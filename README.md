@@ -86,7 +86,7 @@ Alur integrasi fungsional adalah sebagai berikut:
 
 ## 📋 Tahapan Pengerjaan
 
-Secara garis besar, yang akan kita lakukan adalah:
+Secara garis besar, yang akan kita lakukan adalah (sementara):
 
 1. Memetakan fitur web → fitur mobile  
 2. Memutuskan pola autentikasi untuk mobile  
