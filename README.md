@@ -79,4 +79,4 @@ Aplikasi mobile Flutter ini akan berinteraksi penuh dengan Web Service (API) yan
 
 ## 🎨 Link Figma
 
-* [https://exit-upload-30788858.figma.site/](https://exit-upload-30788858.figma.site/) (Referensi Desain)
+* [https://www.figma.com/make/h1deASIz7IL8uZRctJkKYl/SportWatch-Web-App-Design?node-id=0-1&p=f&t=2bJs6hW6aXSqO6Cg-0](https://www.figma.com/make/h1deASIz7IL8uZRctJkKYl/SportWatch-Web-App-Design?node-id=0-1&p=f&t=2bJs6hW6aXSqO6Cg-0)
