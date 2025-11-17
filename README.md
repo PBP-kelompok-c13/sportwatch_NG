@@ -84,6 +84,20 @@ Alur integrasi fungsional adalah sebagai berikut:
     * Flutter mengirimkan *request* `POST` atau `PUT` ke *endpoint* yang sesuai (misal, `/api/checkout/`) dengan membawa *payload* data (JSON) dan *token* autentikasi.
     * Server Django memvalidasi data, memprosesnya ke database, dan mengembalikan status sukses atau error dalam format JSON.
 
+## 📋 Tahapan Pengerjaan
+
+Secara garis besar, yang akan kita lakukan adalah:
+
+1. Memetakan fitur web → fitur mobile  
+2. Memutuskan pola autentikasi untuk mobile  
+3. Merapikan layer API per app (di Django)  
+4. Mengatur struktur URL API supaya rapi  
+5. Melakukan standarisasi format response API  
+6. Membangun mobile app sebagai client API  
+7. Menangani keamanan & environment  
+8. Menguji end-to-end  
+9. Melakukan penyempurnaan UI untuk setiap modul  
+
 ## 🎨 Link Figma
 
 * [https://www.figma.com/make/h1deASIz7IL8uZRctJkKYl/SportWatch-Web-App-Design?node-id=0-1&p=f&t=2bJs6hW6aXSqO6Cg-0](https://www.figma.com/make/h1deASIz7IL8uZRctJkKYl/SportWatch-Web-App-Design?node-id=0-1&p=f&t=2bJs6hW6aXSqO6Cg-0)
