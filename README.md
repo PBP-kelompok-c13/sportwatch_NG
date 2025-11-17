@@ -8,12 +8,6 @@ Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkink
 
 ---
 
-### 🔗 Tautan Penting
-* **GitHub Repository:** `[Link ke GitHub Kelompok]`
-* **Codebase:** `[Link ke Codebase Kelompok]`
-
----
-
 ## 👥 Daftar Anggota Kelompok
 
 | Nama Lengkap | NPM |
@@ -69,13 +63,26 @@ Aplikasi ini memiliki tiga peran utama:
 
 ## 🔌 Alur Pengintegrasian Web Service
 
-Aplikasi mobile Flutter ini akan berinteraksi penuh dengan Web Service (API) yang telah dibuat saat Proyek Tengah Semester.
+Arsitektur aplikasi ini menggunakan model **Client-Server**.
 
-* *(Placeholder: Jelaskan alur autentikasi pengguna via API)*
-* *(Placeholder: Jelaskan alur pengambilan (GET) data berita dari API)*
-* *(Placeholder: Jelaskan alur pengambilan (GET) data scoreboard dari API)*
-* *(Placeholder: Jelaskan alur pengambilan (GET) data produk/shop dari API)*
-* *(Placeholder: Jelaskan alur pengiriman (POST) data transaksi/checkout ke API)*
+* **Backend (Server):** Proyek Django yang telah dibuat (Proyek Tengah Semester) berfungsi sebagai **API Server**. Menggunakan **Django REST Framework (DRF)**, *backend* tidak lagi mengirimkan HTML, melainkan menyediakan *endpoints* (URL) yang mengirimkan dan menerima data murni dalam format **JSON**.
+* **Frontend (Client):** Aplikasi mobile Flutter ini bertindak sebagai **client**. Flutter tidak memiliki akses langsung ke database, melainkan berkomunikasi dengan *backend* Django melalui **HTTP Requests** (GET, POST, PUT, DELETE) untuk mengonsumsi *endpoints* API tersebut.
+
+Alur integrasi fungsional adalah sebagai berikut:
+
+* **Autentikasi:**
+    * Flutter mengirimkan *request* `POST` ke *endpoint* `/api/login/` (contoh) dengan kredensial pengguna (JSON).
+    * Server Django memvalidasi data dan mengembalikan *token* (misal, JWT) dalam respons JSON.
+    * Flutter menyimpan *token* ini di *local storage* (misal: `flutter_secure_storage`) untuk digunakan di *header* *request* selanjutnya.
+
+* **Pengambilan Data (Berita, Produk, Skor):**
+    * Flutter mengirimkan *request* `GET` ke *endpoint* yang relevan (misal, `/api/berita/`).
+    * Server Django (via *Serializer*) mengambil data dari database, mengubahnya menjadi JSON, dan mengirimkannya kembali.
+    * Flutter menerima JSON, mem-parsing-nya menjadi *List* objek Dart, dan menampilkannya di UI (misal: `ListView`).
+
+* **Pengiriman Data (Checkout, CRUD Admin):**
+    * Flutter mengirimkan *request* `POST` atau `PUT` ke *endpoint* yang sesuai (misal, `/api/checkout/`) dengan membawa *payload* data (JSON) dan *token* autentikasi.
+    * Server Django memvalidasi data, memprosesnya ke database, dan mengembalikan status sukses atau error dalam format JSON.
 
 ## 🎨 Link Figma
 
