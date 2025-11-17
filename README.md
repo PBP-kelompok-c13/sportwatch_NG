@@ -90,7 +90,7 @@ Secara garis besar, yang akan kita lakukan adalah (sementara):
 
 1. Memetakan fitur web → fitur mobile  
 2. Memutuskan pola autentikasi untuk mobile  
-3. Merapikan layer API per app (di Django)  
+3. Merapikan layer API per app 
 4. Mengatur struktur URL API supaya rapi  
 5. Melakukan standarisasi format response API  
 6. Membangun mobile app sebagai client API  
