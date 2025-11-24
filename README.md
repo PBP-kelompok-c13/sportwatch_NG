@@ -4,8 +4,8 @@
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-TAHAP%20II%20(25%25)-yellow?style=for-the-badge)
 
+[![Flutter CI](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml)
 [![Build Status](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33/status.svg?token=B73M8_agenC2FZWZQA1MqA&branch=master)](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33)
-![CI/CD Status](https://img.shields.io/badge/CI%2FCD-Not%20Started-red?style=for-the-badge)
 
 Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkinkan pengguna membaca berita olahraga, memantau skor pertandingan, berdiskusi, hingga membeli merchandise tim favorit mereka.
 
@@ -13,13 +13,13 @@ Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkink
 
 ## 👥 Daftar Anggota Kelompok
 
-| Nama Lengkap | NPM |
-| :--- | :--- |
-| **Faiz Yusuf Ridwan** | `2406434292` |
-| **Muhammad Fadhil Al Afifi Fajar** | `2406430104` |
-| **Edward Jeremy Worang** | `2406359475` |
+| Nama Lengkap                              | NPM          | 
+| :---                                      | :---         |
+| **Faiz Yusuf Ridwan**                     | `2406434292` |
+| **Muhammad Fadhil Al Afifi Fajar**        | `2406430104` |
+| **Edward Jeremy Worang**                  | `2406359475` |
 | **Kadek Ngurah Septyawan Chandra Diputra**| `2406420772` |
-| **Dzaki Abrar Fatihul Ihsan** | `2306275241` |
+| **Dzaki Abrar Fatihul Ihsan**             | `2306275241` |
 
 ## 📝 Deskripsi Aplikasi
 
@@ -104,3 +104,14 @@ Secara garis besar, yang akan kita lakukan adalah (sementara):
 ## 🎨 Link Figma
 
 * [https://www.figma.com/make/h1deASIz7IL8uZRctJkKYl/SportWatch-Web-App-Design?node-id=0-1&p=f&t=2bJs6hW6aXSqO6Cg-0](https://www.figma.com/make/h1deASIz7IL8uZRctJkKYl/SportWatch-Web-App-Design?node-id=0-1&p=f&t=2bJs6hW6aXSqO6Cg-0)
+## CI/CD
+
+### GitHub Actions workflow
+1. File `./.github/workflows/flutter-ci.yml` menyiapkan Flutter channel stabil di runner Ubuntu, menjalankan `flutter pub get`, kemudian `flutter test --no-pub` untuk setiap push/pull request menuju branch `main` atau `master`.
+2. Setelah push, buka tab **Actions** di repositori [`PBP-kelompok-c13/sportwatch_NG`](https://github.com/PBP-kelompok-c13/sportwatch_NG) untuk memantau log, artefak, atau mengulang workflow bila gagal.
+3. Jalankan `flutter test` secara lokal sebelum membuat commit agar hasilnya konsisten dengan CI di GitHub.
+
+### Bitrise pipeline
+1. Status badge Bitrise di atas menunjukan hasil dari app `88c9ea2b-d5f8-4446-9a5e-10f95db28c33`; hubungkan repositori GitHub publik ini agar setiap push otomatis memicu build.
+2. Gunakan langkah `Flutter Install` di awal workflow Bitrise, ikuti dengan `Flutter Test` (yang akan menjalankan widget test baru) serta langkah build tambahan sesuai kebutuhan rilis.
+3. Jika mengganti branch utama atau token badge, perbarui URL badge pada README sehingga status Bitrise tetap akurat.
