@@ -52,7 +52,7 @@
           "id": "widget-edward",
           "description": "Widget modul Shop (Edward)",
           "percent": 15,
-          "done": false
+          "done": true
         },
         {
           "id": "widget-kadek",
@@ -88,7 +88,7 @@
           "id": "apk-readme",
           "description": "Menambahkan tautan APK ke README",
           "percent": 1,
-          "done": false
+          "done": true
         },
         {
           "id": "presentasi-demo",
