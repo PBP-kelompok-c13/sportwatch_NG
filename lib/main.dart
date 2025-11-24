@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'scoreboard/screens/scoreboard_landing_page.dart';
 
 void main() {
   runApp(const MyApp());
