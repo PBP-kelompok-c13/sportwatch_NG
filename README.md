@@ -2,7 +2,9 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Tahap%20I%20(20%25)-brightgreen?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20(25%25)-yellow?style=for-the-badge)
+[![Bitrise Build Status](https://app.bitrise.io/app/YOUR_APP_SLUG/status.svg?token=YOUR_API_TOKEN)](https://app.bitrise.io/app/YOUR_APP_SLUG)
+![CI/CD Status](https://img.shields.io/badge/CI%2FCD-Not%20Started-red?style=for-the-badge)
 
 Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkinkan pengguna membaca berita olahraga, memantau skor pertandingan, berdiskusi, hingga membeli merchandise tim favorit mereka.
 
