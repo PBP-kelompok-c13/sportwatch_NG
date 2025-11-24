@@ -2,7 +2,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%2825%25%29-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%2841%25%29-yellow?style=for-the-badge)
 
 [![Flutter CI](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml)
 [![Build Status](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33/status.svg?token=B73M8_agenC2FZWZQA1MqA&branch=master)](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33)
