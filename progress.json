@@ -1,0 +1,102 @@
+{
+  "stages": [
+    {
+      "id": "tahap1",
+      "label": "I",
+      "max_percent": 20,
+      "tasks": [
+        {
+          "id": "github_repo",
+          "description": "Pembuatan GitHub kelompok",
+          "percent": 5,
+          "done": true
+        },
+        {
+          "id": "codebase",
+          "description": "Pembuatan codebase Flutter kelompok",
+          "percent": 5,
+          "done": true
+        },
+        {
+          "id": "readme",
+          "description": "README lengkap (anggota, deskripsi, modul, peran, alur service, link Figma)",
+          "percent": 5,
+          "done": true
+        },
+        {
+          "id": "submission",
+          "description": "Pengumpulan tautan repo ke SCELE",
+          "percent": 5,
+          "done": true
+        }
+      ]
+    },
+    {
+      "id": "tahap2",
+      "label": "II",
+      "max_percent": 80,
+      "tasks": [
+        {
+          "id": "widget-faiz",
+          "description": "Widget modul Portal Berita (Faiz)",
+          "percent": 5,
+          "done": true
+        },
+        {
+          "id": "widget-fadhil",
+          "description": "Widget modul Scoreboard (Fadhil)",
+          "percent": 15,
+          "done": false
+        },
+        {
+          "id": "widget-edward",
+          "description": "Widget modul Shop (Edward)",
+          "percent": 15,
+          "done": false
+        },
+        {
+          "id": "widget-kadek",
+          "description": "Widget modul Fitur Pencarian (Kadek)",
+          "percent": 15,
+          "done": false
+        },
+        {
+          "id": "widget-dzaki",
+          "description": "Widget modul Checkout (Dzaki)",
+          "percent": 15,
+          "done": false
+        },
+        {
+          "id": "integrasi-modul",
+          "description": "Integrasi seluruh modul dalam satu aplikasi",
+          "percent": 5,
+          "done": false
+        },
+        {
+          "id": "desain-sesuai",
+          "description": "Fungsionalitas & desain sesuai rancangan",
+          "percent": 5,
+          "done": false
+        },
+        {
+          "id": "json-data",
+          "description": "Pengolahan data JSON dari web service Django",
+          "percent": 3,
+          "done": false
+        },
+        {
+          "id": "apk-readme",
+          "description": "Menambahkan tautan APK ke README",
+          "percent": 1,
+          "done": false
+        },
+        {
+          "id": "presentasi-demo",
+          "description": "Presentasi & demo tugas ke dosen",
+          "percent": 1,
+          "done": false
+        }
+      ]
+    }
+  ]
+}

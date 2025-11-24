@@ -2,7 +2,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-TAHAP%20II%20(25%25)-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%2825%25%29-yellow?style=for-the-badge)
 
 [![Flutter CI](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml)
 [![Build Status](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33/status.svg?token=B73M8_agenC2FZWZQA1MqA&branch=master)](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33)
@@ -115,3 +115,39 @@ Secara garis besar, yang akan kita lakukan adalah (sementara):
 1. Status badge Bitrise di atas menunjukan hasil dari app `88c9ea2b-d5f8-4446-9a5e-10f95db28c33`; hubungkan repositori GitHub publik ini agar setiap push otomatis memicu build.
 2. Gunakan langkah `Flutter Install` di awal workflow Bitrise, ikuti dengan `Flutter Test` (yang akan menjalankan widget test baru) serta langkah build tambahan sesuai kebutuhan rilis.
 3. Jika mengganti branch utama atau token badge, perbarui URL badge pada README sehingga status Bitrise tetap akurat.
+
+## Otomasi Status Tahap
+
+### Cara Kerja
+1. Seluruh deliverable tahapan dicatat di `progress.json` lengkap dengan bobot persentase (Tahap I = 20%, Tahap II = 80%) sehingga sesuai daftar “Tahapan dan deliverables”.
+2. Mengganti nilai `done` menjadi `true` pada sebuah task menambah progres sesuai bobotnya.
+3. Jalankan `python scripts/update_tahap_status.py` setiap kali mengubah `progress.json` untuk memperbarui badge status secara lokal.
+4. Workflow `.github/workflows/update-progress.yml` menjalankan skrip yang sama saat ada push ke `main`/`master` (atau ketika dipicu manual melalui `workflow_dispatch`). Jika badge berubah, workflow otomatis membuat commit `chore: update tahap status badge [skip ci]` menggunakan `GITHUB_TOKEN`.
+
+> Instruksi bonus pembuatan video promosi diabaikan sesuai permintaan, sehingga tidak mempengaruhi perhitungan progress.
+
+### Tahap I – 20% (deadline: Senin, 24 November 2025, 23.59 WIB)
+| Deliverable | Bobot | Status awal |
+| --- | --- | --- |
+| Pembuatan GitHub kelompok | 5% | ✅ (`github_repo`) |
+| Codebase Flutter kelompok | 5% | ✅ (`codebase`) |
+| README lengkap (anggota, deskripsi, modul, peran, alur web service, link Figma) | 5% | ✅ (`readme`) |
+| Pengumpulan tautan repo ke SCELE | 5% | ✅ (`submission`) |
+
+Tahap I selesai penuh sehingga menyumbang 20% ke badge.
+
+### Tahap II – 80% (deadline: Minggu, 21 Desember 2025, 23.59 WIB + toleransi 30 menit)
+| Deliverable | Bobot | Status awal |
+| --- | --- | --- |
+| Widget modul Portal Berita (Faiz) | 5% | ✅ (`widget-faiz`) |
+| Widget modul Scoreboard (Fadhil) | 15% | ⏳ |
+| Widget modul Shop (Edward) | 15% | ⏳ |
+| Widget modul Fitur Pencarian (Kadek) | 15% | ⏳ |
+| Widget modul Checkout (Dzaki) | 15% | ⏳ |
+| Integrasi seluruh modul | 5% | ⏳ |
+| Fungsionalitas sesuai desain | 5% | ⏳ |
+| Pengolahan JSON web service Django | 3% | ⏳ |
+| Menambahkan tautan APK ke README | 1% | ⏳ |
+| Presentasi & demo ke dosen | 1% | ⏳ |
+
+Progress awal `Tahap II (25%)` = 20% (Tahap I) + 5% (widget modul Faiz). Saat deliverable lain diselesaikan, badge akan otomatis naik tanpa perlu mengedit README secara manual.
