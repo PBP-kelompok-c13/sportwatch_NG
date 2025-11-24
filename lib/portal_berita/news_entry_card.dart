@@ -37,11 +37,14 @@ class NewsEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(
-          horizontal: _kCardMarginHorizontal, vertical: _kCardMarginVertical),
+        horizontal: _kCardMarginHorizontal,
+        vertical: _kCardMarginVertical,
+      ),
       elevation: _kCardElevation,
       clipBehavior: Clip.antiAlias, // Clips content to card borders
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_kCardBorderRadius)),
+        borderRadius: BorderRadius.circular(_kCardBorderRadius),
+      ),
       child: InkWell(
         onTap: onTap,
         child: Column(
@@ -53,41 +56,54 @@ class NewsEntryCard extends StatelessWidget {
                 SizedBox(
                   height: _kImageHeight,
                   width: double.infinity,
-                  child: Image.network(
-                    '$baseUrl/auth/proxy-image/?url=${Uri.encodeComponent(news.thumbnail)}',
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.broken_image,
-                              size: 40,
+                  child: news.thumbnail.isNotEmpty
+                      ? Image.network(
+                          buildProxyImageUrl(news.thumbnail),
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.broken_image,
+                                        size: 40,
+                                        color: Colors.grey,
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        "Image Error",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                        )
+                      : Container(
+                          color: Colors.grey[200],
+                          child: const Center(
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              size: 48,
                               color: Colors.grey,
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              "Image Error",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
                 // Featured Badge
                 if (news.isPublished)
@@ -101,8 +117,9 @@ class NewsEntryCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: Colors.amber,
-                        borderRadius:
-                            BorderRadius.circular(_kFeaturedBadgeBorderRadius),
+                        borderRadius: BorderRadius.circular(
+                          _kFeaturedBadgeBorderRadius,
+                        ),
                         boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
@@ -114,9 +131,11 @@ class NewsEntryCard extends StatelessWidget {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.star,
-                              size: _kFeaturedBadgeIconSize,
-                              color: Colors.white),
+                          Icon(
+                            Icons.star,
+                            size: _kFeaturedBadgeIconSize,
+                            color: Colors.white,
+                          ),
                           SizedBox(width: _kFeaturedBadgeIconTextSpacing),
                           Text(
                             'Featured',
@@ -147,8 +166,9 @@ class NewsEntryCard extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor.withAlpha(25),
-                      borderRadius:
-                          BorderRadius.circular(_kCategoryTagBorderRadius),
+                      borderRadius: BorderRadius.circular(
+                        _kCategoryTagBorderRadius,
+                      ),
                     ),
                     child: Text(
                       news.kategori.toUpperCase(),
@@ -165,8 +185,8 @@ class NewsEntryCard extends StatelessWidget {
                   Text(
                     news.judul,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -194,9 +214,9 @@ class NewsEntryCard extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.black54,
-                          height: 1.5,
-                        ),
+                      color: Colors.black54,
+                      height: 1.5,
+                    ),
                   ),
 
                   const SizedBox(height: _kContentPreviewSpacing),

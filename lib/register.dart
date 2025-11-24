@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sportwatch_ng/login.dart';
+import 'package:sportwatch_ng/config.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -183,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 try {
                                   // Update URL to match your Django server
                                   final response = await request.postJson(
-                                    "http://127.0.0.1:8000/authentication/register/",
+                                    registerUrl,
                                     jsonEncode({
                                       "username": username,
                                       "password": password,

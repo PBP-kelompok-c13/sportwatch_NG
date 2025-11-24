@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:sportwatch_ng/home.dart';
+import 'package:sportwatch_ng/config.dart';
+import 'package:sportwatch_ng/main_page.dart';
 import 'package:sportwatch_ng/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -129,10 +130,10 @@ class _LoginPageState extends State<LoginPage> {
                             try {
                               // Replace with your actual URL.
                               // Use 10.0.2.2 for Android Emulator, localhost for Web/iOS Simulator
-                              final response = await request.login(
-                                "http://127.0.0.1:8000/authentication/login/",
-                                {'username': username, 'password': password},
-                              );
+                              final response = await request.login(loginUrl, {
+                                'username': username,
+                                'password': password,
+                              });
 
                               if (request.loggedIn) {
                                 String message = response['message'];
@@ -141,9 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const MyHomePage(
-                                        title: 'Sportwatch New Generations',
-                                      ),
+                                      builder: (context) => const MainPage(),
                                     ),
                                   );
                                   ScaffoldMessenger.of(context)
