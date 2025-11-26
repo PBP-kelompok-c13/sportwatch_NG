@@ -3,6 +3,7 @@ import 'package:sportwatch_ng/home.dart';
 import 'package:sportwatch_ng/portal_berita/news_page.dart';
 import 'package:sportwatch_ng/scoreboard/screens/scoreboard_landing_page.dart';
 import 'package:sportwatch_ng/shop/screens/shop_landing_page.dart';
+import 'package:sportwatch_ng/search/screens/search_landing_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -20,6 +21,7 @@ class _MainPageState extends State<MainPage> {
     ),
     ScoreboardLandingPage(),
     ShopPage(),
+    SearchLandingPage()
   ];
 
   void _onItemTapped(int index) {
@@ -58,6 +60,10 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_checkout, color: Colors.black,),
             label: 'Shop',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search, color: Colors.black,),
+            label: 'Search',
           ),
         ],
         currentIndex: _selectedIndex,
