@@ -4,7 +4,6 @@ import 'package:sportwatch_ng/portal_berita/news_page.dart';
 import 'package:sportwatch_ng/scoreboard/screens/scoreboard_landing_page.dart';
 import 'package:sportwatch_ng/shop/screens/shop_landing_page.dart';
 
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
   @override
