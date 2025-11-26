@@ -3,6 +3,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/login.dart';
+import 'package:sportwatch_ng/theme_notifier.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final themeNotifier = context.watch<ThemeNotifier>();
     final userData = request.getJsonData();
     final rawUsername = userData['username']?.toString() ?? '';
     final username = rawUsername.isNotEmpty ? rawUsername : 'User';
@@ -45,6 +47,16 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Sportwatch New Generations'),
+        actions: [
+          IconButton(
+            tooltip:
+                themeNotifier.isDark ? 'Switch to light mode' : 'Switch to dark mode',
+            icon: Icon(
+              themeNotifier.isDark ? Icons.light_mode : Icons.dark_mode,
+            ),
+            onPressed: themeNotifier.toggle,
+          ),
+        ],
       ),
       drawer: Drawer(
         child: SafeArea(
@@ -76,6 +88,20 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.admin_panel_settings_outlined),
+                title: const Text('Admin Panel'),
+                subtitle: const Text('Placeholder'),
+                onTap: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Admin panel will be available soon.'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.logout),
