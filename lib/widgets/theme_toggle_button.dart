@@ -44,9 +44,7 @@ class ThemeToggleButton extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: (isDark
-                                ? Colors.black
-                                : const Color(0xFF60A5FA))
+                        color: (isDark ? Colors.black : const Color(0xFF60A5FA))
                             .withAlpha((0.28 * 255).round()),
                         blurRadius: 12,
                         offset: const Offset(0, 4),

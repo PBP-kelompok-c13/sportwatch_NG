@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum MatchStatus {
-  live,
-  finished,
-  upcoming,
-}
+enum MatchStatus { live, finished, upcoming }
 
 class MatchCard extends StatelessWidget {
   final String homeTeam;
@@ -108,12 +104,7 @@ class MatchCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     switch (status) {
       case MatchStatus.live:
-        return _badge(
-          context,
-          'LIVE',
-          colorScheme.error,
-          colorScheme.onError,
-        );
+        return _badge(context, 'LIVE', colorScheme.error, colorScheme.onError);
       case MatchStatus.finished:
         return _badge(
           context,

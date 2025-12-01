@@ -4,11 +4,7 @@ class SectionTitle extends StatelessWidget {
   final String title;
   final Color? color;
 
-  const SectionTitle({
-    super.key,
-    required this.title,
-    this.color,
-  });
+  const SectionTitle({super.key, required this.title, this.color});
 
   @override
   Widget build(BuildContext context) {

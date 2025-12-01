@@ -190,26 +190,35 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
 
     final filteredNews = _allNews.where((item) {
       if (_searchIn == 'products') return false;
-      if (_newsCategory != null && _newsCategory!.isNotEmpty && item.category != _newsCategory) {
+      if (_newsCategory != null &&
+          _newsCategory!.isNotEmpty &&
+          item.category != _newsCategory) {
         return false;
       }
       if (query.isEmpty) return true;
-      return item.title.toLowerCase().contains(query) || item.summary.toLowerCase().contains(query);
+      return item.title.toLowerCase().contains(query) ||
+          item.summary.toLowerCase().contains(query);
     }).toList();
 
     final filteredProducts = _allProducts.where((item) {
       if (_searchIn == 'news') return false;
-      if (_productCategory != null && _productCategory!.isNotEmpty && item.category != _productCategory) {
+      if (_productCategory != null &&
+          _productCategory!.isNotEmpty &&
+          item.category != _productCategory) {
         return false;
       }
-      if (_brand != null && _brand!.isNotEmpty && item.brand != null && item.brand != _brand) {
+      if (_brand != null &&
+          _brand!.isNotEmpty &&
+          item.brand != null &&
+          item.brand != _brand) {
         return false;
       }
       if (_onlyDiscount && !item.hasDiscount) return false;
       if (minPrice != null && item.price < minPrice) return false;
       if (maxPrice != null && item.price > maxPrice) return false;
       if (query.isEmpty) return true;
-      return item.name.toLowerCase().contains(query) || item.category.toLowerCase().contains(query);
+      return item.name.toLowerCase().contains(query) ||
+          item.category.toLowerCase().contains(query);
     }).toList();
 
     setState(() {
@@ -230,8 +239,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
       parts.add('Kata kunci: "${_queryController.text}"');
     }
     parts.add('Scope: ${_labelForScope(_searchIn)}');
-    if (_newsCategory?.isNotEmpty == true) parts.add('Kategori berita: $_newsCategory');
-    if (_productCategory?.isNotEmpty == true) parts.add('Kategori produk: $_productCategory');
+    if (_newsCategory?.isNotEmpty == true) {
+      parts.add('Kategori berita: $_newsCategory');
+    }
+    if (_productCategory?.isNotEmpty == true) {
+      parts.add('Kategori produk: $_productCategory');
+    }
     if (_brand?.isNotEmpty == true) parts.add('Brand: $_brand');
     if (_onlyDiscount) parts.add('Hanya diskon');
     final minPrice = _minPriceController.text.trim();
@@ -456,9 +469,18 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                     key: ValueKey('scope-$_searchIn'),
                     initialValue: _searchIn,
                     items: const [
-                      DropdownMenuItem(value: 'all', child: Text('Cari di: Semua')),
-                      DropdownMenuItem(value: 'news', child: Text('Cari di: Berita')),
-                      DropdownMenuItem(value: 'products', child: Text('Cari di: Produk')),
+                      DropdownMenuItem(
+                        value: 'all',
+                        child: Text('Cari di: Semua'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'news',
+                        child: Text('Cari di: Berita'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'products',
+                        child: Text('Cari di: Produk'),
+                      ),
                     ],
                     onChanged: (value) {
                       if (value == null) return;
@@ -483,8 +505,15 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                   child: DropdownButtonFormField<String?>(
                     key: ValueKey('news-$_newsCategory'),
                     initialValue: _newsCategory,
-                    items: _buildOptions(['', 'Umum', 'Sepak Bola', 'Lari', 'Basket']),
-                    onChanged: (v) => setState(() => _newsCategory = _emptyToNull(v)),
+                    items: _buildOptions([
+                      '',
+                      'Umum',
+                      'Sepak Bola',
+                      'Lari',
+                      'Basket',
+                    ]),
+                    onChanged: (v) =>
+                        setState(() => _newsCategory = _emptyToNull(v)),
                     decoration: const InputDecoration(
                       labelText: 'Kategori Berita',
                       border: OutlineInputBorder(),
@@ -496,8 +525,17 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                   child: DropdownButtonFormField<String?>(
                     key: ValueKey('product-$_productCategory'),
                     initialValue: _productCategory,
-                    items: _buildOptions(['', 'Sepak Bola', 'Lari', 'Basket', 'Wearable', 'Training', 'Aksesori']),
-                    onChanged: (v) => setState(() => _productCategory = _emptyToNull(v)),
+                    items: _buildOptions([
+                      '',
+                      'Sepak Bola',
+                      'Lari',
+                      'Basket',
+                      'Wearable',
+                      'Training',
+                      'Aksesori',
+                    ]),
+                    onChanged: (v) =>
+                        setState(() => _productCategory = _emptyToNull(v)),
                     decoration: const InputDecoration(
                       labelText: 'Kategori Produk',
                       border: OutlineInputBorder(),
@@ -509,7 +547,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                   child: DropdownButtonFormField<String?>(
                     key: ValueKey('brand-$_brand'),
                     initialValue: _brand,
-                    items: _buildOptions(['', 'SwiftRun', 'SportWatch', 'AeroFit']),
+                    items: _buildOptions([
+                      '',
+                      'SwiftRun',
+                      'SportWatch',
+                      'AeroFit',
+                    ]),
                     onChanged: (v) => setState(() => _brand = _emptyToNull(v)),
                     decoration: const InputDecoration(
                       labelText: 'Brand',
@@ -573,7 +616,10 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                     key: ValueKey('preset-$_selectedPresetId'),
                     initialValue: _selectedPresetId,
                     items: [
-                      const DropdownMenuItem<String?>(value: null, child: Text('Tanpa preset')),
+                      const DropdownMenuItem<String?>(
+                        value: null,
+                        child: Text('Tanpa preset'),
+                      ),
                       ..._presets.map(
                         (preset) => DropdownMenuItem<String?>(
                           value: preset.id,
@@ -587,7 +633,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                       });
                       final preset = _presets.firstWhere(
                         (p) => p.id == value,
-                        orElse: () => SearchPreset(id: '', label: '', description: '', searchIn: 'all'),
+                        orElse: () => SearchPreset(
+                          id: '',
+                          label: '',
+                          description: '',
+                          searchIn: 'all',
+                        ),
                       );
                       if (preset.id.isNotEmpty) {
                         _applyPreset(preset);
@@ -626,7 +677,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
         .toList();
   }
 
-  String? _emptyToNull(String? value) => (value == null || value.isEmpty) ? null : value;
+  String? _emptyToNull(String? value) =>
+      (value == null || value.isEmpty) ? null : value;
 
   Widget _buildSummaryCard() {
     final theme = Theme.of(context);
@@ -641,10 +693,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
             Icon(Icons.info_outline, color: colorScheme.primary),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                _buildSummary(),
-                style: theme.textTheme.bodyMedium,
-              ),
+              child: Text(_buildSummary(), style: theme.textTheme.bodyMedium),
             ),
           ],
         ),
@@ -690,8 +739,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
               label: Text('${_filteredNews.length} hasil'),
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
           ],
         ),
@@ -700,8 +749,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
           Text(
             'Belum ada berita yang cocok. Coba ubah filter atau kata kunci.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           )
         else
           Column(
@@ -765,7 +814,9 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     child: ListTile(
                       title: Text(product.name),
-                      subtitle: Text('${product.category} • ${product.currency}${product.price.toStringAsFixed(0)}'),
+                      subtitle: Text(
+                        '${product.category} • ${product.currency}${product.price.toStringAsFixed(0)}',
+                      ),
                       leading: Icon(
                         Icons.shopping_bag_outlined,
                         color: product.hasDiscount
@@ -825,7 +876,11 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                           : null,
                       child: ListTile(
                         title: Text(preset.label),
-                        subtitle: Text(preset.description.isEmpty ? 'Tanpa deskripsi' : preset.description),
+                        subtitle: Text(
+                          preset.description.isEmpty
+                              ? 'Tanpa deskripsi'
+                              : preset.description,
+                        ),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () => _applyPreset(preset),
                       ),
@@ -857,8 +912,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
               Text(
                 'Belum ada pencarian.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               )
             else
               Column(
@@ -867,7 +922,11 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                       (item) => ListTile(
                         dense: true,
                         leading: const Icon(Icons.history, size: 20),
-                        title: Text(item, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        title: Text(
+                          item,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     )
                     .toList(),
@@ -948,8 +1007,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                 final crossAxisCount = constraints.maxWidth > 800
                     ? 3
                     : constraints.maxWidth > 520
-                        ? 2
-                        : 1;
+                    ? 2
+                    : 1;
                 return GridView.count(
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 12,
@@ -958,9 +1017,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                   physics: const NeverScrollableScrollPhysics(),
                   childAspectRatio: 1.1,
                   children: _featuredProducts
-                      .map(
-                        (product) => _FeaturedProductCard(product: product),
-                      )
+                      .map((product) => _FeaturedProductCard(product: product))
                       .toList(),
                 );
               },
@@ -989,7 +1046,9 @@ class _HeaderCard extends StatelessWidget {
           children: [
             Text(
               'Temukan Segalanya di SportWatch',
-              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
@@ -1030,20 +1089,16 @@ class _FeaturedProductCard extends StatelessWidget {
                   color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  Icons.image,
-                  size: 48,
-                  color: subtleTextColor,
-                ),
+                child: Icon(Icons.image, size: 48, color: subtleTextColor),
               ),
             ),
             const SizedBox(height: 8),
-            Text(product.name, style: const TextStyle(fontWeight: FontWeight.w700)),
-            const SizedBox(height: 4),
             Text(
-              product.category,
-              style: TextStyle(color: subtleTextColor),
+              product.name,
+              style: const TextStyle(fontWeight: FontWeight.w700),
             ),
+            const SizedBox(height: 4),
+            Text(product.category, style: TextStyle(color: subtleTextColor)),
             const SizedBox(height: 4),
             Text(
               '${product.currency}${product.price.toStringAsFixed(0)}',
@@ -1053,10 +1108,7 @@ class _FeaturedProductCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Lihat detail'),
-            ),
+            TextButton(onPressed: () {}, child: const Text('Lihat detail')),
           ],
         ),
       ),

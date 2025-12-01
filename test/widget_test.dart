@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sportwatch_ng/main.dart';
 
 void main() {
-  testWidgets('Login screen renders core controls', (WidgetTester tester) async {
+  testWidgets('Login screen renders core controls', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 

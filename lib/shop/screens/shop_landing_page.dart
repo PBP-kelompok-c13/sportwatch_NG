@@ -104,11 +104,11 @@ class ShopPage extends StatelessWidget {
                     itemCount: products.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 0.7,
-                    ),
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.7,
+                        ),
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return _ProductCard(
@@ -161,11 +161,7 @@ class _ProductCard extends StatelessWidget {
                   top: Radius.circular(16),
                 ),
               ),
-              child: Icon(
-                Icons.watch,
-                size: 48,
-                color: subtleTextColor,
-              ),
+              child: Icon(Icons.watch, size: 48, color: subtleTextColor),
             ),
           ),
           Padding(

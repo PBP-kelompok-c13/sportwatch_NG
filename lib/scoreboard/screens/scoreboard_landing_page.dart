@@ -28,7 +28,9 @@ class ScoreboardLandingPage extends StatelessWidget {
           children: [
             Text(
               'Live Scores & Results',
-              style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
@@ -41,10 +43,7 @@ class ScoreboardLandingPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: theme.cardColor,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: colorScheme.outlineVariant,
-                  width: 1,
-                ),
+                border: Border.all(color: colorScheme.outlineVariant, width: 1),
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -89,10 +88,7 @@ class ScoreboardLandingPage extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  SectionTitle(
-                    title: 'Live Now',
-                    color: colorScheme.error,
-                  ),
+                  SectionTitle(title: 'Live Now', color: colorScheme.error),
                   const SizedBox(height: 8),
                   const MatchCard(
                     league: 'English Premier League',
@@ -144,11 +140,7 @@ class FilterPill extends StatelessWidget {
   final String label;
   final bool selected;
 
-  const FilterPill({
-    super.key,
-    required this.label,
-    this.selected = false,
-  });
+  const FilterPill({super.key, required this.label, this.selected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -157,10 +149,11 @@ class FilterPill extends StatelessWidget {
     final backgroundColor = selected
         ? colorScheme.primary
         : (theme.brightness == Brightness.dark
-            ? colorScheme.surfaceContainerHighest
-            : colorScheme.surfaceContainerHigh);
-    final foregroundColor =
-        selected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant;
+              ? colorScheme.surfaceContainerHighest
+              : colorScheme.surfaceContainerHigh);
+    final foregroundColor = selected
+        ? colorScheme.onPrimary
+        : colorScheme.onSurfaceVariant;
     return Container(
       margin: const EdgeInsets.only(right: 6),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
