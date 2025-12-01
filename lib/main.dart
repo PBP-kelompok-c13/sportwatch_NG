@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
         builder: (context, themeNotifier, _) {
           return MaterialApp(
             title: 'Sportwatch New Generations',
+            debugShowCheckedModeBanner: false,
             theme: _buildTheme(lightScheme),
             darkTheme: _buildTheme(darkScheme),
             themeMode: themeNotifier.themeMode,
