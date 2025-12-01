@@ -3,10 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sportwatch_ng/main.dart';
 
 void main() {
-  testWidgets('Login screen renders core controls', (
+  testWidgets('Guest can open login form from the drawer', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Login'));
     await tester.pumpAndSettle();
 
     expect(find.text('Welcome Back'), findsOneWidget);
@@ -16,8 +22,6 @@ void main() {
 
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
     await tester.pump();
-
-    // Empty fields must trigger the validation message.
     expect(find.text('Please fill in all fields'), findsOneWidget);
   });
 }
