@@ -39,11 +39,25 @@ String newsListApi({int page = 1, int perPage = 6}) {
   return uri.toString();
 }
 
-String productsListApi({
-  int page = 1,
-  int perPage = 6,
-  String sort = "featured",
-}) {
+String searchResultsUrl(Map<String, String> queryParameters) {
+  final base = Uri.parse(baseUrl).resolve("/search/api/results/");
+  if (queryParameters.isEmpty) {
+    return base.toString();
+  }
+  return base.replace(queryParameters: queryParameters).toString();
+}
+
+String searchFilterOptionsUrl() {
+  return Uri.parse(baseUrl).resolve("/search/api/filter-options/").toString();
+}
+
+String featuredProductsUrl({int page = 1}) {
+  final uri =
+      Uri.parse(baseUrl).resolve("/shop/api/products/?sort=featured&page=$page");
+  return uri.toString();
+}
+
+String productsListApi({int page = 1, int perPage = 6, String sort = "featured"}) {
   final safePerPage = perPage.clamp(1, 50);
   final uri = Uri.parse(
     baseUrl,
