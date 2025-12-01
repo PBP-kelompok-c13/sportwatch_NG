@@ -16,12 +16,9 @@ class _MainPageState extends State<MainPage> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     NewsPage(),
-    Text(
-      'Halaman Placeholder',
-    ),
+    SearchLandingPage(),
     ScoreboardLandingPage(),
     ShopPage(),
-    SearchLandingPage()
   ];
 
   void _onItemTapped(int index) {
@@ -39,35 +36,29 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(
-                Icons.home,
-              color: Colors.black,
-            ),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper, color: Colors.black,),
+            icon: Icon(Icons.newspaper),
             label: 'News',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add, color: Colors.black,),
-            label: 'Placeholder',
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.scoreboard, color: Colors.black,),
-              label: 'Scoreboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_checkout, color: Colors.black,),
-            label: 'Shop',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.black,),
+            icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.scoreboard),
+            label: 'Scoreboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_checkout),
+            label: 'Shop',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent[400],
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
         onTap: _onItemTapped,
       ),
     );
