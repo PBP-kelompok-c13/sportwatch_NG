@@ -38,10 +38,10 @@ class MatchCard extends StatelessWidget {
 
     switch (match.status) {
       case MatchStatus.live:
-        borderColor = colorScheme.error.withOpacity(0.4);
+        borderColor = colorScheme.error.withValues(alpha: 0.4);
         break;
       case MatchStatus.finished:
-        borderColor = colorScheme.secondary.withOpacity(0.4);
+        borderColor = colorScheme.secondary.withValues(alpha: 0.4);
         break;
       case MatchStatus.upcoming:
         borderColor = const Color(0xFFF3C76A);
@@ -63,15 +63,14 @@ class MatchCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // TOP ROW: league badge + status badge
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.08),
+                    color: colorScheme.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
@@ -85,9 +84,9 @@ class MatchCard extends StatelessWidget {
                 const Spacer(),
                 Container(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: _statusColor(context).withOpacity(0.15),
+                    color: _statusColor(context).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: Text(
@@ -101,8 +100,6 @@ class MatchCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-
-            // MIDDLE ROW: teams + big score
             Row(
               children: [
                 Expanded(
@@ -151,9 +148,7 @@ class MatchCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
             if (_formattedDate().isNotEmpty)
               Text(
                 _formattedDate(),
@@ -205,7 +200,7 @@ class _TeamInfo extends StatelessWidget {
 
     return Row(
       mainAxisAlignment:
-      alignRight ? MainAxisAlignment.end : MainAxisAlignment.start,
+          alignRight ? MainAxisAlignment.end : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: rowChildren,
     );
