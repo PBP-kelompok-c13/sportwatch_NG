@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
             theme: _buildTheme(lightScheme),
             darkTheme: _buildTheme(darkScheme),
             themeMode: themeNotifier.themeMode,
+            debugShowCheckedModeBanner: false,
             home: const LoginPage(),
           );
         },
