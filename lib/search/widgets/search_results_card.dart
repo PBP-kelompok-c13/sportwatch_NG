@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sportwatch_ng/search/search_models.dart';
+import 'package:sportwatch_ng/search/models/search_models.dart';
 
 class SearchResultsCard extends StatelessWidget {
   const SearchResultsCard({
