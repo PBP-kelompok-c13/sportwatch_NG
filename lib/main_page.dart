@@ -5,7 +5,6 @@ import 'package:sportwatch_ng/scoreboard/screens/scoreboard_landing_page.dart';
 import 'package:sportwatch_ng/shop/screens/shop_landing_page.dart';
 import 'package:sportwatch_ng/search/screens/search_landing_page.dart';
 
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
   @override
