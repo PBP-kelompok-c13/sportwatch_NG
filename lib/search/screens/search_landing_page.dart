@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class SearchLandingPage extends StatefulWidget {
   const SearchLandingPage({super.key});
@@ -226,7 +227,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
   String _buildSummary() {
     final parts = <String>[];
     if (_queryController.text.isNotEmpty) {
-      parts.add('Kata kunci: \"${_queryController.text}\"');
+      parts.add('Kata kunci: "${_queryController.text}"');
     }
     parts.add('Scope: ${_labelForScope(_searchIn)}');
     if (_newsCategory?.isNotEmpty == true) parts.add('Kategori berita: $_newsCategory');
@@ -281,7 +282,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
     });
     _performSearch();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Preset \"${preset.label}\" diterapkan')),
+      SnackBar(content: Text('Preset "${preset.label}" diterapkan')),
     );
   }
 
@@ -377,6 +378,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SportWatch Search'),
+        actions: const [ThemeToggleButton()],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -451,7 +453,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                 SizedBox(
                   width: 200,
                   child: DropdownButtonFormField<String>(
-                    value: _searchIn,
+                    key: ValueKey('scope-$_searchIn'),
+                    initialValue: _searchIn,
                     items: const [
                       DropdownMenuItem(value: 'all', child: Text('Cari di: Semua')),
                       DropdownMenuItem(value: 'news', child: Text('Cari di: Berita')),
@@ -478,7 +481,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                 SizedBox(
                   width: 220,
                   child: DropdownButtonFormField<String?>(
-                    value: _newsCategory,
+                    key: ValueKey('news-$_newsCategory'),
+                    initialValue: _newsCategory,
                     items: _buildOptions(['', 'Umum', 'Sepak Bola', 'Lari', 'Basket']),
                     onChanged: (v) => setState(() => _newsCategory = _emptyToNull(v)),
                     decoration: const InputDecoration(
@@ -490,7 +494,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                 SizedBox(
                   width: 220,
                   child: DropdownButtonFormField<String?>(
-                    value: _productCategory,
+                    key: ValueKey('product-$_productCategory'),
+                    initialValue: _productCategory,
                     items: _buildOptions(['', 'Sepak Bola', 'Lari', 'Basket', 'Wearable', 'Training', 'Aksesori']),
                     onChanged: (v) => setState(() => _productCategory = _emptyToNull(v)),
                     decoration: const InputDecoration(
@@ -502,7 +507,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                 SizedBox(
                   width: 220,
                   child: DropdownButtonFormField<String?>(
-                    value: _brand,
+                    key: ValueKey('brand-$_brand'),
+                    initialValue: _brand,
                     items: _buildOptions(['', 'SwiftRun', 'SportWatch', 'AeroFit']),
                     onChanged: (v) => setState(() => _brand = _emptyToNull(v)),
                     decoration: const InputDecoration(
@@ -564,7 +570,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                 SizedBox(
                   width: 240,
                   child: DropdownButtonFormField<String?>(
-                    value: _selectedPresetId,
+                    key: ValueKey('preset-$_selectedPresetId'),
+                    initialValue: _selectedPresetId,
                     items: [
                       const DropdownMenuItem<String?>(value: null, child: Text('Tanpa preset')),
                       ..._presets.map(
@@ -622,6 +629,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
   String? _emptyToNull(String? value) => (value == null || value.isEmpty) ? null : value;
 
   Widget _buildSummaryCard() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -629,12 +638,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            const Icon(Icons.info_outline, color: Colors.blue),
+            Icon(Icons.info_outline, color: colorScheme.primary),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 _buildSummary(),
-                style: const TextStyle(fontSize: 14),
+                style: theme.textTheme.bodyMedium,
               ),
             ),
           ],
@@ -679,15 +688,20 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
             ),
             Chip(
               label: Text('${_filteredNews.length} hasil'),
-              backgroundColor: Colors.blue.shade50,
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
             ),
           ],
         ),
         const SizedBox(height: 8),
         if (_filteredNews.isEmpty)
-          const Text(
+          Text(
             'Belum ada berita yang cocok. Coba ubah filter atau kata kunci.',
-            style: TextStyle(color: Colors.grey),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
           )
         else
           Column(
@@ -713,6 +727,8 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
   }
 
   Widget _buildProductResults() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -725,15 +741,20 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
             ),
             Chip(
               label: Text('${_filteredProducts.length} hasil'),
-              backgroundColor: Colors.blue.shade50,
+              backgroundColor: colorScheme.primaryContainer,
+              labelStyle: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onPrimaryContainer,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
         if (_filteredProducts.isEmpty)
-          const Text(
+          Text(
             'Belum ada produk yang cocok. Coba sesuaikan filter atau harga.',
-            style: TextStyle(color: Colors.grey),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
           )
         else
           Column(
@@ -747,13 +768,17 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
                       subtitle: Text('${product.category} • ${product.currency}${product.price.toStringAsFixed(0)}'),
                       leading: Icon(
                         Icons.shopping_bag_outlined,
-                        color: product.hasDiscount ? Colors.green : Colors.blueGrey,
+                        color: product.hasDiscount
+                            ? colorScheme.secondary
+                            : colorScheme.onSurfaceVariant,
                       ),
                       trailing: product.hasDiscount
-                          ? const Chip(
-                              label: Text('Diskon'),
-                              backgroundColor: Color(0xFFE6F4EA),
-                              labelStyle: TextStyle(color: Colors.green),
+                          ? Chip(
+                              label: const Text('Diskon'),
+                              backgroundColor: colorScheme.secondaryContainer,
+                              labelStyle: TextStyle(
+                                color: colorScheme.onSecondaryContainer,
+                              ),
                             )
                           : null,
                     ),
@@ -795,7 +820,9 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
               children: _presets
                   .map(
                     (preset) => Card(
-                      color: preset.id == _selectedPresetId ? Colors.blue.shade50 : null,
+                      color: preset.id == _selectedPresetId
+                          ? Theme.of(context).colorScheme.primaryContainer
+                          : null,
                       child: ListTile(
                         title: Text(preset.label),
                         subtitle: Text(preset.description.isEmpty ? 'Tanpa deskripsi' : preset.description),
@@ -827,7 +854,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> {
             ),
             const SizedBox(height: 8),
             if (_recentSearches.isEmpty)
-              const Text('Belum ada pencarian.', style: TextStyle(color: Colors.grey))
+              Text(
+                'Belum ada pencarian.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              )
             else
               Column(
                 children: _recentSearches
@@ -962,7 +994,9 @@ class _HeaderCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Cari berita olahraga terkini, produk incaran, atau simpan preset pencarian favoritmu.',
-              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -978,6 +1012,9 @@ class _FeaturedProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final subtleTextColor = colorScheme.onSurfaceVariant;
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -990,20 +1027,30 @@ class _FeaturedProductCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey.shade50,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.image, size: 48, color: Colors.blueGrey),
+                child: Icon(
+                  Icons.image,
+                  size: 48,
+                  color: subtleTextColor,
+                ),
               ),
             ),
             const SizedBox(height: 8),
             Text(product.name, style: const TextStyle(fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
-            Text(product.category, style: const TextStyle(color: Colors.grey)),
+            Text(
+              product.category,
+              style: TextStyle(color: subtleTextColor),
+            ),
             const SizedBox(height: 4),
             Text(
               '${product.currency}${product.price.toStringAsFixed(0)}',
-              style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.green),
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: colorScheme.secondary,
+              ),
             ),
             const SizedBox(height: 8),
             TextButton(

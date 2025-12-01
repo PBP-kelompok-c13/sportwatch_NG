@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:sportwatch_ng/admin/admin_panel_page.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/login.dart';
-import 'package:sportwatch_ng/theme_notifier.dart';
+import 'package:sportwatch_ng/user_profile_notifier.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,12 +15,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _profileRequested = false;
+
   Future<void> _handleLogout(CookieRequest request) async {
     final response = await request.logout(logoutUrl);
     final message = response["message"] ?? 'Unknown response';
     if (!mounted) return;
 
     if (response['status']) {
+      final profileNotifier = context.read<UserProfileNotifier>();
+      await profileNotifier.refresh(request);
+      if (!mounted) return;
       final uname = response["username"] ?? '';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$message See you again, $uname.")),
@@ -28,6 +35,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
@@ -35,9 +43,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_profileRequested) {
+      _profileRequested = true;
+      _ensureProfile();
+    }
+  }
+
+  Future<void> _ensureProfile() async {
+    final profileNotifier = context.read<UserProfileNotifier>();
+    if (profileNotifier.hasLoaded) return;
+    final request = context.read<CookieRequest>();
+    try {
+      await profileNotifier.refresh(request);
+    } catch (_) {
+      // Ignore errors; drawer will remain disabled until next attempt.
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    final themeNotifier = context.watch<ThemeNotifier>();
+    final profile = context.watch<UserProfileNotifier>();
     final userData = request.getJsonData();
     final rawUsername = userData['username']?.toString() ?? '';
     final username = rawUsername.isNotEmpty ? rawUsername : 'User';
@@ -48,14 +76,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Sportwatch New Generations'),
         actions: [
-          IconButton(
-            tooltip:
-                themeNotifier.isDark ? 'Switch to light mode' : 'Switch to dark mode',
-            icon: Icon(
-              themeNotifier.isDark ? Icons.light_mode : Icons.dark_mode,
-            ),
-            onPressed: themeNotifier.toggle,
-          ),
+          const ThemeToggleButton(),
         ],
       ),
       drawer: Drawer(
@@ -92,16 +113,34 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 leading: const Icon(Icons.admin_panel_settings_outlined),
                 title: const Text('Admin Panel'),
-                subtitle: const Text('Placeholder'),
-                onTap: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Admin panel will be available soon.'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                },
+                subtitle: Text(
+                  profile.hasLoaded
+                      ? (profile.isStaff
+                          ? 'Manage content & analytics'
+                          : 'Staff only')
+                      : 'Checking permissions...',
+                ),
+                enabled: profile.hasLoaded,
+                onTap: !profile.hasLoaded
+                    ? null
+                    : () {
+                        Navigator.pop(context);
+                        if (!profile.isStaff) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Admin access is restricted to staff users.'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                          return;
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AdminPanelPage(),
+                          ),
+                        );
+                      },
               ),
               ListTile(
                 leading: const Icon(Icons.logout),

@@ -4,6 +4,7 @@ import 'package:sportwatch_ng/login.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -38,6 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.pop(context);
           },
         ),
+        actions: const [ThemeToggleButton()],
       ),
       body: Center(
         child: SingleChildScrollView(

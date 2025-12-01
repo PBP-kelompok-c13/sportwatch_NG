@@ -1,46 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:sportwatch_ng/scoreboard/widgets/match_card.dart';
 import 'package:sportwatch_ng/scoreboard/widgets/section_title.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class ScoreboardLandingPage extends StatelessWidget {
   const ScoreboardLandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
+    final subtleTextStyle = textTheme.bodySmall?.copyWith(
+      color: colorScheme.onSurfaceVariant,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scoreboard'),
         centerTitle: true,
+        actions: const [ThemeToggleButton()],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Live Scores & Results',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'PBP C — Score Tracker by Kelompok 13',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.black54,
-              ),
+            Text(
+              'PBP C - Score Tracker by Kelompok 13',
+              style: subtleTextStyle,
             ),
             const SizedBox(height: 16),
-
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.grey.shade300,
+                  color: colorScheme.outlineVariant,
                   width: 1,
                 ),
               ),
@@ -48,11 +50,10 @@ class ScoreboardLandingPage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    const Text(
+                    Text(
                       'Status:',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -64,14 +65,13 @@ class ScoreboardLandingPage extends StatelessWidget {
                     Container(
                       height: 20,
                       width: 1,
-                      color: Colors.grey.shade300,
+                      color: colorScheme.outlineVariant,
                     ),
                     const SizedBox(width: 12),
-                    const Text(
+                    Text(
                       'Sports:',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -85,15 +85,16 @@ class ScoreboardLandingPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
             Expanded(
               child: ListView(
-                children: const [
-                  SectionTitle(title: 'Live Now', color: Colors.red),
-                  SizedBox(height: 8),
-                  MatchCard(
+                children: [
+                  SectionTitle(
+                    title: 'Live Now',
+                    color: colorScheme.error,
+                  ),
+                  const SizedBox(height: 8),
+                  const MatchCard(
                     league: 'English Premier League',
                     homeTeam: 'Bayern Munchen',
                     awayTeam: 'Borussia Dortmund',
@@ -101,12 +102,13 @@ class ScoreboardLandingPage extends StatelessWidget {
                     awayScore: 0,
                     status: MatchStatus.live,
                   ),
-
-                  SizedBox(height: 24),
-
-                  SectionTitle(title: 'Recent Results', color: Colors.grey),
-                  SizedBox(height: 8),
-                  MatchCard(
+                  const SizedBox(height: 24),
+                  SectionTitle(
+                    title: 'Recent Results',
+                    color: colorScheme.secondary,
+                  ),
+                  const SizedBox(height: 8),
+                  const MatchCard(
                     league: 'English Premier League',
                     homeTeam: 'Real Madrid',
                     awayTeam: 'FC Barcelona',
@@ -114,11 +116,13 @@ class ScoreboardLandingPage extends StatelessWidget {
                     awayScore: 1,
                     status: MatchStatus.finished,
                   ),
-                  SizedBox(height: 24),
-
-                  SectionTitle(title: 'Upcoming Match', color: Colors.yellow),
-                  SizedBox(height: 8),
-                  MatchCard(
+                  const SizedBox(height: 24),
+                  SectionTitle(
+                    title: 'Upcoming Match',
+                    color: colorScheme.tertiary,
+                  ),
+                  const SizedBox(height: 8),
+                  const MatchCard(
                     league: 'English Premier League',
                     homeTeam: 'Al Nassr',
                     awayTeam: 'Arsenal',
@@ -148,11 +152,20 @@ class FilterPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final backgroundColor = selected
+        ? colorScheme.primary
+        : (theme.brightness == Brightness.dark
+            ? colorScheme.surfaceContainerHighest
+            : colorScheme.surfaceContainerHigh);
+    final foregroundColor =
+        selected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant;
     return Container(
       margin: const EdgeInsets.only(right: 6),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: selected ? Colors.black : Colors.grey.shade100,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -160,7 +173,7 @@ class FilterPill extends StatelessWidget {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
-          color: selected ? Colors.white : Colors.black87,
+          color: foregroundColor,
         ),
       ),
     );
