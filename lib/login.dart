@@ -136,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
                             });
 
                             try {
-                              final profileNotifier = context.read<UserProfileNotifier>();
+                              final profileNotifier = context
+                                  .read<UserProfileNotifier>();
                               // Replace with your actual URL.
                               // Use 10.0.2.2 for Android Emulator, localhost for Web/iOS Simulator
                               final response = await request.login(loginUrl, {
@@ -154,10 +155,11 @@ class _LoginPageState extends State<LoginPage> {
                                 if (!mounted) return;
                                 String message = response['message'];
                                 String uname = response['username'];
-                                navigator.pushReplacement(
+                                navigator.pushAndRemoveUntil(
                                   MaterialPageRoute(
                                     builder: (context) => const MainPage(),
                                   ),
+                                  (route) => false,
                                 );
                                 messenger
                                   ..hideCurrentSnackBar()
@@ -185,9 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                             } catch (e) {
                               if (!mounted) return;
                               messenger.showSnackBar(
-                                SnackBar(
-                                  content: Text("Connection error: $e"),
-                                ),
+                                SnackBar(content: Text("Connection error: $e")),
                               );
                             } finally {
                               if (mounted) {
@@ -213,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
-                  const SizedBox(height: 36.0),
+                  const SizedBox(height: 24.0),
 
                   // Register Link
                   GestureDetector(
@@ -243,5 +243,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-

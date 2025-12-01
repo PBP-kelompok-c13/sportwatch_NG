@@ -59,9 +59,9 @@ String featuredProductsUrl({int page = 1}) {
 
 String productsListApi({int page = 1, int perPage = 6, String sort = "featured"}) {
   final safePerPage = perPage.clamp(1, 50);
-  final uri = Uri.parse(baseUrl).resolve(
-    "/shop/api/products/?page=$page&per_page=$safePerPage&sort=$sort",
-  );
+  final uri = Uri.parse(
+    baseUrl,
+  ).resolve("/shop/api/products/?page=$page&per_page=$safePerPage&sort=$sort");
   return uri.toString();
 }
 
@@ -79,6 +79,8 @@ String scoreboardFilterApi({String? status, String? sport}) {
   }
   final uri = Uri.parse(baseUrl).resolve("/scoreboard/filter/");
   return uri
-      .replace(queryParameters: queryParameters.isEmpty ? null : queryParameters)
+      .replace(
+        queryParameters: queryParameters.isEmpty ? null : queryParameters,
+      )
       .toString();
 }

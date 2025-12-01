@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:sportwatch_ng/login.dart';
+import 'package:sportwatch_ng/main_page.dart';
 import 'package:sportwatch_ng/theme_notifier.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
 
@@ -27,12 +27,8 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        Provider<CookieRequest>(
-          create: (_) => CookieRequest(),
-        ),
-        ChangeNotifierProvider<ThemeNotifier>(
-          create: (_) => ThemeNotifier(),
-        ),
+        Provider<CookieRequest>(create: (_) => CookieRequest()),
+        ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
         ChangeNotifierProvider<UserProfileNotifier>(
           create: (_) => UserProfileNotifier(),
         ),
@@ -41,11 +37,11 @@ class MyApp extends StatelessWidget {
         builder: (context, themeNotifier, _) {
           return MaterialApp(
             title: 'Sportwatch New Generations',
+            debugShowCheckedModeBanner: false,
             theme: _buildTheme(lightScheme),
             darkTheme: _buildTheme(darkScheme),
             themeMode: themeNotifier.themeMode,
-            debugShowCheckedModeBanner: false,
-            home: const LoginPage(),
+            home: const MainPage(),
           );
         },
       ),
@@ -70,9 +66,7 @@ ThemeData _buildTheme(ColorScheme colorScheme) {
     cardTheme: CardThemeData(
       color: colorScheme.surface,
       elevation: colorScheme.brightness == Brightness.light ? 2 : 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
     inputDecorationTheme: const InputDecorationTheme(
       border: roundedInputBorder,

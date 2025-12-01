@@ -28,10 +28,12 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Future<void> _fetchNews(CookieRequest request) async {
-    setState(() {
-      _loadingNews = true;
-      _newsError = null;
-    });
+    if (mounted) {
+      setState(() {
+        _loadingNews = true;
+        _newsError = null;
+      });
+    }
     try {
       final response = await request.get(newsListApi());
       final List<dynamic> rawResults = response['results'] as List<dynamic>;
@@ -42,14 +44,18 @@ class _NewsPageState extends State<NewsPage> {
             ),
           )
           .toList();
-      setState(() {
-        _newsEntries = entries;
-      });
+      if (mounted) {
+        setState(() {
+          _newsEntries = entries;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _newsError = e.toString();
-        _newsEntries = [];
-      });
+      if (mounted) {
+        setState(() {
+          _newsError = e.toString();
+          _newsEntries = [];
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {

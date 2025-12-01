@@ -170,7 +170,9 @@ class NewsEntryCard extends StatelessWidget {
                       vertical: _kCategoryTagPaddingVertical,
                     ),
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withAlpha((0.15 * 255).round()),
+                      color: colorScheme.primary.withAlpha(
+                        (0.15 * 255).round(),
+                      ),
                       borderRadius: BorderRadius.circular(
                         _kCategoryTagBorderRadius,
                       ),
@@ -202,16 +204,12 @@ class NewsEntryCard extends StatelessWidget {
                     children: [
                       Text(
                         news.penulis ?? "Unknown Author",
-                        style: textTheme.bodySmall?.copyWith(
-                          color: mutedColor,
-                        ),
+                        style: textTheme.bodySmall?.copyWith(color: mutedColor),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         timeago.format(news.tanggalDibuat),
-                        style: textTheme.bodySmall?.copyWith(
-                          color: mutedColor,
-                        ),
+                        style: textTheme.bodySmall?.copyWith(color: mutedColor),
                       ),
                     ],
                   ),

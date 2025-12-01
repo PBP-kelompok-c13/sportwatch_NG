@@ -34,16 +34,22 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
     }
 
     final newsResponse = await request.get(newsListApi(page: 1, perPage: 5));
-    final newsTotalResponse =
-        await request.get(newsListApi(page: 1, perPage: 1));
+    final newsTotalResponse = await request.get(
+      newsListApi(page: 1, perPage: 1),
+    );
     final analyticsResponse = await request.get(searchAnalyticsApi());
-    final productResponse =
-        await request.get(productsListApi(page: 1, perPage: 6, sort: "featured"));
-    final liveScoresResponse = await request.get(scoreboardFilterApi(status: 'live'));
-    final finishedScoresResponse =
-        await request.get(scoreboardFilterApi(status: 'recent'));
-    final upcomingScoresResponse =
-        await request.get(scoreboardFilterApi(status: 'upcoming'));
+    final productResponse = await request.get(
+      productsListApi(page: 1, perPage: 6, sort: "featured"),
+    );
+    final liveScoresResponse = await request.get(
+      scoreboardFilterApi(status: 'live'),
+    );
+    final finishedScoresResponse = await request.get(
+      scoreboardFilterApi(status: 'recent'),
+    );
+    final upcomingScoresResponse = await request.get(
+      scoreboardFilterApi(status: 'upcoming'),
+    );
 
     return _AdminDashboardData(
       news: (newsResponse['results'] as List<dynamic>? ?? [])
@@ -56,7 +62,8 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
       products: (productResponse['results'] as List<dynamic>? ?? [])
           .map((item) => AdminProductItem.fromJson(item))
           .toList(),
-      totalProducts: productResponse['total_count'] as int? ??
+      totalProducts:
+          productResponse['total_count'] as int? ??
           (productResponse['results'] as List<dynamic>? ?? []).length,
       liveMatches: (liveScoresResponse['scores'] as List<dynamic>? ?? [])
           .map((item) => AdminMatchItem.fromJson(item, status: 'live'))
@@ -138,16 +145,16 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
       children: [
         Text(
           'Hello, ${profile.username.isNotEmpty ? profile.username : 'Administrator'}',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 4),
         Text(
           'Here is the latest snapshot of SportWatch backend activity.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -185,8 +192,8 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
         final crossAxisCount = constraints.maxWidth > 800
             ? 4
             : constraints.maxWidth > 600
-                ? 2
-                : 1;
+            ? 2
+            : 1;
         return GridView.count(
           crossAxisCount: crossAxisCount,
           childAspectRatio: 3.2,
@@ -194,9 +201,7 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
           physics: const NeverScrollableScrollPhysics(),
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          children: cards
-              .map((card) => _OverviewStatCard(data: card))
-              .toList(),
+          children: cards.map((card) => _OverviewStatCard(data: card)).toList(),
         );
       },
     );
@@ -209,8 +214,11 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.lock_outline,
-                size: 48, color: Theme.of(context).colorScheme.error),
+            Icon(
+              Icons.lock_outline,
+              size: 48,
+              color: Theme.of(context).colorScheme.error,
+            ),
             const SizedBox(height: 12),
             Text(
               message,
@@ -248,7 +256,8 @@ class AdminNewsItem {
       category: json['kategori']?.toString() ?? 'General',
       isPublished: json['is_published'] == true,
       views: (json['views'] as num?)?.toInt() ?? 0,
-      publishedAt: DateTime.tryParse(json['tanggal_dibuat']?.toString() ?? '') ??
+      publishedAt:
+          DateTime.tryParse(json['tanggal_dibuat']?.toString() ?? '') ??
           DateTime.now(),
     );
   }
@@ -300,13 +309,16 @@ class AdminMatchItem {
     this.score2,
   });
 
-  factory AdminMatchItem.fromJson(Map<String, dynamic> json,
-      {required String status}) {
+  factory AdminMatchItem.fromJson(
+    Map<String, dynamic> json, {
+    required String status,
+  }) {
     return AdminMatchItem(
       team1: json['tim1']?.toString() ?? '-',
       team2: json['tim2']?.toString() ?? '-',
       status: status,
-      sport: json['sport_display']?.toString() ?? json['sport']?.toString() ?? '',
+      sport:
+          json['sport_display']?.toString() ?? json['sport']?.toString() ?? '',
       score1: (json['skor_tim1'] as num?)?.toInt(),
       score2: (json['skor_tim2'] as num?)?.toInt(),
     );
@@ -412,15 +424,15 @@ class _OverviewStatCard extends StatelessWidget {
             children: [
               Text(
                 data.value,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
               ),
               Text(
                 data.label,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),
@@ -460,9 +472,9 @@ class _SearchAnalyticsCard extends StatelessWidget {
           children: [
             Text(
               'Search Analytics',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -491,9 +503,8 @@ class _SearchAnalyticsCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           scope.scope.toUpperCase(),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -522,9 +533,9 @@ class _NewsSection extends StatelessWidget {
           children: [
             Text(
               'Latest News Submissions',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             if (news.isEmpty)
@@ -577,9 +588,9 @@ class _ProductSection extends StatelessWidget {
           children: [
             Text(
               'Featured Products',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             if (products.isEmpty)
@@ -591,21 +602,19 @@ class _ProductSection extends StatelessWidget {
                       (item) => ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: CircleAvatar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primaryContainer,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer,
                           child: const Icon(Icons.watch),
                         ),
                         title: Text(item.name),
-                        subtitle: Text(
-                          item.category ?? 'Uncategorised',
-                        ),
+                        subtitle: Text(item.category ?? 'Uncategorised'),
                         trailing: Text(
                           item.salePrice != null
                               ? 'Rp${item.salePrice!.toStringAsFixed(0)}'
                               : 'Rp${item.price.toStringAsFixed(0)}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                     )
@@ -639,9 +648,9 @@ class _ScoreboardSection extends StatelessWidget {
           children: [
             Text(
               'Scoreboard Snapshot',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             _buildMatchList(context, 'Live', live, Colors.red),
@@ -673,14 +682,16 @@ class _ScoreboardSection extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        ...matches.take(3).map(
+        ...matches
+            .take(3)
+            .map(
               (match) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
@@ -692,8 +703,8 @@ class _ScoreboardSection extends StatelessWidget {
                           ? '${match.score1} - ${match.score2}'
                           : match.status.toUpperCase(),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),

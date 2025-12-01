@@ -36,30 +36,30 @@ class NewsEntry {
   });
 
   factory NewsEntry.fromJson(Map<String, dynamic> json) => NewsEntry(
-        id: json["id"],
-        judul: json["judul"],
-        konten: json["konten"],
-        kategori: json["kategori"],
-        thumbnail: json["thumbnail"],
-        views: json["views"],
-        penulis: json["penulis"],
-        sumber: json["sumber"],
-        isPublished: json["is_published"],
-        tanggalDibuat: DateTime.parse(json["tanggal_dibuat"]),
-        tanggalDiperbarui: DateTime.parse(json["tanggal_diperbarui"]),
-      );
+    id: json["id"],
+    judul: json["judul"],
+    konten: json["konten"],
+    kategori: json["kategori"],
+    thumbnail: json["thumbnail"],
+    views: json["views"],
+    penulis: json["penulis"],
+    sumber: json["sumber"],
+    isPublished: json["is_published"],
+    tanggalDibuat: DateTime.parse(json["tanggal_dibuat"]),
+    tanggalDiperbarui: DateTime.parse(json["tanggal_diperbarui"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "judul": judul,
-        "konten": konten,
-        "kategori": kategori,
-        "thumbnail": thumbnail,
-        "views": views,
-        "penulis": penulis,
-        "sumber": sumber,
-        "is_published": isPublished,
-        "tanggal_dibuat": tanggalDibuat.toIso8601String(),
-        "tanggal_diperbarui": tanggalDiperbarui.toIso8601String(),
-      };
+    "id": id,
+    "judul": judul,
+    "konten": konten,
+    "kategori": kategori,
+    "thumbnail": thumbnail,
+    "views": views,
+    "penulis": penulis,
+    "sumber": sumber,
+    "is_published": isPublished,
+    "tanggal_dibuat": tanggalDibuat.toIso8601String(),
+    "tanggal_diperbarui": tanggalDiperbarui.toIso8601String(),
+  };
 }
