@@ -9,6 +9,7 @@ import 'package:sportwatch_ng/search/widgets/search_filters_card.dart';
 import 'package:sportwatch_ng/search/widgets/search_results_card.dart';
 import 'package:sportwatch_ng/search/widgets/search_side_panels.dart';
 import 'package:sportwatch_ng/search/widgets/search_summary_card.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 part 'search_landing_page_state.dart';
 part 'search_page_snapshot.dart';

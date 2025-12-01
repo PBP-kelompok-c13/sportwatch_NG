@@ -542,6 +542,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     return Scaffold(
       appBar: AppBar(
         title: const Text('SportWatch Search'),
+        actions: const [ThemeToggleButton()],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
