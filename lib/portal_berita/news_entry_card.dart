@@ -35,6 +35,11 @@ class NewsEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final mutedColor = colorScheme.onSurfaceVariant;
+
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: _kCardMarginHorizontal,
@@ -74,20 +79,20 @@ class NewsEntryCard extends StatelessWidget {
                           },
                           errorBuilder: (context, error, stackTrace) =>
                               Container(
-                                color: Colors.grey[300],
-                                child: const Center(
+                                color: colorScheme.surfaceContainerHighest,
+                                child: Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.broken_image,
                                         size: 40,
-                                        color: Colors.grey,
+                                        color: mutedColor,
                                       ),
-                                      SizedBox(height: 4),
+                                      const SizedBox(height: 4),
                                       Text(
                                         "Image Error",
-                                        style: TextStyle(color: Colors.grey),
+                                        style: TextStyle(color: mutedColor),
                                       ),
                                     ],
                                   ),
@@ -95,12 +100,12 @@ class NewsEntryCard extends StatelessWidget {
                               ),
                         )
                       : Container(
-                          color: Colors.grey[200],
-                          child: const Center(
+                          color: colorScheme.surfaceContainerHighest,
+                          child: Center(
                             child: Icon(
                               Icons.image_not_supported_outlined,
                               size: 48,
-                              color: Colors.grey,
+                              color: mutedColor,
                             ),
                           ),
                         ),
@@ -116,7 +121,7 @@ class NewsEntryCard extends StatelessWidget {
                         vertical: _kFeaturedBadgePaddingVertical,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.amber,
+                        color: colorScheme.secondary,
                         borderRadius: BorderRadius.circular(
                           _kFeaturedBadgeBorderRadius,
                         ),
@@ -128,19 +133,19 @@ class NewsEntryCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             Icons.star,
                             size: _kFeaturedBadgeIconSize,
-                            color: Colors.white,
+                            color: colorScheme.onSecondary,
                           ),
                           SizedBox(width: _kFeaturedBadgeIconTextSpacing),
                           Text(
                             'Featured',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: colorScheme.onSecondary,
                               fontWeight: FontWeight.bold,
                               fontSize: _kFeaturedBadgeFontSize,
                             ),
@@ -165,7 +170,9 @@ class NewsEntryCard extends StatelessWidget {
                       vertical: _kCategoryTagPaddingVertical,
                     ),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withAlpha(25),
+                      color: colorScheme.primary.withAlpha(
+                        (0.15 * 255).round(),
+                      ),
                       borderRadius: BorderRadius.circular(
                         _kCategoryTagBorderRadius,
                       ),
@@ -173,7 +180,7 @@ class NewsEntryCard extends StatelessWidget {
                     child: Text(
                       news.kategori.toUpperCase(),
                       style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: colorScheme.primary,
                         fontSize: _kCategoryTagFontSize,
                         fontWeight: FontWeight.bold,
                       ),
@@ -184,7 +191,7 @@ class NewsEntryCard extends StatelessWidget {
                   // Title
                   Text(
                     news.judul,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     maxLines: 2,
@@ -197,12 +204,12 @@ class NewsEntryCard extends StatelessWidget {
                     children: [
                       Text(
                         news.penulis ?? "Unknown Author",
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: textTheme.bodySmall?.copyWith(color: mutedColor),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         timeago.format(news.tanggalDibuat),
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: textTheme.bodySmall?.copyWith(color: mutedColor),
                       ),
                     ],
                   ),
@@ -213,8 +220,8 @@ class NewsEntryCard extends StatelessWidget {
                     news.konten,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.black54,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: mutedColor,
                       height: 1.5,
                     ),
                   ),
@@ -227,7 +234,7 @@ class NewsEntryCard extends StatelessWidget {
                       Text(
                         "Read more",
                         style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color: colorScheme.primary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -235,7 +242,7 @@ class NewsEntryCard extends StatelessWidget {
                       Icon(
                         Icons.arrow_forward,
                         size: _kReadMoreIconSize,
-                        color: Theme.of(context).primaryColor,
+                        color: colorScheme.primary,
                       ),
                     ],
                   ),

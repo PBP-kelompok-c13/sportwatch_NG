@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/main_page.dart';
 import 'package:sportwatch_ng/register.dart';
+import 'package:sportwatch_ng/user_profile_notifier.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,7 +27,10 @@ class _LoginPageState extends State<LoginPage> {
     final request = context.watch<CookieRequest>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(
+        title: const Text('Login'),
+        actions: const [ThemeToggleButton()],
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -112,6 +117,9 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             String username = _usernameController.text;
                             String password = _passwordController.text;
+                            final navigator = Navigator.of(context);
+                            final messenger = ScaffoldMessenger.of(context);
+                            final theme = Theme.of(context);
 
                             // Client-side validation
                             if (username.isEmpty || password.isEmpty) {
@@ -128,62 +136,59 @@ class _LoginPageState extends State<LoginPage> {
                             });
 
                             try {
+                              final profileNotifier = context
+                                  .read<UserProfileNotifier>();
                               // Replace with your actual URL.
                               // Use 10.0.2.2 for Android Emulator, localhost for Web/iOS Simulator
                               final response = await request.login(loginUrl, {
                                 'username': username,
                                 'password': password,
                               });
+                              if (!mounted) return;
 
                               if (request.loggedIn) {
+                                try {
+                                  await profileNotifier.refresh(request);
+                                } catch (_) {
+                                  // ignore profile refresh errors during login
+                                }
+                                if (!mounted) return;
                                 String message = response['message'];
                                 String uname = response['username'];
-                                if (context.mounted) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const MainPage(),
-                                    ),
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                    ..hideCurrentSnackBar()
-                                    ..showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          "$message Welcome, $uname.",
-                                        ),
-                                      ),
-                                    );
-                                }
-                              } else {
-                                if (context.mounted) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Login Failed'),
+                                navigator.pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => const MainPage(),
+                                  ),
+                                  (route) => false,
+                                );
+                                messenger
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(
+                                    SnackBar(
                                       content: Text(
-                                        response['message'] ?? 'Unknown error',
+                                        "$message Welcome, $uname.",
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ],
                                     ),
                                   );
-                                }
+                              } else {
+                                final errorMessage =
+                                    response['message'] ?? 'Unknown error';
+                                messenger
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(
+                                    SnackBar(
+                                      content: Text(errorMessage),
+                                      backgroundColor:
+                                          theme.colorScheme.errorContainer,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
                               }
                             } catch (e) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Connection error: $e"),
-                                  ),
-                                );
-                              }
+                              if (!mounted) return;
+                              messenger.showSnackBar(
+                                SnackBar(content: Text("Connection error: $e")),
+                              );
                             } finally {
                               if (mounted) {
                                 setState(() {
@@ -208,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
-                  const SizedBox(height: 36.0),
+                  const SizedBox(height: 24.0),
 
                   // Register Link
                   GestureDetector(
@@ -238,5 +243,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-

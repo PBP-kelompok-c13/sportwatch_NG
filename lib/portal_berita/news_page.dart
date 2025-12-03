@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/portal_berita/news_entry.dart';
 import 'package:sportwatch_ng/portal_berita/news_entry_card.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({super.key});
@@ -27,10 +28,12 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Future<void> _fetchNews(CookieRequest request) async {
-    setState(() {
-      _loadingNews = true;
-      _newsError = null;
-    });
+    if (mounted) {
+      setState(() {
+        _loadingNews = true;
+        _newsError = null;
+      });
+    }
     try {
       final response = await request.get(newsListApi());
       final List<dynamic> rawResults = response['results'] as List<dynamic>;
@@ -41,14 +44,18 @@ class _NewsPageState extends State<NewsPage> {
             ),
           )
           .toList();
-      setState(() {
-        _newsEntries = entries;
-      });
+      if (mounted) {
+        setState(() {
+          _newsEntries = entries;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _newsError = e.toString();
-        _newsEntries = [];
-      });
+      if (mounted) {
+        setState(() {
+          _newsError = e.toString();
+          _newsEntries = [];
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -125,6 +132,7 @@ class _NewsPageState extends State<NewsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('News Portal'),
+        actions: const [ThemeToggleButton()],
       ),
       body: _buildNewsList(request),
     );

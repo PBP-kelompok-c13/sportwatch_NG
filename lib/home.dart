@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:sportwatch_ng/admin/admin_panel_page.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/login.dart';
+import 'package:sportwatch_ng/user_profile_notifier.dart';
+import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,39 +15,94 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void> _handleLogout(CookieRequest request) async {
-    final response = await request.logout(logoutUrl);
-    final message = response["message"] ?? 'Unknown response';
-    if (!mounted) return;
+  bool _profileRequested = false;
 
-    if (response['status']) {
-      final uname = response["username"] ?? '';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$message See you again, $uname.")),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+  Future<void> _handleLogout(CookieRequest request) async {
+    final profileNotifier = context.read<UserProfileNotifier>();
+    final messenger = ScaffoldMessenger.of(context);
+
+    if (profileNotifier.isGuest) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('You are already browsing as a guest.')),
+        );
+      return;
+    }
+
+    if (!request.loggedIn) {
+      profileNotifier.enterGuestMode();
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Session expired. Continuing as guest.'),
+          ),
+        );
+      return;
+    }
+
+    try {
+      final response = await request.logout(logoutUrl);
+      final message = response["message"] ?? 'Logged out successfully.';
+      profileNotifier.enterGuestMode();
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text("$message You're now browsing as a guest.")),
+        );
+    } catch (e) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Failed to log out. Please try again.')),
+        );
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_profileRequested) {
+      _profileRequested = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _ensureProfile();
+      });
+    }
+  }
+
+  Future<void> _ensureProfile() async {
+    final profileNotifier = context.read<UserProfileNotifier>();
+    final request = context.read<CookieRequest>();
+    if (!request.loggedIn) {
+      profileNotifier.enterGuestMode();
+      return;
+    }
+    try {
+      await profileNotifier.refresh(request);
+    } catch (_) {
+      // Ignore errors; drawer will remain disabled until next attempt.
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final profile = context.watch<UserProfileNotifier>();
     final userData = request.getJsonData();
-    final rawUsername = userData['username']?.toString() ?? '';
-    final username = rawUsername.isNotEmpty ? rawUsername : 'User';
-    final greeting = 'Welcome, $username';
+    final fallbackUsername = userData['username']?.toString() ?? '';
+    final username = profile.isGuest
+        ? 'Guest'
+        : profile.username.isNotEmpty
+        ? profile.username
+        : (fallbackUsername.isNotEmpty ? fallbackUsername : 'User');
+    final greeting = profile.isGuest ? 'Welcome, Guest' : 'Welcome, $username';
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Sportwatch New Generations'),
+        actions: [const ThemeToggleButton()],
       ),
       drawer: Drawer(
         child: SafeArea(
@@ -78,10 +136,64 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
-                onTap: () => _handleLogout(request),
+                leading: const Icon(Icons.admin_panel_settings_outlined),
+                title: const Text('Admin Panel'),
+                subtitle: Text(
+                  profile.isGuest
+                      ? 'Login required to access admin tools'
+                      : profile.isStaff
+                      ? 'Manage content & analytics'
+                      : 'Staff only',
+                ),
+                enabled: !profile.isGuest && profile.hasLoaded,
+                onTap: profile.isGuest
+                    ? null
+                    : () {
+                        Navigator.pop(context);
+                        if (!profile.isStaff) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Admin access is restricted to staff users.',
+                              ),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                          return;
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AdminPanelPage(),
+                          ),
+                        );
+                      },
               ),
+              const Divider(),
+              if (profile.isGuest)
+                ListTile(
+                  leading: const Icon(Icons.login),
+                  title: const Text('Login'),
+                  subtitle: const Text('Sign in to unlock all features'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                )
+              else
+                ListTile(
+                  leading: const Icon(Icons.logout),
+                  title: const Text('Logout'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _handleLogout(request);
+                  },
+                ),
             ],
           ),
         ),
