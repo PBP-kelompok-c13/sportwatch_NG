@@ -17,6 +17,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _profileRequested = false;
 
+  bool _asBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    if (value is String) {
+      final lower = value.toLowerCase();
+      return lower == 'true' || lower == '1' || lower == 'yes';
+    }
+    return false;
+  }
+
   Future<void> _handleLogout(CookieRequest request) async {
     final profileNotifier = context.read<UserProfileNotifier>();
     final messenger = ScaffoldMessenger.of(context);
@@ -89,6 +99,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
     final profile = context.watch<UserProfileNotifier>();
+    final isStaff =
+        profile.isStaff || _asBool(request.getJsonData()['is_staff']);
     final userData = request.getJsonData();
     final fallbackUsername = userData['username']?.toString() ?? '';
     final username = profile.isGuest
@@ -141,16 +153,16 @@ class _HomePageState extends State<HomePage> {
                 subtitle: Text(
                   profile.isGuest
                       ? 'Login required to access admin tools'
-                      : profile.isStaff
+                      : isStaff
                       ? 'Manage content & analytics'
                       : 'Staff only',
                 ),
-                enabled: !profile.isGuest && profile.hasLoaded,
+                enabled: !profile.isGuest && isStaff && profile.hasLoaded,
                 onTap: profile.isGuest
                     ? null
                     : () {
                         Navigator.pop(context);
-                        if (!profile.isStaff) {
+                        if (!isStaff) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
