@@ -14,6 +14,8 @@ class ProductEntryCard extends StatelessWidget {
   /// apakah current user adalah pemilik produk
   final bool isOwner;
 
+  final bool isGuest;
+
   final VoidCallback? onLongPress;
 
   const ProductEntryCard({
@@ -22,6 +24,7 @@ class ProductEntryCard extends StatelessWidget {
     required this.onCardTap,
     required this.onAddToCart,
     required this.isOwner,
+    required this.isGuest,
     this.onLongPress,
   });
 
@@ -220,7 +223,11 @@ class ProductEntryCard extends StatelessWidget {
                           ? null
                           : onAddToCart,
                       icon: const Icon(Icons.add_shopping_cart),
-                      label: Text(isOwner ? "Your product" : "Add to Cart"),
+                      label: Text(
+                        isOwner
+                            ? "Your product"
+                            : (isGuest ? "Login to buy" : "Add to Cart"),
+                      ),
                     ),
                   ),
                 ],
