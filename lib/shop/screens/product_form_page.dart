@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:sportwatch_ng/shop/models/constants.dart';
 import 'package:sportwatch_ng/shop/models/product_entry.dart';
+import 'package:sportwatch_ng/user_profile_notifier.dart';
 
 class ProductFormPage extends StatefulWidget {
   final ProductEntry? product; // null = create, non-null = edit
@@ -152,6 +153,22 @@ class _ProductFormPageState extends State<ProductFormPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final profile = context.watch<UserProfileNotifier>(); // ⬅️ NEW
+
+    if (profile.isGuest) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.isEdit ? "Edit Product" : "Add Product"),
+          centerTitle: true,
+        ),
+        body: const Center(
+          child: Text(
+            'You must login to create or edit products.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
