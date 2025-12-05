@@ -10,6 +10,7 @@ import 'package:sportwatch_ng/shop/models/constants.dart';
 import 'package:sportwatch_ng/shop/screens/product_detail_page.dart';
 import 'package:sportwatch_ng/shop/screens/product_form_page.dart';
 import 'package:sportwatch_ng/shop/widgets/product_entry_card.dart';
+import 'package:sportwatch_ng/user_profile_notifier.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -206,6 +207,7 @@ class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final profile = context.watch<UserProfileNotifier>();
 
     return Scaffold(
       appBar: AppBar(
