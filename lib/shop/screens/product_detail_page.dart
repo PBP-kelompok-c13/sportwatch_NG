@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:sportwatch_ng/shop/models/product_entry.dart';
 import 'package:sportwatch_ng/shop/models/constants.dart';
+import 'package:sportwatch_ng/user_profile_notifier.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final ProductEntry product;
@@ -204,8 +205,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final profile = context.watch<UserProfileNotifier>();
     final fields = widget.product.fields;
     final hasDiscount = widget.product.salePrice != null;
+    final isGuest = profile.isGuest;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Detail Produk'), centerTitle: true),
@@ -333,7 +336,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: (!widget.product.inStock || widget.isOwner)
+                onPressed:
+                    (!widget.product.inStock ||
+                        widget.isOwner ||
+                        profile.isGuest)
                     ? null
                     : () {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -349,7 +355,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ? "Out of Stock"
                       : (widget.isOwner
                             ? "You own this product"
-                            : "Add to Cart"),
+                            : (profile.isGuest
+                                  ? "Login to buy"
+                                  : "Add to Cart")),
                 ),
               ),
             ),
@@ -419,14 +427,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             const SizedBox(height: 24),
 
             // ---------- REVIEW FORM (hanya jika bukan owner & belum review) ----------
-            if (!_hasReviewed) ...[
+            if (!widget.isOwner && !_hasReviewed && !isGuest) ...[
               const Text(
                 "Write a review",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
 
-              // Rating picker 1-5
+              // Rating picker 1–5
               Row(
                 children: List.generate(5, (i) {
                   final starValue = i + 1;
@@ -473,6 +481,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     _isSubmittingReview ? "Submitting..." : "Submit Review",
                   ),
                 ),
+              ),
+            ] else if (isGuest) ...[
+              const Text(
+                "Login to write a review.",
+                style: TextStyle(fontSize: 13, color: Colors.grey),
+              ),
+            ] else if (widget.isOwner) ...[
+              const Text(
+                "You cannot review your own product.",
+                style: TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ] else if (!widget.isOwner && _hasReviewed) ...[
               const Text(

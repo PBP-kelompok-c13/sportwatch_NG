@@ -1,1 +1,3 @@
-const String baseUrl = "http://10.0.2.2:8000";
+import 'package:sportwatch_ng/config.dart' as app_config;
+
+final String baseUrl = app_config.baseUrl;
