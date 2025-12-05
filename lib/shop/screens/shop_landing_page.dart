@@ -10,6 +10,7 @@ import 'package:sportwatch_ng/shop/models/constants.dart';
 import 'package:sportwatch_ng/shop/screens/product_detail_page.dart';
 import 'package:sportwatch_ng/shop/screens/product_form_page.dart';
 import 'package:sportwatch_ng/shop/widgets/product_entry_card.dart';
+import 'package:sportwatch_ng/user_profile_notifier.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -206,12 +207,22 @@ class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final profile = context.watch<UserProfileNotifier>();
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.add),
           onPressed: () async {
+            if (profile.isGuest) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('You must login to create products.'),
+                ),
+              );
+              return;
+            }
+
             final created = await Navigator.push<bool>(
               context,
               MaterialPageRoute(builder: (_) => const ProductFormPage()),
@@ -225,6 +236,7 @@ class _ShopPageState extends State<ShopPage> {
         centerTitle: true,
         elevation: 0,
       ),
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -236,6 +248,30 @@ class _ShopPageState extends State<ShopPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
+
+              // 🔹 TEMPORARY DEBUG WIDGET
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: profile.isGuest
+                      ? Colors.red.shade100
+                      : Colors.green.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  profile.isGuest
+                      ? 'You are currently browsing as GUEST'
+                      : 'Logged in as ${profile.username}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: profile.isGuest
+                        ? Colors.red.shade800
+                        : Colors.green.shade800,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+
               const Text(
                 'Temukan perangkat dan aksesoris SportWatch kamu di sini.',
                 style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -287,12 +323,22 @@ class _ShopPageState extends State<ShopPage> {
                     label: const Text("My products"),
                     selected: _showMyProductsOnly,
                     onSelected: (v) {
+                      if (profile.isGuest) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Login to see your products.'),
+                          ),
+                        );
+                        return;
+                      }
+
                       debugPrint('jsonData: ${request.jsonData}');
                       setState(() {
                         _showMyProductsOnly = v;
                       });
                     },
                   ),
+
                   const SizedBox(width: 8),
                   ElevatedButton.icon(
                     onPressed: _refresh,
@@ -444,7 +490,7 @@ class _ShopPageState extends State<ShopPage> {
                             );
                           },
                           isOwner: isOwner,
-
+                          isGuest: profile.isGuest,
                           onLongPress: isOwner
                               ? () => _showOwnerActions(context, product)
                               : null,
