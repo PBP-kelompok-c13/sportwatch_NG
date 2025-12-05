@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:sportwatch_ng/scoreboard/models/scoreboard_entry.dart';
 
-
 class ScoreboardApi {
   late final String baseUrl = kIsWeb
       ? 'http://127.0.0.1:8000/scoreboard/filter/'
@@ -15,6 +14,11 @@ class ScoreboardApi {
         if (sport != null) 'sport': sport,
       },
     );
+
+  Future<List<ScoreboardMatch>> fetchMatches({String? sport}) async {
+    final uri = Uri.parse(
+      baseUrl,
+    ).replace(queryParameters: {if (sport != null) 'sport': sport});
 
     final response = await http.get(uri);
 

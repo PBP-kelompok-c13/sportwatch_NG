@@ -3,6 +3,8 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/search/models/search_models.dart';
+import 'package:sportwatch_ng/shop/models/product_entry.dart';
+import 'package:sportwatch_ng/shop/screens/product_detail_page.dart';
 import 'package:sportwatch_ng/search/widgets/featured_products_section.dart';
 import 'package:sportwatch_ng/search/widgets/header_card.dart';
 import 'package:sportwatch_ng/search/widgets/search_filters_card.dart';
