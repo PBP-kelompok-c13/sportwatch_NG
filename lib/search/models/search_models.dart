@@ -97,6 +97,7 @@ class NewsItem {
 @immutable
 class ProductItem {
   const ProductItem({
+    this.id,
     required this.name,
     required this.category,
     required this.price,
@@ -109,6 +110,7 @@ class ProductItem {
     this.stock,
   });
 
+  final String? id;
   final String name;
   final String category;
   final double price;
@@ -124,6 +126,7 @@ class ProductItem {
     final discount = (json['discount'] as num? ?? json['discount_percent'] as num?)?.toDouble();
     final priceValue = json['final_price'] ?? json['price'] ?? json['sale_price'];
     return ProductItem(
+      id: json['id']?.toString(),
       name: json['name'] as String? ?? '',
       category: json['category'] as String? ?? '',
       price: (priceValue as num?)?.toDouble() ?? 0,
