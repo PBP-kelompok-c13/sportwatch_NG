@@ -25,9 +25,6 @@ const double _kCategoryTagBorderRadius = 4.0;
 const double _kCategoryTagFontSize = 11.0;
 const double _kTitleSpacing = 8.0;
 const double _kAuthorDateSpacing = 8.0;
-const double _kContentPreviewSpacing = 12.0;
-const double _kReadMoreSpacing = 4.0;
-const double _kReadMoreIconSize = 16.0;
 
 class NewsEntryCard extends StatefulWidget {
   final NewsEntry news;
@@ -358,8 +355,8 @@ class _NewsEntryCardState extends State<NewsEntryCard> {
                         return Material(
                           color: isSelected
                               ? colorScheme.primaryContainer
-                              : colorScheme.surfaceContainerHighest.withOpacity(
-                                  0.5,
+                              : colorScheme.surfaceContainerHighest.withValues(
+                                  alpha: 0.5,
                                 ),
                           borderRadius: BorderRadius.circular(20),
                           child: InkWell(

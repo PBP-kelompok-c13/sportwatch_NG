@@ -36,20 +36,18 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
     });
     try {
       final response = await request.get(newsCommentsApi(widget.news.id));
+      if (!mounted) return;
       final List<dynamic> rawComments = response['comments'];
-      if (mounted) {
-        setState(() {
-          _comments = rawComments
-              .map((json) => NewsComment.fromJson(json))
-              .toList();
-        });
-      }
+      setState(() {
+        _comments = rawComments
+            .map((json) => NewsComment.fromJson(json))
+            .toList();
+      });
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Failed to load comments: $e')));
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to load comments: $e')));
     } finally {
       if (mounted) {
         setState(() {
@@ -81,6 +79,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
       });
 
       if (response['status'] == 'success') {
+        if (!mounted) return;
         _commentController.clear();
         final newComment = NewsComment.fromJson(response['comment']);
         setState(() {
@@ -93,13 +92,16 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
         throw Exception(response['message'] ?? 'Unknown error');
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Failed to post comment: $e')));
     } finally {
-      setState(() {
-        _submittingComment = false;
-      });
+      if (mounted) {
+        setState(() {
+          _submittingComment = false;
+        });
+      }
     }
   }
 
