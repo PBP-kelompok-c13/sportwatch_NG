@@ -84,3 +84,42 @@ String scoreboardFilterApi({String? status, String? sport}) {
       )
       .toString();
 }
+
+// --- News CRUD ---
+String createNewsApi() {
+  return Uri.parse(baseUrl).resolve("/portal_berita/api/create-flutter/").toString();
+}
+
+String editNewsApi(String id) {
+  return Uri.parse(baseUrl).resolve("/portal_berita/api/edit-flutter/$id/").toString();
+}
+
+String deleteNewsApi(String id) {
+  return Uri.parse(baseUrl).resolve("/portal_berita/api/delete-flutter/$id/").toString();
+}
+
+// --- Scoreboard CRUD ---
+String createScoreApi() {
+  return Uri.parse(baseUrl).resolve("/scoreboard/api/create-flutter/").toString();
+}
+
+String editScoreApi(int id) {
+  return Uri.parse(baseUrl).resolve("/scoreboard/api/edit-flutter/$id/").toString();
+}
+
+String deleteScoreApi(int id) {
+  return Uri.parse(baseUrl).resolve("/scoreboard/api/delete-flutter/$id/").toString();
+}
+
+// --- Shop CRUD ---
+String createProductApi() {
+  return Uri.parse(baseUrl).resolve("/shop/api/create-flutter/").toString();
+}
+
+String editProductApi(String id) {
+  return Uri.parse(baseUrl).resolve("/shop/api/products/$id/edit-flutter/").toString();
+}
+
+String deleteProductApi(String id) {
+  return Uri.parse(baseUrl).resolve("/shop/api/products/$id/delete-flutter/").toString();
+}

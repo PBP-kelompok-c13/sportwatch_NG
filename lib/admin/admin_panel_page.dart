@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:sportwatch_ng/admin/news_management_page.dart';
+import 'package:sportwatch_ng/admin/product_management_page.dart';
+import 'package:sportwatch_ng/admin/score_management_page.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
 import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
@@ -20,62 +23,86 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _dashboardFuture ??= _loadDashboard();
+    if (_dashboardFuture == null) {
+      // Defer loading until after first frame to avoid notifying providers
+      // during build (profile.refresh triggers notifyListeners).
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() {
+          _dashboardFuture = _loadDashboard();
+        });
+      });
+    }
   }
 
   Future<_AdminDashboardData> _loadDashboard() async {
     final request = context.read<CookieRequest>();
     final profile = context.read<UserProfileNotifier>();
-    if (!profile.isStaff) {
-      await profile.refresh(request);
-    }
-    if (!profile.isStaff) {
+    if (!request.loggedIn) {
       throw _AdminAccessDenied();
     }
 
-    final newsResponse = await request.get(newsListApi(page: 1, perPage: 5));
-    final newsTotalResponse = await request.get(
-      newsListApi(page: 1, perPage: 1),
-    );
-    final analyticsResponse = await request.get(searchAnalyticsApi());
-    final productResponse = await request.get(
+    // Best-effort refresh; keep going with cached login data if the
+    // profile endpoint redirects to the login page.
+    try {
+      await profile.refresh(request);
+    } catch (_) {}
+
+    final isStaff =
+        profile.isStaff || _asBool(request.getJsonData()['is_staff']);
+    if (!isStaff) {
+      throw _AdminAccessDenied();
+    }
+
+    final newsResponse =
+        await _safeGetMap(request, newsListApi(page: 1, perPage: 5));
+    final newsTotalResponse =
+        await _safeGetMap(request, newsListApi(page: 1, perPage: 1));
+    final analyticsResponse =
+        await _safeGetMap(request, searchAnalyticsApi());
+    final productResponse = await _safeGetMap(
+      request,
       productsListApi(page: 1, perPage: 6, sort: "featured"),
     );
-    final liveScoresResponse = await request.get(
-      scoreboardFilterApi(status: 'live'),
-    );
-    final finishedScoresResponse = await request.get(
-      scoreboardFilterApi(status: 'recent'),
-    );
-    final upcomingScoresResponse = await request.get(
-      scoreboardFilterApi(status: 'upcoming'),
-    );
+    final liveScoresResponse =
+        await _safeGetMap(request, scoreboardFilterApi(status: 'live'));
+    final finishedScoresResponse =
+        await _safeGetMap(request, scoreboardFilterApi(status: 'recent'));
+    final upcomingScoresResponse =
+        await _safeGetMap(request, scoreboardFilterApi(status: 'upcoming'));
+
+    final newsList = _asList(newsResponse['results'])
+        .map((item) => AdminNewsItem.fromJson(_asMap(item)))
+        .toList();
+    final productList = _asList(productResponse['results'])
+        .map((item) => AdminProductItem.fromJson(_asMap(item)))
+        .toList();
 
     return _AdminDashboardData(
-      news: (newsResponse['results'] as List<dynamic>? ?? [])
-          .map((item) => AdminNewsItem.fromJson(item))
-          .toList(),
-      totalNews: newsTotalResponse['total_count'] is int
-          ? newsTotalResponse['total_count'] as int
-          : (newsTotalResponse['total_pages'] as int? ?? 0),
+      news: newsList,
+      totalNews: _asInt(
+        newsTotalResponse['total_count'],
+        fallback: newsList.length,
+      ),
       analytics: AdminAnalytics.fromJson(analyticsResponse),
-      products: (productResponse['results'] as List<dynamic>? ?? [])
-          .map((item) => AdminProductItem.fromJson(item))
+      products: productList,
+      totalProducts: _asInt(
+        productResponse['total_count'],
+        fallback: productList.length,
+      ),
+      liveMatches: _asList(liveScoresResponse['scores'])
+          .map((item) => AdminMatchItem.fromJson(_asMap(item), status: 'live'))
           .toList(),
-      totalProducts:
-          productResponse['total_count'] as int? ??
-          (productResponse['results'] as List<dynamic>? ?? []).length,
-      liveMatches: (liveScoresResponse['scores'] as List<dynamic>? ?? [])
-          .map((item) => AdminMatchItem.fromJson(item, status: 'live'))
+      finishedMatches: _asList(finishedScoresResponse['scores'])
+          .map(
+            (item) => AdminMatchItem.fromJson(_asMap(item), status: 'recent'),
+          )
           .toList(),
-      finishedMatches:
-          (finishedScoresResponse['scores'] as List<dynamic>? ?? [])
-              .map((item) => AdminMatchItem.fromJson(item, status: 'recent'))
-              .toList(),
-      upcomingMatches:
-          (upcomingScoresResponse['scores'] as List<dynamic>? ?? [])
-              .map((item) => AdminMatchItem.fromJson(item, status: 'upcoming'))
-              .toList(),
+      upcomingMatches: _asList(upcomingScoresResponse['scores'])
+          .map(
+            (item) => AdminMatchItem.fromJson(_asMap(item), status: 'upcoming'),
+          )
+          .toList(),
     );
   }
 
@@ -93,16 +120,16 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            if (snapshot.error is _AdminAccessDenied) {
-              return _buildErrorState(
-                context,
-                'You do not have permission to view this dashboard.',
-              );
+            final error = snapshot.error;
+            String message;
+            if (error is _AdminAccessDenied) {
+              message = 'You do not have permission to view this dashboard.';
+            } else if (error is _AdminDataLoadError) {
+              message = error.message;
+            } else {
+              message = 'Failed to load admin data. Please try again later.';
             }
-            return _buildErrorState(
-              context,
-              'Failed to load admin data. Please try again later.',
-            );
+            return _buildErrorState(context, message);
           }
           final data = snapshot.data!;
           return RefreshIndicator(
@@ -116,6 +143,8 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
               padding: const EdgeInsets.all(16),
               children: [
                 _buildHeader(context, data),
+                const SizedBox(height: 16),
+                _buildQuickActions(context),
                 const SizedBox(height: 16),
                 _buildStatsGrid(context, data),
                 const SizedBox(height: 16),
@@ -155,6 +184,42 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quick Actions',
+           style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            ActionChip(
+              avatar: const Icon(Icons.newspaper),
+              label: const Text('Manage News'),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NewsManagementPage())),
+            ),
+            ActionChip(
+              avatar: const Icon(Icons.shopping_bag),
+              label: const Text('Manage Products'),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProductManagementPage())),
+            ),
+            ActionChip(
+              avatar: const Icon(Icons.scoreboard),
+              label: const Text('Manage Scoreboard'),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ScoreManagementPage())),
+            ),
+          ],
         ),
       ],
     );
@@ -393,6 +458,53 @@ class _AdminDashboardData {
 }
 
 class _AdminAccessDenied implements Exception {}
+class _AdminDataLoadError implements Exception {
+  final String message;
+  _AdminDataLoadError(this.message);
+}
+
+Future<Map<String, dynamic>> _safeGetMap(
+  CookieRequest request,
+  String url,
+) async {
+  try {
+    final response = await request.get(url);
+    if (response is Map<String, dynamic>) {
+      return response;
+    }
+  } catch (_) {}
+  return const {};
+}
+
+Map<String, dynamic> _asMap(dynamic value) {
+  if (value is Map<String, dynamic>) return value;
+  return {};
+}
+
+List<dynamic> _asList(dynamic value) {
+  if (value is List<dynamic>) return value;
+  return const [];
+}
+
+int _asInt(dynamic value, {int fallback = 0}) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) {
+    final parsed = int.tryParse(value);
+    if (parsed != null) return parsed;
+  }
+  return fallback;
+}
+
+bool _asBool(dynamic value) {
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  if (value is String) {
+    final lower = value.toLowerCase();
+    return lower == 'true' || lower == '1' || lower == 'yes';
+  }
+  return false;
+}
 
 class _OverviewStatCard extends StatelessWidget {
   final _StatCardData data;

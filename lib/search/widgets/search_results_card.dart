@@ -7,11 +7,13 @@ class SearchResultsCard extends StatelessWidget {
     required this.newsResults,
     required this.productResults,
     required this.onViewNews,
+    required this.onViewProduct,
   });
 
   final List<NewsItem> newsResults;
   final List<ProductItem> productResults;
   final ValueChanged<NewsItem> onViewNews;
+  final ValueChanged<ProductItem> onViewProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class SearchResultsCard extends StatelessWidget {
             const SizedBox(height: 12),
             _NewsResults(newsResults: newsResults, onViewNews: onViewNews),
             const SizedBox(height: 16),
-            _ProductResults(productResults: productResults),
+            _ProductResults(productResults: productResults, onViewProduct: onViewProduct),
           ],
         ),
       ),
@@ -93,9 +95,13 @@ class _NewsResults extends StatelessWidget {
 }
 
 class _ProductResults extends StatelessWidget {
-  const _ProductResults({required this.productResults});
+  const _ProductResults({
+    required this.productResults,
+    required this.onViewProduct,
+  });
 
   final List<ProductItem> productResults;
+  final ValueChanged<ProductItem> onViewProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -135,13 +141,22 @@ class _ProductResults extends StatelessWidget {
                         Icons.shopping_bag_outlined,
                         color: product.hasDiscount ? Colors.green : Colors.blueGrey,
                       ),
-                      trailing: product.hasDiscount
-                          ? const Chip(
+                      trailing: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 8,
+                        children: [
+                          if (product.hasDiscount)
+                            const Chip(
                               label: Text('Diskon'),
                               backgroundColor: Color(0xFFE6F4EA),
                               labelStyle: TextStyle(color: Colors.green),
-                            )
-                          : null,
+                            ),
+                          TextButton(
+                            onPressed: () => onViewProduct(product),
+                            child: const Text('Lihat'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 )

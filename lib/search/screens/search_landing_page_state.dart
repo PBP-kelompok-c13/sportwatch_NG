@@ -5,6 +5,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
   final TextEditingController _queryController = TextEditingController();
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
+  final Map<String, ProductEntry> _productEntryCache = {};
 
   String _searchIn = 'all';
   String? _selectedNewsCategoryId;
@@ -420,6 +421,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
       newsResults: _filteredNews,
       productResults: _filteredProducts,
       onViewNews: _showNewsDialog,
+      onViewProduct: _openProductDetail,
     );
   }
 
@@ -638,4 +640,66 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
 
   @override
   bool get wantKeepAlive => true;
+
+  Future<void> _openProductDetail(ProductItem product) async {
+    final productId = product.id;
+    if (productId == null || productId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Produk ini belum memiliki detail lengkap.')),
+      );
+      return;
+    }
+    final request = context.read<CookieRequest>();
+    try {
+      final entry = await _getProductEntryById(productId, request);
+      if (!mounted) return;
+      if (entry == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Detail produk tidak dapat ditemukan.')),
+        );
+        return;
+      }
+      final currentUserId = _resolveCurrentUserId(request);
+      final isOwner = currentUserId != null && entry.fields.createdBy == currentUserId;
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ProductDetailPage(
+            product: entry,
+            isOwner: isOwner,
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal membuka detail produk: $e')),
+      );
+    }
+  }
+
+  Future<ProductEntry?> _getProductEntryById(String id, CookieRequest request) async {
+    final cached = _productEntryCache[id];
+    if (cached != null) {
+      return cached;
+    }
+    final response = await request.get('$baseUrl/shop/json/');
+    if (response is! List) {
+      return null;
+    }
+    final List<dynamic> items = response;
+    for (final item in items) {
+      if (item is! Map<String, dynamic>) continue;
+      final entry = ProductEntry.fromJson(item);
+      _productEntryCache[entry.pk] = entry;
+    }
+    return _productEntryCache[id];
+  }
+
+  int? _resolveCurrentUserId(CookieRequest request) {
+    final rawId = request.jsonData['id'] ?? request.jsonData['user_id'] ?? request.jsonData['pk'];
+    if (rawId is int) return rawId;
+    if (rawId is String) return int.tryParse(rawId);
+    return null;
+  }
 }
