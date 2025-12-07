@@ -70,11 +70,11 @@ class _ShopPageState extends State<ShopPage> {
                 onTap: () async {
                   Navigator.pop(context);
 
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Delete product'),
-                      content: Text('Yakin ingin menghapus "${product.name}"?'),
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete product'),
+        content: Text('Yakin ingin menghapus "${product.name}"?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(ctx, false),
@@ -88,42 +88,42 @@ class _ShopPageState extends State<ShopPage> {
                           ),
                         ),
                       ],
-                    ),
-                  );
+      ),
+    );
 
-                  if (confirm == true) {
+    if (!context.mounted) return;
+
+    if (confirm == true) {
                     try {
+                      final messenger = ScaffoldMessenger.of(context);
                       final response = await request.post(
                         "$baseUrl/shop/api/products/${product.id}/delete-flutter/",
                         {}, // body kosong saja
                       );
 
+                      if (!context.mounted) return;
+
                       if (response["status"] == "success") {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Product berhasil dihapus."),
-                            ),
-                          );
-                        }
+                        messenger.showSnackBar(
+                          const SnackBar(
+                            content: Text("Product berhasil dihapus."),
+                          ),
+                        );
                         _refresh(); // reload list produk
                       } else {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Gagal menghapus: ${response['error'] ?? 'Unknown error'}",
-                              ),
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Gagal menghapus: ${response['error'] ?? 'Unknown error'}",
                             ),
-                          );
-                        }
+                          ),
+                        );
                       }
                     } catch (e) {
-                      if (mounted) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text("Error: $e")));
-                      }
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("Error: $e")));
                     }
                   }
                 },

@@ -1,6 +1,3 @@
-// lib/shop/screens/product_detail_page.dart
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +46,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     // load reviews begitu halaman dibuka
     Future.microtask(() {
+      if (!mounted) return;
       final request = context.read<CookieRequest>();
       _fetchReviews(request, reset: true);
     });
@@ -93,6 +91,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
       final newReviews = results.map(_ProductReview.fromJson).toList();
 
+      if (!mounted) return;
       setState(() {
         _reviews.addAll(newReviews);
         _hasMoreReviews = response['has_next'] == true;
@@ -141,6 +140,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         "title": _titleController.text.trim(),
         "content": _contentController.text.trim(),
       });
+      if (!mounted) return;
 
       // Kalau backend mengikuti view create_review, response-nya:
       // { ok: true, review: {...}, rating_avg: x, rating_count: y }
@@ -177,6 +177,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         );
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Failed to submit review: $e')));

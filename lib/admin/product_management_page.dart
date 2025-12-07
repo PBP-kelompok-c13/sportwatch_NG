@@ -27,11 +27,13 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
     try {
       // Fetching a larger page size to see more items
       final response = await request.get(productsListApi(page: 1, perPage: 50, sort: 'newest'));
+      if (!mounted) return;
       setState(() {
         _products = response['results'] ?? [];
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching products: $e')));
     }
@@ -50,11 +52,12 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
       )
     );
     
-    if (confirm != true) return;
+    if (confirm != true || !mounted) return;
 
     final request = context.read<CookieRequest>();
     try {
       final response = await request.postJson(deleteProductApi(id), '{}');
+      if (!mounted) return;
       if (response['status'] == 'success') {
         _fetchProducts();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Deleted successfully')));
@@ -62,6 +65,7 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${response['error'] ?? response['message']}')));
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
@@ -71,6 +75,7 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
       context, 
       MaterialPageRoute(builder: (context) => ProductFormPage(initialData: data))
     );
+    if (!mounted) return;
     if (result == true) {
       _fetchProducts();
     }
@@ -120,3 +125,4 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
     );
   }
 }
+

@@ -145,13 +145,15 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _sportOptions.contains(_sport) ? _sport : _sportOptions.first,
+              key: ValueKey(_sport),
+              initialValue: _sportOptions.contains(_sport) ? _sport : _sportOptions.first,
               decoration: const InputDecoration(labelText: 'Sport'),
               items: _sportOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
               onChanged: (v) => setState(() => _sport = v!),
             ),
             DropdownButtonFormField<String>(
-              value: _statusOptions.contains(_status) ? _status : _statusOptions.first,
+              key: ValueKey(_status),
+              initialValue: _statusOptions.contains(_status) ? _status : _statusOptions.first,
               decoration: const InputDecoration(labelText: 'Status'),
               items: _statusOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
               onChanged: (v) => setState(() => _status = v!),

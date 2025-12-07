@@ -121,14 +121,9 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
           }
           if (snapshot.hasError) {
             final error = snapshot.error;
-            String message;
-            if (error is _AdminAccessDenied) {
-              message = 'You do not have permission to view this dashboard.';
-            } else if (error is _AdminDataLoadError) {
-              message = error.message;
-            } else {
-              message = 'Failed to load admin data. Please try again later.';
-            }
+            final message = error is _AdminAccessDenied
+                ? 'You do not have permission to view this dashboard.'
+                : 'Failed to load admin data. Please try again later.';
             return _buildErrorState(context, message);
           }
           final data = snapshot.data!;
@@ -458,11 +453,6 @@ class _AdminDashboardData {
 }
 
 class _AdminAccessDenied implements Exception {}
-class _AdminDataLoadError implements Exception {
-  final String message;
-  _AdminDataLoadError(this.message);
-}
-
 Future<Map<String, dynamic>> _safeGetMap(
   CookieRequest request,
   String url,
