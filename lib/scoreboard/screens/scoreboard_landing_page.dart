@@ -39,8 +39,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
   }
 
   void _loadMatches({bool silent = false}) {
-    final String? sportParam =
-        _selectedSport == 'All' ? null : _selectedSport;
+    final String? sportParam = _selectedSport == 'All' ? null : _selectedSport;
 
     if (silent) {
       _matchesFuture = _api.fetchMatches(sport: sportParam);
@@ -105,10 +104,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
               decoration: BoxDecoration(
                 color: theme.cardColor,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: colorScheme.outlineVariant,
-                  width: 1,
-                ),
+                border: Border.all(color: colorScheme.outlineVariant, width: 1),
               ),
               child: isCompact
                   ? Column(
@@ -164,12 +160,30 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                               value: _selectedSport,
                               underline: const SizedBox(),
                               items: const [
-                                DropdownMenuItem(value: 'All', child: Text('All')),
-                                DropdownMenuItem(value: 'NBA', child: Text('NBA')),
-                                DropdownMenuItem(value: 'EPL', child: Text('EPL')),
-                                DropdownMenuItem(value: 'NFL', child: Text('NFL')),
-                                DropdownMenuItem(value: 'MLB', child: Text('MLB')),
-                                DropdownMenuItem(value: 'NHL', child: Text('NHL')),
+                                DropdownMenuItem(
+                                  value: 'All',
+                                  child: Text('All'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'NBA',
+                                  child: Text('NBA'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'EPL',
+                                  child: Text('EPL'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'NFL',
+                                  child: Text('NFL'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'MLB',
+                                  child: Text('MLB'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'NHL',
+                                  child: Text('NHL'),
+                                ),
                               ],
                               onChanged: (value) {
                                 if (value != null) _onSportChanged(value);
@@ -264,9 +278,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                 future: _matchesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
@@ -298,9 +310,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                       _selectedStatus == 'All' || _selectedStatus == 'Upcoming';
 
                   if (matches.isEmpty) {
-                    return const Center(
-                      child: Text('No matches found'),
-                    );
+                    return const Center(child: Text('No matches found'));
                   }
 
                   return ListView(
@@ -320,7 +330,9 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: colorScheme.error.withValues(alpha: 0.15),
+                                  color: colorScheme.error.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
@@ -335,10 +347,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                         ),
                         const SizedBox(height: 8),
                         if (liveMatches.isEmpty)
-                          Text(
-                            'No live matches',
-                            style: subtleTextStyle,
-                          )
+                          Text('No live matches', style: subtleTextStyle)
                         else
                           ...liveMatches.map(
                             (m) => Padding(
@@ -355,10 +364,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                         ),
                         const SizedBox(height: 8),
                         if (finishedMatches.isEmpty)
-                          Text(
-                            'No recent results',
-                            style: subtleTextStyle,
-                          )
+                          Text('No recent results', style: subtleTextStyle)
                         else
                           ...finishedMatches.map(
                             (m) => Padding(
@@ -375,10 +381,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                         ),
                         const SizedBox(height: 8),
                         if (upcomingMatches.isEmpty)
-                          Text(
-                            'No upcoming matches',
-                            style: subtleTextStyle,
-                          )
+                          Text('No upcoming matches', style: subtleTextStyle)
                         else
                           ...upcomingMatches.map(
                             (m) => Padding(
@@ -418,10 +421,11 @@ class FilterPill extends StatelessWidget {
     final backgroundColor = selected
         ? colorScheme.primary
         : (theme.brightness == Brightness.dark
-            ? colorScheme.surfaceContainerHighest
-            : colorScheme.surfaceContainerHigh);
-    final foregroundColor =
-        selected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant;
+              ? colorScheme.surfaceContainerHighest
+              : colorScheme.surfaceContainerHigh);
+    final foregroundColor = selected
+        ? colorScheme.onPrimary
+        : colorScheme.onSurfaceVariant;
 
     return GestureDetector(
       onTap: onTap,

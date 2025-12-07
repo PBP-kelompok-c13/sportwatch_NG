@@ -70,11 +70,11 @@ class _ShopPageState extends State<ShopPage> {
                 onTap: () async {
                   Navigator.pop(context);
 
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete product'),
-        content: Text('Yakin ingin menghapus "${product.name}"?'),
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Delete product'),
+                      content: Text('Yakin ingin menghapus "${product.name}"?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(ctx, false),
@@ -88,12 +88,12 @@ class _ShopPageState extends State<ShopPage> {
                           ),
                         ),
                       ],
-      ),
-    );
+                    ),
+                  );
 
-    if (!context.mounted) return;
+                  if (!context.mounted) return;
 
-    if (confirm == true) {
+                  if (confirm == true) {
                     try {
                       final messenger = ScaffoldMessenger.of(context);
                       final response = await request.post(

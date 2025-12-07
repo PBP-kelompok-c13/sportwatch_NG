@@ -88,9 +88,18 @@ class SearchFiltersCard extends StatelessWidget {
                     initialValue: searchIn,
                     isExpanded: true,
                     items: const [
-                      DropdownMenuItem(value: 'all', child: Text('Cari di: Semua')),
-                      DropdownMenuItem(value: 'news', child: Text('Cari di: Berita')),
-                      DropdownMenuItem(value: 'products', child: Text('Cari di: Produk')),
+                      DropdownMenuItem(
+                        value: 'all',
+                        child: Text('Cari di: Semua'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'news',
+                        child: Text('Cari di: Berita'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'products',
+                        child: Text('Cari di: Produk'),
+                      ),
                     ],
                     onChanged: (value) {
                       if (value != null) {
@@ -186,10 +195,7 @@ class SearchFiltersCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Switch(
-                      value: onlyDiscount,
-                      onChanged: onDiscountChanged,
-                    ),
+                    Switch(value: onlyDiscount, onChanged: onDiscountChanged),
                     const Text('Hanya tampilkan diskon'),
                   ],
                 ),
@@ -208,7 +214,10 @@ class SearchFiltersCard extends StatelessWidget {
                     initialValue: selectedPresetId,
                     isExpanded: true,
                     items: [
-                      const DropdownMenuItem<String?>(value: null, child: Text('Tanpa preset')),
+                      const DropdownMenuItem<String?>(
+                        value: null,
+                        child: Text('Tanpa preset'),
+                      ),
                       ...presets.map(
                         (preset) => DropdownMenuItem<String?>(
                           value: preset.id,
@@ -246,7 +255,9 @@ class SearchFiltersCard extends StatelessWidget {
     );
   }
 
-  List<DropdownMenuItem<String?>> _buildFilterOptions(List<FilterOption> options) {
+  List<DropdownMenuItem<String?>> _buildFilterOptions(
+    List<FilterOption> options,
+  ) {
     return [
       const DropdownMenuItem<String?>(value: null, child: Text('Semua')),
       ...options.map(
@@ -257,6 +268,7 @@ class SearchFiltersCard extends StatelessWidget {
       ),
     ];
   }
+
   SearchPreset? _findPresetById(String id) {
     for (final preset in presets) {
       if (preset.id == id) {

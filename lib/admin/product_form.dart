@@ -25,7 +25,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   String? _selectedCategorySlug;
   String? _selectedBrandSlug;
-  
+
   List<Map<String, dynamic>> _categories = [];
   List<Map<String, dynamic>> _brands = [];
   bool _isLoading = false;
@@ -37,14 +37,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
       final data = widget.initialData!;
       _name = data['name'] ?? '';
       // Description might not be in the list item, handling that gracefully
-      _description = data['description'] ?? ''; 
+      _description = data['description'] ?? '';
       _price = (data['price'] as num?)?.toDouble();
       _salePrice = (data['sale_price'] as num?)?.toDouble();
       _stock = data['stock'] ?? 0; // List might not have stock
       _thumbnail = data['thumbnail'];
       _isFeatured = data['is_featured'] == true; // List might not have this
-      
-      // Usually list items have category name not slug, but let's see. 
+
+      // Usually list items have category name not slug, but let's see.
       // For now, we might need to just let user pick again if we can't map back.
       // But wait, we can try to match name? Or just leave empty.
       // Ideally, we should fetch detail first. But for MVP let's rely on what we have or re-select.
@@ -58,19 +58,27 @@ class _ProductFormPageState extends State<ProductFormPage> {
   Future<void> _fetchOptions() async {
     final request = context.read<CookieRequest>();
     try {
-      final catRes = await request.get(Uri.parse(baseUrl).resolve("/shop/api/categories/").toString());
-      final brandRes = await request.get(Uri.parse(baseUrl).resolve("/shop/api/brands/").toString());
-      
+      final catRes = await request.get(
+        Uri.parse(baseUrl).resolve("/shop/api/categories/").toString(),
+      );
+      final brandRes = await request.get(
+        Uri.parse(baseUrl).resolve("/shop/api/brands/").toString(),
+      );
+
       if (mounted) {
         setState(() {
           _categories = List<Map<String, dynamic>>.from(catRes);
           _brands = List<Map<String, dynamic>>.from(brandRes);
-          
+
           // Try to match initial category name to slug if provided
-          if (widget.initialData != null && widget.initialData!['category'] != null) {
-             final catName = widget.initialData!['category'];
-             final found = _categories.firstWhere((c) => c['name'] == catName, orElse: () => {});
-             if (found.isNotEmpty) _selectedCategorySlug = found['slug'];
+          if (widget.initialData != null &&
+              widget.initialData!['category'] != null) {
+            final catName = widget.initialData!['category'];
+            final found = _categories.firstWhere(
+              (c) => c['name'] == catName,
+              orElse: () => {},
+            );
+            if (found.isNotEmpty) _selectedCategorySlug = found['slug'];
           }
         });
       }
@@ -101,31 +109,37 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     try {
       final isEdit = widget.initialData != null;
-      final url = isEdit 
-          ? editProductApi(widget.initialData!['id'].toString()) 
+      final url = isEdit
+          ? editProductApi(widget.initialData!['id'].toString())
           : createProductApi();
-      
+
       final response = await request.postJson(url, body);
 
       if (response['status'] == 'success') {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(isEdit ? 'Product updated' : 'Product created')),
+            SnackBar(
+              content: Text(isEdit ? 'Product updated' : 'Product created'),
+            ),
           );
           Navigator.pop(context, true);
         }
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${response['error'] ?? response['message']}')),
+            SnackBar(
+              content: Text(
+                'Error: ${response['error'] ?? response['message']}',
+              ),
+            ),
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -136,7 +150,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.initialData != null ? 'Edit Product' : 'Add Product'),
+        title: Text(
+          widget.initialData != null ? 'Edit Product' : 'Add Product',
+        ),
       ),
       body: Form(
         key: _formKey,
@@ -189,28 +205,37 @@ class _ProductFormPageState extends State<ProductFormPage> {
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               key: ValueKey(_selectedCategorySlug ?? 'category'),
-              initialValue: _categories.any((c) => c['slug'] == _selectedCategorySlug)
+              initialValue:
+                  _categories.any((c) => c['slug'] == _selectedCategorySlug)
                   ? _selectedCategorySlug
                   : null,
               decoration: const InputDecoration(labelText: 'Category'),
-              items: _categories.map((c) => DropdownMenuItem(
-                value: c['slug'] as String, 
-                child: Text(c['name'])
-              )).toList(),
+              items: _categories
+                  .map(
+                    (c) => DropdownMenuItem(
+                      value: c['slug'] as String,
+                      child: Text(c['name']),
+                    ),
+                  )
+                  .toList(),
               onChanged: (v) => setState(() => _selectedCategorySlug = v),
               validator: (v) => v == null ? 'Required' : null,
             ),
             const SizedBox(height: 16),
-             DropdownButtonFormField<String>(
+            DropdownButtonFormField<String>(
               key: ValueKey(_selectedBrandSlug ?? 'brand'),
               initialValue: _brands.any((b) => b['slug'] == _selectedBrandSlug)
                   ? _selectedBrandSlug
                   : null,
               decoration: const InputDecoration(labelText: 'Brand'),
-              items: _brands.map((b) => DropdownMenuItem(
-                value: b['slug'] as String, 
-                child: Text(b['name'])
-              )).toList(),
+              items: _brands
+                  .map(
+                    (b) => DropdownMenuItem(
+                      value: b['slug'] as String,
+                      child: Text(b['name']),
+                    ),
+                  )
+                  .toList(),
               onChanged: (v) => setState(() => _selectedBrandSlug = v),
             ),
             const SizedBox(height: 16),
@@ -228,7 +253,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _isLoading ? null : _save,
-              child: _isLoading ? const CircularProgressIndicator() : const Text('Save'),
+              child: _isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text('Save'),
             ),
           ],
         ),

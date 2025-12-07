@@ -60,14 +60,18 @@ class _PresetSheetController {
   final List<FilterOption> productCategories;
   final List<FilterOption> brandOptions;
 
-  late final TextEditingController labelController =
-      TextEditingController(text: initialPreset?.label ?? '');
-  late final TextEditingController descController =
-      TextEditingController(text: initialPreset?.description ?? '');
-  late final TextEditingController minController =
-      TextEditingController(text: initialPreset?.minPrice?.toStringAsFixed(0) ?? minPriceText);
-  late final TextEditingController maxController =
-      TextEditingController(text: initialPreset?.maxPrice?.toStringAsFixed(0) ?? maxPriceText);
+  late final TextEditingController labelController = TextEditingController(
+    text: initialPreset?.label ?? '',
+  );
+  late final TextEditingController descController = TextEditingController(
+    text: initialPreset?.description ?? '',
+  );
+  late final TextEditingController minController = TextEditingController(
+    text: initialPreset?.minPrice?.toStringAsFixed(0) ?? minPriceText,
+  );
+  late final TextEditingController maxController = TextEditingController(
+    text: initialPreset?.maxPrice?.toStringAsFixed(0) ?? maxPriceText,
+  );
 
   String _scopeValue = '';
   String? _newsValue;
@@ -103,7 +107,10 @@ class _PresetSheetController {
                   children: [
                     Text(
                       initialPreset == null ? 'Buat Preset' : 'Edit Preset',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     TextField(
@@ -132,8 +139,14 @@ class _PresetSheetController {
                       ),
                       items: const [
                         DropdownMenuItem(value: 'all', child: Text('Semua')),
-                        DropdownMenuItem(value: 'news', child: Text('Hanya berita')),
-                        DropdownMenuItem(value: 'products', child: Text('Hanya produk')),
+                        DropdownMenuItem(
+                          value: 'news',
+                          child: Text('Hanya berita'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'products',
+                          child: Text('Hanya produk'),
+                        ),
                       ],
                       onChanged: (value) {
                         if (value != null) {
@@ -150,7 +163,10 @@ class _PresetSheetController {
                         border: OutlineInputBorder(),
                       ),
                       items: [
-                        const DropdownMenuItem<String?>(value: null, child: Text('Semua')),
+                        const DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text('Semua'),
+                        ),
                         ...newsCategories.map(
                           (option) => DropdownMenuItem<String?>(
                             value: option.id,
@@ -158,7 +174,8 @@ class _PresetSheetController {
                           ),
                         ),
                       ],
-                      onChanged: (value) => setModalState(() => _newsValue = value),
+                      onChanged: (value) =>
+                          setModalState(() => _newsValue = value),
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String?>(
@@ -169,7 +186,10 @@ class _PresetSheetController {
                         border: OutlineInputBorder(),
                       ),
                       items: [
-                        const DropdownMenuItem<String?>(value: null, child: Text('Semua')),
+                        const DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text('Semua'),
+                        ),
                         ...productCategories.map(
                           (option) => DropdownMenuItem<String?>(
                             value: option.id,
@@ -177,7 +197,8 @@ class _PresetSheetController {
                           ),
                         ),
                       ],
-                      onChanged: (value) => setModalState(() => _productValue = value),
+                      onChanged: (value) =>
+                          setModalState(() => _productValue = value),
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String?>(
@@ -188,7 +209,10 @@ class _PresetSheetController {
                         border: OutlineInputBorder(),
                       ),
                       items: [
-                        const DropdownMenuItem<String?>(value: null, child: Text('Semua')),
+                        const DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text('Semua'),
+                        ),
                         ...brandOptions.map(
                           (option) => DropdownMenuItem<String?>(
                             value: option.id,
@@ -196,7 +220,8 @@ class _PresetSheetController {
                           ),
                         ),
                       ],
-                      onChanged: (value) => setModalState(() => _brandValue = value),
+                      onChanged: (value) =>
+                          setModalState(() => _brandValue = value),
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -229,7 +254,8 @@ class _PresetSheetController {
                       children: [
                         Switch(
                           value: _discountValue,
-                          onChanged: (value) => setModalState(() => _discountValue = value),
+                          onChanged: (value) =>
+                              setModalState(() => _discountValue = value),
                         ),
                         const Text('Hanya tampilkan diskon secara default'),
                       ],

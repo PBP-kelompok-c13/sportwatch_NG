@@ -58,10 +58,10 @@ class _NewsFormPageState extends State<NewsFormPage> {
 
     try {
       final isEdit = widget.initialData != null;
-      final url = isEdit 
-          ? editNewsApi(widget.initialData!['id'].toString()) 
+      final url = isEdit
+          ? editNewsApi(widget.initialData!['id'].toString())
           : createNewsApi();
-      
+
       final response = await request.postJson(url, body);
 
       if (response['status'] == 'success') {
@@ -80,9 +80,9 @@ class _NewsFormPageState extends State<NewsFormPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -117,7 +117,9 @@ class _NewsFormPageState extends State<NewsFormPage> {
             const SizedBox(height: 16),
             TextFormField(
               initialValue: _kategori,
-              decoration: const InputDecoration(labelText: 'Category (e.g. Football, Transfer)'),
+              decoration: const InputDecoration(
+                labelText: 'Category (e.g. Football, Transfer)',
+              ),
               onSaved: (v) => _kategori = v,
             ),
             const SizedBox(height: 16),
@@ -141,7 +143,9 @@ class _NewsFormPageState extends State<NewsFormPage> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _isLoading ? null : _save,
-              child: _isLoading ? const CircularProgressIndicator() : const Text('Save'),
+              child: _isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text('Save'),
             ),
           ],
         ),

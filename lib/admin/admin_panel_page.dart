@@ -54,29 +54,38 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
       throw _AdminAccessDenied();
     }
 
-    final newsResponse =
-        await _safeGetMap(request, newsListApi(page: 1, perPage: 5));
-    final newsTotalResponse =
-        await _safeGetMap(request, newsListApi(page: 1, perPage: 1));
-    final analyticsResponse =
-        await _safeGetMap(request, searchAnalyticsApi());
+    final newsResponse = await _safeGetMap(
+      request,
+      newsListApi(page: 1, perPage: 5),
+    );
+    final newsTotalResponse = await _safeGetMap(
+      request,
+      newsListApi(page: 1, perPage: 1),
+    );
+    final analyticsResponse = await _safeGetMap(request, searchAnalyticsApi());
     final productResponse = await _safeGetMap(
       request,
       productsListApi(page: 1, perPage: 6, sort: "featured"),
     );
-    final liveScoresResponse =
-        await _safeGetMap(request, scoreboardFilterApi(status: 'live'));
-    final finishedScoresResponse =
-        await _safeGetMap(request, scoreboardFilterApi(status: 'recent'));
-    final upcomingScoresResponse =
-        await _safeGetMap(request, scoreboardFilterApi(status: 'upcoming'));
+    final liveScoresResponse = await _safeGetMap(
+      request,
+      scoreboardFilterApi(status: 'live'),
+    );
+    final finishedScoresResponse = await _safeGetMap(
+      request,
+      scoreboardFilterApi(status: 'recent'),
+    );
+    final upcomingScoresResponse = await _safeGetMap(
+      request,
+      scoreboardFilterApi(status: 'upcoming'),
+    );
 
-    final newsList = _asList(newsResponse['results'])
-        .map((item) => AdminNewsItem.fromJson(_asMap(item)))
-        .toList();
-    final productList = _asList(productResponse['results'])
-        .map((item) => AdminProductItem.fromJson(_asMap(item)))
-        .toList();
+    final newsList = _asList(
+      newsResponse['results'],
+    ).map((item) => AdminNewsItem.fromJson(_asMap(item))).toList();
+    final productList = _asList(
+      productResponse['results'],
+    ).map((item) => AdminProductItem.fromJson(_asMap(item))).toList();
 
     return _AdminDashboardData(
       news: newsList,
@@ -190,7 +199,7 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
       children: [
         Text(
           'Quick Actions',
-           style: Theme.of(
+          style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
@@ -202,17 +211,28 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
             ActionChip(
               avatar: const Icon(Icons.newspaper),
               label: const Text('Manage News'),
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NewsManagementPage())),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NewsManagementPage()),
+              ),
             ),
             ActionChip(
               avatar: const Icon(Icons.shopping_bag),
               label: const Text('Manage Products'),
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProductManagementPage())),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const ProductManagementPage(),
+                ),
+              ),
             ),
             ActionChip(
               avatar: const Icon(Icons.scoreboard),
               label: const Text('Manage Scoreboard'),
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ScoreManagementPage())),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ScoreManagementPage()),
+              ),
             ),
           ],
         ),
@@ -453,6 +473,7 @@ class _AdminDashboardData {
 }
 
 class _AdminAccessDenied implements Exception {}
+
 Future<Map<String, dynamic>> _safeGetMap(
   CookieRequest request,
   String url,

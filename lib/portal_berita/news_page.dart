@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/portal_berita/news_entry.dart';
 import 'package:sportwatch_ng/portal_berita/news_entry_card.dart';
+import 'package:sportwatch_ng/portal_berita/news_detail_page.dart';
 import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
 
 class NewsPage extends StatefulWidget {
@@ -66,22 +67,9 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   void _openNews(NewsEntry entry) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(entry.judul),
-        content: Text(
-          entry.konten,
-          maxLines: 12,
-          overflow: TextOverflow.ellipsis,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NewsDetailPage(news: entry)),
     );
   }
 
