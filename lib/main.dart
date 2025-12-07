@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/main_page.dart';
 import 'package:sportwatch_ng/theme_notifier.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
+import 'package:sportwatch_ng/card_notifier.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
         ChangeNotifierProvider<UserProfileNotifier>(
           create: (_) => UserProfileNotifier(),
+        ),
+        ChangeNotifierProvider<CartNotifier>(
+          create: (_) => CartNotifier(),
         ),
       ],
       child: Consumer<ThemeNotifier>(
