@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-const String _webBaseUrl = "http://127.0.0.1:8000";
+// Use localhost instead of 127.0.0.1 for the web build so the browser treats
+// the Flutter dev server and Django backend as the same site. This ensures
+// session cookies are sent with cross-origin requests during local testing.
+const String _webBaseUrl = "http://localhost:8000";
 const String _androidEmulatorBaseUrl = "http://10.0.2.2:8000";
 
 String _resolveBaseUrl() {

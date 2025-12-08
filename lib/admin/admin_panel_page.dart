@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/admin/news_management_page.dart';
 import 'package:sportwatch_ng/admin/product_management_page.dart';
 import 'package:sportwatch_ng/admin/score_management_page.dart';
+import 'package:sportwatch_ng/admin/search_admin_page.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
 import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
@@ -135,6 +136,9 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
                 : 'Failed to load admin data. Please try again later.';
             return _buildErrorState(context, message);
           }
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final data = snapshot.data!;
           return RefreshIndicator(
             onRefresh: () async {
@@ -232,6 +236,14 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ScoreManagementPage()),
+              ),
+            ),
+            ActionChip(
+              avatar: const Icon(Icons.search),
+              label: const Text('Search Analytics'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SearchAdminPage()),
               ),
             ),
           ],
