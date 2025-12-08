@@ -19,7 +19,7 @@ String formatCurrency(double value) {
   final formatted = value.toStringAsFixed(0);
   final buffer = StringBuffer();
   final chars = formatted.split('').toList();
-  
+
   for (int i = 0; i < chars.length; i++) {
     buffer.write(chars[i]);
     final remainingDigits = chars.length - i - 1;
@@ -27,7 +27,7 @@ String formatCurrency(double value) {
       buffer.write(',');
     }
   }
-  
+
   return buffer.toString();
 }
 
@@ -273,7 +273,7 @@ class _ShopPageState extends State<ShopPage> {
                     //   context,
                     //   MaterialPageRoute(builder: (_) => const CartPage()),
                     // );
-                    
+
                     // Sementara tampilkan info
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -361,45 +361,48 @@ class _ShopPageState extends State<ShopPage> {
               const SizedBox(height: 12),
 
               // 🔹 Filter chips (featured & my products) + reload
-              Row(
-                children: [
-                  FilterChip(
-                    label: const Text("Featured only"),
-                    selected: _showFeaturedOnly,
-                    onSelected: (v) {
-                      setState(() {
-                        _showFeaturedOnly = v;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  FilterChip(
-                    label: const Text("My products"),
-                    selected: _showMyProductsOnly,
-                    onSelected: (v) {
-                      if (profile.isGuest) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Login to see your products.'),
-                          ),
-                        );
-                        return;
-                      }
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    FilterChip(
+                      label: const Text("Featured only"),
+                      selected: _showFeaturedOnly,
+                      onSelected: (v) {
+                        setState(() {
+                          _showFeaturedOnly = v;
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    FilterChip(
+                      label: const Text("My products"),
+                      selected: _showMyProductsOnly,
+                      onSelected: (v) {
+                        if (profile.isGuest) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Login to see your products.'),
+                            ),
+                          );
+                          return;
+                        }
 
-                      debugPrint('jsonData: ${request.jsonData}');
-                      setState(() {
-                        _showMyProductsOnly = v;
-                      });
-                    },
-                  ),
+                        debugPrint('jsonData: ${request.jsonData}');
+                        setState(() {
+                          _showMyProductsOnly = v;
+                        });
+                      },
+                    ),
 
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: _refresh,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text("Reload"),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      onPressed: _refresh,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text("Reload"),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 12),
 
