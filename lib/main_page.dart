@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/home.dart';
-import 'package:sportwatch_ng/login.dart';
 import 'package:sportwatch_ng/portal_berita/news_page.dart';
 import 'package:sportwatch_ng/scoreboard/screens/scoreboard_landing_page.dart';
 import 'package:sportwatch_ng/shop/screens/shop_landing_page.dart';
@@ -16,7 +13,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  bool _redirectingToLogin = false;
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     NewsPage(),
@@ -33,23 +29,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
-    if (!request.loggedIn) {
-      if (!_redirectingToLogin) {
-        _redirectingToLogin = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const LoginPage()),
-            (route) => false,
-          );
-        });
-      }
-      return const SizedBox.shrink();
-    } else if (_redirectingToLogin) {
-      _redirectingToLogin = false;
-    }
-
     return Scaffold(
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
