@@ -33,9 +33,9 @@ class ProductEntry {
   String get name => fields.name;
   String get description => fields.description;
   String get thumbnail => fields.thumbnail;
-  String get currency => fields.currency == Currency.IDR ? "IDR" : "IDR";
+  String get currency => fields.currency == Currency.idr ? "IDR" : "IDR";
   bool get isFeatured => fields.isFeatured;
-  bool get inStock => fields.stock > 0 && fields.status == Status.ACTIVE;
+  bool get inStock => fields.stock > 0 && fields.status == Status.active;
   double get price =>
       double.tryParse(fields.price) ??
       0; // price and salePrice come as String from JSON
@@ -103,9 +103,7 @@ class Fields {
     slug: json["slug"],
     description: json["description"],
     price: json["price"].toString(),
-    salePrice: json["sale_price"] != null
-        ? json["sale_price"].toString()
-        : null,
+    salePrice: json["sale_price"]?.toString(),
     currency: currencyValues.map[json["currency"]]!,
     stock: json["stock"],
     totalSold: json["total_sold"],
@@ -139,17 +137,17 @@ class Fields {
   };
 }
 
-enum Currency { IDR }
+enum Currency { idr }
 
-final currencyValues = EnumValues({"IDR": Currency.IDR});
+final currencyValues = EnumValues({"IDR": Currency.idr});
 
-enum Status { ACTIVE }
+enum Status { active }
 
-final statusValues = EnumValues({"active": Status.ACTIVE});
+final statusValues = EnumValues({"active": Status.active});
 
-enum Model { SHOP_PRODUCT }
+enum Model { shopProduct }
 
-final modelValues = EnumValues({"shop.product": Model.SHOP_PRODUCT});
+final modelValues = EnumValues({"shop.product": Model.shopProduct});
 
 class EnumValues<T> {
   Map<String, T> map;

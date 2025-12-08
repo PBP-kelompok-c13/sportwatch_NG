@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/admin/news_management_page.dart';
 import 'package:sportwatch_ng/admin/product_management_page.dart';
 import 'package:sportwatch_ng/admin/score_management_page.dart';
+import 'package:sportwatch_ng/admin/search_admin_page.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
 import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
@@ -116,20 +117,18 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
       body: FutureBuilder<_AdminDashboardData>(
         future: _dashboardFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
           if (snapshot.hasError) {
             final error = snapshot.error;
             String message;
             if (error is _AdminAccessDenied) {
               message = 'You do not have permission to view this dashboard.';
-            } else if (error is _AdminDataLoadError) {
-              message = error.message;
             } else {
               message = 'Failed to load admin data. Please try again later.';
             }
             return _buildErrorState(context, message);
+          }
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
           }
           final data = snapshot.data!;
           return RefreshIndicator(
@@ -218,6 +217,14 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
               avatar: const Icon(Icons.scoreboard),
               label: const Text('Manage Scoreboard'),
               onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ScoreManagementPage())),
+            ),
+            ActionChip(
+              avatar: const Icon(Icons.search),
+              label: const Text('Search Analytics'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SearchAdminPage()),
+              ),
             ),
           ],
         ),
@@ -458,10 +465,6 @@ class _AdminDashboardData {
 }
 
 class _AdminAccessDenied implements Exception {}
-class _AdminDataLoadError implements Exception {
-  final String message;
-  _AdminDataLoadError(this.message);
-}
 
 Future<Map<String, dynamic>> _safeGetMap(
   CookieRequest request,

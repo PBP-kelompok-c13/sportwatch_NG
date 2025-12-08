@@ -22,18 +22,22 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
   }
 
   Future<void> _fetchProducts() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
     final request = context.read<CookieRequest>();
     try {
       // Fetching a larger page size to see more items
       final response = await request.get(productsListApi(page: 1, perPage: 50, sort: 'newest'));
+      if (!mounted) return;
       setState(() {
         _products = response['results'] ?? [];
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching products: $e')));
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.showSnackBar(SnackBar(content: Text('Error fetching products: $e')));
     }
   }
 
@@ -50,19 +54,22 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
       )
     );
     
-    if (confirm != true) return;
+    if (!mounted || confirm != true) return;
 
     final request = context.read<CookieRequest>();
+    final messenger = ScaffoldMessenger.of(context);
     try {
       final response = await request.postJson(deleteProductApi(id), '{}');
       if (response['status'] == 'success') {
-        _fetchProducts();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Deleted successfully')));
+        if (!mounted) return;
+        await _fetchProducts();
+        messenger.showSnackBar(const SnackBar(content: Text('Deleted successfully')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${response['error'] ?? response['message']}')));
+        messenger.showSnackBar(SnackBar(content: Text('Error: ${response['error'] ?? response['message']}')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (!mounted) return;
+      messenger.showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -71,6 +78,7 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
       context, 
       MaterialPageRoute(builder: (context) => ProductFormPage(initialData: data))
     );
+    if (!mounted) return;
     if (result == true) {
       _fetchProducts();
     }
