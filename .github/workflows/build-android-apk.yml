@@ -1,0 +1,62 @@
+name: Build Android APK (manual gated)
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_mode:
+        description: Select Flutter build mode (defaults to release)
+        required: false
+        default: release
+
+env:
+  # Set the repository variable RUN_APK_CI to 'true' to allow this workflow to run.
+  APK_WORKFLOW_ENABLED: ${{ vars.RUN_APK_CI }}
+
+jobs:
+  android-apk:
+    if: ${{ env.APK_WORKFLOW_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    env:
+      JAVA_VERSION: "17"
+      FLUTTER_CHANNEL: stable
+      FLUTTER_VERSION: "3.24.3"
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Flutter analyze
+        run: flutter analyze
+
+      - name: Run unit tests
+        run: flutter test
+
+      - name: Build Android APK
+        run: flutter build apk --${{ github.event.inputs.build_mode || 'release' }} --split-per-abi
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sportwatch-${{ github.event.inputs.build_mode || 'release' }}-apk
+          path: |
+            build/app/outputs/flutter-apk/*.apk
+          retention-days: 14
