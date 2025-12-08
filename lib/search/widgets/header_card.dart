@@ -16,12 +16,16 @@ class SearchHeaderCard extends StatelessWidget {
           children: [
             Text(
               'Temukan Segalanya di SportWatch',
-              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               'Cari berita olahraga terkini, produk incaran, atau simpan preset pencarian favoritmu.',
-              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.grey[700],
+              ),
             ),
           ],
         ),

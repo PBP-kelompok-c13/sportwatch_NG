@@ -17,10 +17,7 @@ class SearchSummaryCard extends StatelessWidget {
             const Icon(Icons.info_outline, color: Colors.blue),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                summaryText,
-                style: const TextStyle(fontSize: 14),
-              ),
+              child: Text(summaryText, style: const TextStyle(fontSize: 14)),
             ),
           ],
         ),

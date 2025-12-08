@@ -1,0 +1,28 @@
+---
+format_version: "13"
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: flutter
+
+workflows:
+  primary:
+    steps:
+      - activate-ssh-key@4: {}
+      - git-clone@8: {}
+      - bitrise-io-cache-pull@2: {}
+      - flutter-installer@0:
+          inputs:
+            - is_update: "false"
+      - flutter-analyze@0:
+          inputs:
+            - project_path: "."
+      - flutter-test@2:
+          inputs:
+            - project_path: "."
+      - flutter-build@2:
+          inputs:
+            - platform: both
+      - bitrise-io-cache-push@2: {}
+
+app:
+  envs:
+    - FLUTTER_PROJECT_PATH: "."

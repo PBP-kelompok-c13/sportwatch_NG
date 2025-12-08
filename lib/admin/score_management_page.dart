@@ -26,51 +26,72 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
     setState(() => _isLoading = true);
     final request = context.read<CookieRequest>();
     try {
-      final response = await request.get(scoreboardFilterApi(status: _currentFilter));
+      final response = await request.get(
+        scoreboardFilterApi(status: _currentFilter),
+      );
+      if (!mounted) return;
       setState(() {
         _scores = response['scores'] ?? [];
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching scores: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error fetching scores: $e')));
     }
   }
 
   Future<void> _deleteScore(int id) async {
     final confirm = await showDialog<bool>(
-      context: context, 
+      context: context,
       builder: (c) => AlertDialog(
         title: const Text('Confirm Delete'),
         content: const Text('Are you sure you want to delete this match?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(
+            onPressed: () => Navigator.pop(c, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(c, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
         ],
-      )
+      ),
     );
-    
-    if (confirm != true) return;
+
+    if (confirm != true || !mounted) return;
 
     final request = context.read<CookieRequest>();
     try {
       final response = await request.postJson(deleteScoreApi(id), '{}');
+      if (!mounted) return;
       if (response['status'] == 'success') {
         _fetchScores();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Deleted successfully')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Deleted successfully')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${response['message']}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${response['message']}')),
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
   void _navigateForm([Map<String, dynamic>? data]) async {
     final result = await Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => ScoreFormPage(initialData: data))
+      context,
+      MaterialPageRoute(builder: (context) => ScoreFormPage(initialData: data)),
     );
+    if (!mounted) return;
     if (result == true) {
       _fetchScores();
     }
@@ -86,12 +107,12 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
             value: _currentFilter,
             dropdownColor: Theme.of(context).colorScheme.surfaceContainerHigh,
             items: const [
-               DropdownMenuItem(value: 'live', child: Text('Live')),
-               DropdownMenuItem(value: 'upcoming', child: Text('Upcoming')),
-               DropdownMenuItem(value: 'recent', child: Text('Recent')),
+              DropdownMenuItem(value: 'live', child: Text('Live')),
+              DropdownMenuItem(value: 'upcoming', child: Text('Upcoming')),
+              DropdownMenuItem(value: 'recent', child: Text('Recent')),
             ],
             onChanged: (v) {
-              if(v != null) {
+              if (v != null) {
                 setState(() => _currentFilter = v);
                 _fetchScores();
               }
@@ -102,28 +123,39 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
           const SizedBox(width: 16),
         ],
       ),
-      body: _isLoading 
-        ? const Center(child: CircularProgressIndicator()) 
-        : ListView.builder(
-            itemCount: _scores.length,
-            itemBuilder: (context, index) {
-              final score = _scores[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  title: Text('${score['tim1']} vs ${score['tim2']}'),
-                  subtitle: Text('${score['sport']} • ${score['status']} • ${score['skor_tim1'] ?? 0}-${score['skor_tim2'] ?? 0}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: const Icon(Icons.edit), onPressed: () => _navigateForm(score)),
-                      IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteScore(score['id'])),
-                    ],
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _scores.length,
+              itemBuilder: (context, index) {
+                final score = _scores[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
                   ),
-                ),
-              );
-            },
-          ),
+                  child: ListTile(
+                    title: Text('${score['tim1']} vs ${score['tim2']}'),
+                    subtitle: Text(
+                      '${score['sport']} • ${score['status']} • ${score['skor_tim1'] ?? 0}-${score['skor_tim2'] ?? 0}',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => _navigateForm(score),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _deleteScore(score['id']),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateForm(),
         child: const Icon(Icons.add),

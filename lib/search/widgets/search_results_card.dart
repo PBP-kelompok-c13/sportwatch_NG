@@ -32,7 +32,10 @@ class SearchResultsCard extends StatelessWidget {
             const SizedBox(height: 12),
             _NewsResults(newsResults: newsResults, onViewNews: onViewNews),
             const SizedBox(height: 16),
-            _ProductResults(productResults: productResults, onViewProduct: onViewProduct),
+            _ProductResults(
+              productResults: productResults,
+              onViewProduct: onViewProduct,
+            ),
           ],
         ),
       ),
@@ -139,7 +142,9 @@ class _ProductResults extends StatelessWidget {
                       subtitle: Text(_buildProductSubtitle(product)),
                       leading: Icon(
                         Icons.shopping_bag_outlined,
-                        color: product.hasDiscount ? Colors.green : Colors.blueGrey,
+                        color: product.hasDiscount
+                            ? Colors.green
+                            : Colors.blueGrey,
                       ),
                       trailing: Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
