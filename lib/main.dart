@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:sportwatch_ng/main_page.dart';
+import 'package:sportwatch_ng/login.dart';
 import 'package:sportwatch_ng/theme_notifier.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
 
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             theme: _buildTheme(lightScheme),
             darkTheme: _buildTheme(darkScheme),
             themeMode: themeNotifier.themeMode,
-            home: const MainPage(),
+            home: const LoginPage(),
           );
         },
       ),

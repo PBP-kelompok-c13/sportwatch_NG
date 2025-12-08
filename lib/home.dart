@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _handleLogout(CookieRequest request) async {
     final profileNotifier = context.read<UserProfileNotifier>();
     final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
 
     if (profileNotifier.isGuest) {
       messenger
@@ -37,6 +38,10 @@ class _HomePageState extends State<HomePage> {
         ..showSnackBar(
           const SnackBar(content: Text('You are already browsing as a guest.')),
         );
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
       return;
     }
 
@@ -49,6 +54,10 @@ class _HomePageState extends State<HomePage> {
             content: Text('Session expired. Continuing as guest.'),
           ),
         );
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
       return;
     }
 
@@ -61,6 +70,10 @@ class _HomePageState extends State<HomePage> {
         ..showSnackBar(
           SnackBar(content: Text("$message You're now browsing as a guest.")),
         );
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
     } catch (e) {
       messenger
         ..hideCurrentSnackBar()
