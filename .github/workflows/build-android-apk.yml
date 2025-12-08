@@ -14,7 +14,8 @@ env:
 
 jobs:
   android-apk:
-    if: ${{ env.APK_WORKFLOW_ENABLED == 'true' }}
+    # Allow running when RUN_APK_CI repo variable is 'true' or not set.
+    if: ${{ vars.RUN_APK_CI == 'true' || vars.RUN_APK_CI == '' || vars.RUN_APK_CI == null }}
     runs-on: ubuntu-latest
     defaults:
       run:
