@@ -23,7 +23,7 @@ jobs:
     env:
       JAVA_VERSION: "17"
       FLUTTER_CHANNEL: stable
-      FLUTTER_VERSION: "3.24.3"
+      FLUTTER_VERSION: "3.38.4"
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
