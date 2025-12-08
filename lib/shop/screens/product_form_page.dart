@@ -129,7 +129,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
         }
       }
 
-      if (!mounted) return;
       setState(() {
         _categories = cats;
         _brands = brands;
@@ -138,7 +137,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _dropdownLoading = false;
       });
     } catch (e) {
-      if (!mounted) return;
       setState(() {
         _dropdownLoading = false;
       });
@@ -149,6 +147,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
       }
     }
   }
+
+  String _formatPrice(double value) => "Rp ${value.toStringAsFixed(0)}";
 
   @override
   Widget build(BuildContext context) {
@@ -199,8 +199,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
                     // ---------- CATEGORY ----------
                     DropdownButtonFormField<CategoryOption>(
-                      key: ValueKey(_selectedCategory?.id ?? 'category'),
-                      initialValue: _selectedCategory,
+                      value: _selectedCategory,
                       decoration: const InputDecoration(
                         labelText: "Category",
                         border: OutlineInputBorder(),
@@ -221,8 +220,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
                     // ---------- BRAND (OPSIONAL) ----------
                     DropdownButtonFormField<BrandOption?>(
-                      key: ValueKey(_selectedBrand?.id ?? 'brand'),
-                      initialValue: _selectedBrand, // boleh null
+                      value: _selectedBrand, // boleh null
                       decoration: const InputDecoration(
                         labelText: "Brand (optional)",
                         border: OutlineInputBorder(),
@@ -354,13 +352,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
                         onPressed: () async {
                           if (!_formKey.currentState!.validate()) return;
                           if (_selectedCategory == null) return;
-                          final messenger = ScaffoldMessenger.of(context);
-                          final navigator = Navigator.of(context);
 
                           final payload = jsonEncode({
                             "name": _name,
                             "category_slug": _selectedCategory!.slug,
-                            "brand_slug": _selectedBrand?.slug,
+                            "brand_slug": _selectedBrand != null
+                                ? _selectedBrand!.slug
+                                : null,
                             "description": _description,
                             "price": _price,
                             "sale_price": _salePrice,
@@ -379,7 +377,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           if (!mounted) return;
 
                           if (response['status'] == 'success') {
-                            messenger.showSnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
                                   widget.isEdit
@@ -388,9 +386,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                 ),
                               ),
                             );
-                            navigator.pop(true); // sinyal refresh
+                            Navigator.pop(context, true); // sinyal refresh
                           } else {
-                            messenger.showSnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
                                   "Failed: ${response['error'] ?? 'Unknown error'}",
