@@ -12,6 +12,7 @@ class SearchSidePanels extends StatelessWidget {
     required this.recentSearches,
     required this.trendingProducts,
     required this.trendingNews,
+    required this.canManagePresets,
   });
 
   final List<SearchPreset> presets;
@@ -22,6 +23,7 @@ class SearchSidePanels extends StatelessWidget {
   final List<String> recentSearches;
   final List<ProductItem> trendingProducts;
   final List<NewsItem> trendingNews;
+  final bool canManagePresets;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class SearchSidePanels extends StatelessWidget {
           onPresetSelected: onPresetSelected,
           onEditPreset: onEditPreset,
           onDeletePreset: onDeletePreset,
+          canManagePresets: canManagePresets,
         ),
         const SizedBox(height: 12),
         _RecentSearchPanel(recentSearches: recentSearches),
@@ -53,6 +56,7 @@ class _PresetPanel extends StatelessWidget {
     required this.onPresetSelected,
     required this.onEditPreset,
     required this.onDeletePreset,
+    required this.canManagePresets,
   });
 
   final List<SearchPreset> presets;
@@ -60,6 +64,7 @@ class _PresetPanel extends StatelessWidget {
   final ValueChanged<SearchPreset> onPresetSelected;
   final ValueChanged<SearchPreset> onEditPreset;
   final ValueChanged<SearchPreset> onDeletePreset;
+  final bool canManagePresets;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +107,9 @@ class _PresetPanel extends StatelessWidget {
                               IconButton(
                                 icon: const Icon(Icons.edit, size: 20),
                                 tooltip: 'Edit preset',
-                                onPressed: () => onEditPreset(preset),
+                                onPressed: canManagePresets
+                                    ? () => onEditPreset(preset)
+                                    : null,
                               ),
                               IconButton(
                                 icon: const Icon(
@@ -110,7 +117,9 @@ class _PresetPanel extends StatelessWidget {
                                   size: 20,
                                 ),
                                 tooltip: 'Hapus preset',
-                                onPressed: () => onDeletePreset(preset),
+                                onPressed: canManagePresets
+                                    ? () => onDeletePreset(preset)
+                                    : null,
                               ),
                               const Icon(Icons.chevron_right),
                             ],

@@ -11,7 +11,7 @@ class CartService {
 
   static Future<Map<String, dynamic>> add(int productId) async {
     final res = await http.post(
-      Uri.parse(baseUrl + "add/"),
+      Uri.parse('${baseUrl}add/'),
       body: {"product_id": productId.toString(), "qty": "1"},
     );
     return jsonDecode(res.body);
@@ -19,7 +19,7 @@ class CartService {
 
   static Future<Map<String, dynamic>> updateQty(int itemId, int qty) async {
     final res = await http.post(
-      Uri.parse(baseUrl + "update/"),
+      Uri.parse('${baseUrl}update/'),
       body: {"item_id": itemId.toString(), "qty": qty.toString()},
     );
     return jsonDecode(res.body);
@@ -27,7 +27,7 @@ class CartService {
 
   static Future<Map<String, dynamic>> removeItem(int itemId) async {
     final res = await http.post(
-      Uri.parse(baseUrl + "remove/"),
+      Uri.parse('${baseUrl}remove/'),
       body: {"item_id": itemId.toString()},
     );
     return jsonDecode(res.body);
