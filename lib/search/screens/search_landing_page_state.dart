@@ -591,9 +591,38 @@ class _SearchLandingPageState extends State<SearchLandingPage>
     ).showSnackBar(SnackBar(content: Text('Preset "${preset.label}" dihapus')));
   }
 
+  bool _ensurePresetAccess() {
+    final request = context.read<CookieRequest>();
+    if (request.loggedIn) {
+      return true;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Login terlebih dahulu untuk mengelola preset pencarian.'),
+      ),
+    );
+    return false;
+  }
+
+  Future<void> _handleCreatePreset() async {
+    if (!_ensurePresetAccess()) return;
+    await _openPresetSheet();
+  }
+
+  Future<void> _handleEditPreset(SearchPreset preset) async {
+    if (!_ensurePresetAccess()) return;
+    await _openPresetSheet(preset);
+  }
+
+  Future<void> _handleDeletePreset(SearchPreset preset) async {
+    if (!_ensurePresetAccess()) return;
+    await _confirmDeletePreset(preset);
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final canManagePresets = context.watch<CookieRequest>().loggedIn;
     return Scaffold(
       appBar: AppBar(
         title: const Text('SportWatch Search'),
@@ -635,7 +664,8 @@ class _SearchLandingPageState extends State<SearchLandingPage>
                   onPresetChanged: (value) =>
                       setState(() => _selectedPresetId = value),
                   onPresetApplied: _applyPreset,
-                  onCreatePreset: () => _openPresetSheet(),
+                  onCreatePreset: () => _handleCreatePreset(),
+                  canManagePresets: canManagePresets,
                   onPerformSearch: _performSearch,
                 ),
                 const SizedBox(height: 16),
@@ -653,11 +683,12 @@ class _SearchLandingPageState extends State<SearchLandingPage>
                           presets: _presets,
                           selectedPresetId: _selectedPresetId,
                           onPresetSelected: _applyPreset,
-                          onEditPreset: _openPresetSheet,
-                          onDeletePreset: _confirmDeletePreset,
+                          onEditPreset: _handleEditPreset,
+                          onDeletePreset: _handleDeletePreset,
                           recentSearches: _recentSearches,
                           trendingProducts: _trendingProducts,
                           trendingNews: _trendingNews,
+                          canManagePresets: canManagePresets,
                         ),
                       ),
                     ],
@@ -671,11 +702,12 @@ class _SearchLandingPageState extends State<SearchLandingPage>
                         presets: _presets,
                         selectedPresetId: _selectedPresetId,
                         onPresetSelected: _applyPreset,
-                        onEditPreset: _openPresetSheet,
-                        onDeletePreset: _confirmDeletePreset,
+                        onEditPreset: _handleEditPreset,
+                        onDeletePreset: _handleDeletePreset,
                         recentSearches: _recentSearches,
                         trendingProducts: _trendingProducts,
                         trendingNews: _trendingNews,
+                        canManagePresets: canManagePresets,
                       ),
                     ],
                   ),
