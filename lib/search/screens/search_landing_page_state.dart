@@ -395,7 +395,7 @@ class _SearchLandingPageState extends State<SearchLandingPage>
     final newsCount = (entry['news_count'] as num?)?.toInt() ?? 0;
     final productCount = (entry['product_count'] as num?)?.toInt() ?? 0;
     final base = query.isEmpty ? '(tanpa kata kunci)' : query;
-    return '$base • $scope ($newsCount berita, $productCount produk)';
+    return '$base · $scope ($newsCount berita, $productCount produk)';
   }
 
   FilterOption? _findOptionById(List<FilterOption> options, String? id) {
@@ -598,7 +598,9 @@ class _SearchLandingPageState extends State<SearchLandingPage>
     }
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Login terlebih dahulu untuk mengelola preset pencarian.'),
+        content: Text(
+          'Login terlebih dahulu untuk mengelola preset pencarian.',
+        ),
       ),
     );
     return false;

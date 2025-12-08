@@ -29,6 +29,12 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
     });
   }
 
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
   Future<void> _fetchComments() async {
     final request = context.read<CookieRequest>();
     setState(() {

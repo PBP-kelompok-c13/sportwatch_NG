@@ -40,15 +40,27 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
 
   void _loadMatches({bool silent = false}) {
     final String? sportParam = _selectedSport == 'All' ? null : _selectedSport;
+    final String? statusParam = switch (_selectedStatus) {
+      'Live' => 'live',
+      'Finished' => 'recent',
+      'Upcoming' => 'upcoming',
+      _ => null,
+    };
 
     if (silent) {
-      _matchesFuture = _api.fetchMatches(sport: sportParam);
+      _matchesFuture = _api.fetchMatches(
+        sport: sportParam,
+        status: statusParam,
+      );
       setState(() {});
       return;
     }
 
     setState(() {
-      _matchesFuture = _api.fetchMatches(sport: sportParam);
+      _matchesFuture = _api.fetchMatches(
+        sport: sportParam,
+        status: statusParam,
+      );
     });
   }
 
@@ -56,6 +68,7 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
     setState(() {
       _selectedStatus = label;
     });
+    _loadMatches();
   }
 
   void _onSportChanged(String label) {
