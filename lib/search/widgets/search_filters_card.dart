@@ -25,6 +25,7 @@ class SearchFiltersCard extends StatelessWidget {
     required this.onPresetChanged,
     required this.onPresetApplied,
     required this.onCreatePreset,
+    required this.canManagePresets,
     required this.onPerformSearch,
   });
 
@@ -49,6 +50,7 @@ class SearchFiltersCard extends StatelessWidget {
   final ValueChanged<String?> onPresetChanged;
   final ValueChanged<SearchPreset> onPresetApplied;
   final VoidCallback onCreatePreset;
+  final bool canManagePresets;
   final VoidCallback onPerformSearch;
 
   @override
@@ -240,9 +242,14 @@ class SearchFiltersCard extends StatelessWidget {
                   ),
                 ),
                 OutlinedButton(
-                  onPressed: onCreatePreset,
+                  onPressed: canManagePresets ? onCreatePreset : null,
                   child: const Text('Buat Preset'),
                 ),
+                if (!canManagePresets)
+                  const Text(
+                    'Login untuk membuat preset.',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 FilledButton(
                   onPressed: onPerformSearch,
                   child: const Text('Cari Sekarang'),
