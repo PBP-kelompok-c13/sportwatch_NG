@@ -47,3 +47,13 @@ app.*.map.json
 
 # VSCode
 .vscode/
+
+.flutter-plugins
+
+android/local.properties
+
+.packages
+
+pubspec.lock
+
+
