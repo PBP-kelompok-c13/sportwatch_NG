@@ -1,4 +1,6 @@
 // lib/shop/screens/product_detail_page.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +49,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     // load reviews begitu halaman dibuka
     Future.microtask(() {
-      if (!mounted) return;
       final request = context.read<CookieRequest>();
       _fetchReviews(request, reset: true);
     });
@@ -92,7 +93,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
       final newReviews = results.map(_ProductReview.fromJson).toList();
 
-      if (!mounted) return;
       setState(() {
         _reviews.addAll(newReviews);
         _hasMoreReviews = response['has_next'] == true;
@@ -113,17 +113,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   Future<void> _submitReview(CookieRequest request) async {
     if (_isSubmittingReview) return;
-    final messenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
     if (_selectedRating == null) {
-      messenger.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a rating (1-5).')),
       );
       return;
     }
     if (_titleController.text.trim().isEmpty ||
         _contentController.text.trim().isEmpty) {
-      messenger.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Title and content cannot be empty.')),
       );
       return;
@@ -157,7 +155,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           createdAt: DateTime.now(), // backend tidak kirim, pakai sekarang saja
         );
 
-        if (!mounted) return;
         setState(() {
           _reviews.insert(0, newReview);
           _ratingAvg =
@@ -166,19 +163,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           _hasReviewed = true;
         });
 
-        messenger.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Review submitted. Thank you!')),
         );
 
-        navigator.pop(true); // kasih tahu parent bahwa data berubah
+        if (context.mounted) {
+          Navigator.pop(context, true); // kasih tahu parent bahwa data berubah
+        }
       } else {
         final err = response['errors'] ?? response['error'] ?? 'Unknown error';
-        messenger.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to submit review: $err')),
         );
       }
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Failed to submit review: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to submit review: $e')));
     } finally {
       if (mounted) {
         setState(() {

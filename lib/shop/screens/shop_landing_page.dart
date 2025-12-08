@@ -37,11 +37,10 @@ class _ShopPageState extends State<ShopPage> {
 
   void _showOwnerActions(BuildContext context, ProductEntry product) async {
     final request = context.read<CookieRequest>();
-    final messenger = ScaffoldMessenger.of(context);
 
     showModalBottomSheet(
       context: context,
-      builder: (sheetContext) {
+      builder: (_) {
         return SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -50,7 +49,7 @@ class _ShopPageState extends State<ShopPage> {
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit product'),
                 onTap: () async {
-                  Navigator.pop(sheetContext);
+                  Navigator.pop(context);
 
                   final changed = await Navigator.push<bool>(
                     context,
@@ -69,7 +68,7 @@ class _ShopPageState extends State<ShopPage> {
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text('Delete product'),
                 onTap: () async {
-                  Navigator.pop(sheetContext);
+                  Navigator.pop(context);
 
                   final confirm = await showDialog<bool>(
                     context: context,
@@ -92,38 +91,40 @@ class _ShopPageState extends State<ShopPage> {
                     ),
                   );
 
-                  if (!mounted || confirm != true) {
-                    return;
-                  }
-                  try {
-                    final response = await request.post(
-                      "$baseUrl/shop/api/products/${product.id}/delete-flutter/",
-                      {}, // body kosong saja
-                    );
-
-                    if (!mounted) return;
-
-                    if (response["status"] == "success") {
-                      messenger.showSnackBar(
-                        const SnackBar(
-                          content: Text("Product berhasil dihapus."),
-                        ),
+                  if (confirm == true) {
+                    try {
+                      final response = await request.post(
+                        "$baseUrl/shop/api/products/${product.id}/delete-flutter/",
+                        {}, // body kosong saja
                       );
-                      _refresh(); // reload list produk
-                    } else {
-                      messenger.showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "Gagal menghapus: ${response['error'] ?? 'Unknown error'}",
-                          ),
-                        ),
-                      );
+
+                      if (response["status"] == "success") {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Product berhasil dihapus."),
+                            ),
+                          );
+                        }
+                        _refresh(); // reload list produk
+                      } else {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Gagal menghapus: ${response['error'] ?? 'Unknown error'}",
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text("Error: $e")));
+                      }
                     }
-                  } catch (e) {
-                    if (!mounted) return;
-                    messenger.showSnackBar(
-                      SnackBar(content: Text("Error: $e")),
-                    );
                   }
                 },
               ),

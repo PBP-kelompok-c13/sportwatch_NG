@@ -22,21 +22,17 @@ class _NewsManagementPageState extends State<NewsManagementPage> {
   }
 
   Future<void> _fetchNews() async {
-    if (!mounted) return;
     setState(() => _isLoading = true);
     final request = context.read<CookieRequest>();
     try {
       final response = await request.get(newsListApi(page: 1, perPage: 20));
-      if (!mounted) return;
       setState(() {
         _news = response['results'] ?? [];
         _isLoading = false;
       });
     } catch (e) {
-      if (!mounted) return;
       setState(() => _isLoading = false);
-      final messenger = ScaffoldMessenger.of(context);
-      messenger.showSnackBar(SnackBar(content: Text('Error fetching news: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching news: $e')));
     }
   }
 
@@ -53,22 +49,19 @@ class _NewsManagementPageState extends State<NewsManagementPage> {
       )
     );
     
-    if (!mounted || confirm != true) return;
+    if (confirm != true) return;
 
     final request = context.read<CookieRequest>();
-    final messenger = ScaffoldMessenger.of(context);
     try {
       final response = await request.postJson(deleteNewsApi(id), '{}');
       if (response['status'] == 'success') {
-        if (!mounted) return;
-        await _fetchNews();
-        messenger.showSnackBar(const SnackBar(content: Text('Deleted successfully')));
+        _fetchNews();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Deleted successfully')));
       } else {
-        messenger.showSnackBar(SnackBar(content: Text('Error: ${response['message']}')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${response['message']}')));
       }
     } catch (e) {
-      if (!mounted) return;
-      messenger.showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -77,7 +70,6 @@ class _NewsManagementPageState extends State<NewsManagementPage> {
       context, 
       MaterialPageRoute(builder: (context) => NewsFormPage(initialData: data))
     );
-    if (!mounted) return;
     if (result == true) {
       _fetchNews();
     }

@@ -23,21 +23,17 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
   }
 
   Future<void> _fetchScores() async {
-    if (!mounted) return;
     setState(() => _isLoading = true);
     final request = context.read<CookieRequest>();
     try {
       final response = await request.get(scoreboardFilterApi(status: _currentFilter));
-      if (!mounted) return;
       setState(() {
         _scores = response['scores'] ?? [];
         _isLoading = false;
       });
     } catch (e) {
-      if (!mounted) return;
       setState(() => _isLoading = false);
-      final messenger = ScaffoldMessenger.of(context);
-      messenger.showSnackBar(SnackBar(content: Text('Error fetching scores: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching scores: $e')));
     }
   }
 
@@ -54,22 +50,19 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
       )
     );
     
-    if (!mounted || confirm != true) return;
+    if (confirm != true) return;
 
     final request = context.read<CookieRequest>();
-    final messenger = ScaffoldMessenger.of(context);
     try {
       final response = await request.postJson(deleteScoreApi(id), '{}');
       if (response['status'] == 'success') {
-        if (!mounted) return;
-        await _fetchScores();
-        messenger.showSnackBar(const SnackBar(content: Text('Deleted successfully')));
+        _fetchScores();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Deleted successfully')));
       } else {
-        messenger.showSnackBar(SnackBar(content: Text('Error: ${response['message']}')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${response['message']}')));
       }
     } catch (e) {
-      if (!mounted) return;
-      messenger.showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -78,7 +71,6 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
       context, 
       MaterialPageRoute(builder: (context) => ScoreFormPage(initialData: data))
     );
-    if (!mounted) return;
     if (result == true) {
       _fetchScores();
     }

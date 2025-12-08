@@ -188,7 +188,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              initialValue: _selectedCategorySlug,
+              value: _selectedCategorySlug,
               decoration: const InputDecoration(labelText: 'Category'),
               items: _categories.map((c) => DropdownMenuItem(
                 value: c['slug'] as String, 
@@ -199,7 +199,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
             ),
             const SizedBox(height: 16),
              DropdownButtonFormField<String>(
-              initialValue: _selectedBrandSlug,
+              value: _selectedBrandSlug,
               decoration: const InputDecoration(labelText: 'Brand'),
               items: _brands.map((b) => DropdownMenuItem(
                 value: b['slug'] as String, 
