@@ -25,7 +25,6 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
     setState(() => _isLoading = true);
     final request = context.read<CookieRequest>();
     try {
-      // Fetching a larger page size to see more items
       final response = await request.get(
         productsListApi(page: 1, perPage: 50, sort: 'newest'),
       );
