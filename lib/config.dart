@@ -38,7 +38,7 @@ String newsListApi({int page = 1, int perPage = 6}) {
   final safePerPage = perPage.clamp(1, 30);
   final uri = Uri.parse(
     baseUrl,
-  ).resolve("/api/news/?page=$page&per_page=$safePerPage");
+  ).resolve("/portal_berita/api/news/?page=$page&per_page=$safePerPage");
   return uri.toString();
 }
 
