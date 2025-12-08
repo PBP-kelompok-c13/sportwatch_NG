@@ -14,7 +14,7 @@ class NewsManagementPage extends StatefulWidget {
 class _NewsManagementPageState extends State<NewsManagementPage> {
   List<dynamic> _news = [];
   bool _isLoading = true;
-  
+
   @override
   void initState() {
     super.initState();
@@ -42,15 +42,21 @@ class _NewsManagementPageState extends State<NewsManagementPage> {
 
   Future<void> _deleteNews(String id) async {
     final confirm = await showDialog<bool>(
-      context: context, 
+      context: context,
       builder: (c) => AlertDialog(
         title: const Text('Confirm Delete'),
         content: const Text('Are you sure you want to delete this news?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(
+            onPressed: () => Navigator.pop(c, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(c, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
         ],
-      )
+      ),
     );
     
     if (!mounted || confirm != true) return;
@@ -59,6 +65,7 @@ class _NewsManagementPageState extends State<NewsManagementPage> {
     final messenger = ScaffoldMessenger.of(context);
     try {
       final response = await request.postJson(deleteNewsApi(id), '{}');
+      if (!mounted) return;
       if (response['status'] == 'success') {
         if (!mounted) return;
         await _fetchNews();
@@ -74,8 +81,8 @@ class _NewsManagementPageState extends State<NewsManagementPage> {
 
   void _navigateForm([Map<String, dynamic>? data]) async {
     final result = await Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => NewsFormPage(initialData: data))
+      context,
+      MaterialPageRoute(builder: (context) => NewsFormPage(initialData: data)),
     );
     if (!mounted) return;
     if (result == true) {
@@ -86,40 +93,52 @@ class _NewsManagementPageState extends State<NewsManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Manage News'),
-      ),
-      body: _isLoading 
-        ? const Center(child: CircularProgressIndicator()) 
-        : ListView.builder(
-            itemCount: _news.length,
-            itemBuilder: (context, index) {
-              final item = _news[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  leading: item['thumbnail'] != null && item['thumbnail'].toString().isNotEmpty
-                      ? Image.network(
-                          item['thumbnail'], 
-                          width: 50, 
-                          height: 50, 
-                          fit: BoxFit.cover,
-                          errorBuilder: (_,__,___) => const Icon(Icons.article),
-                        )
-                      : const Icon(Icons.article),
-                  title: Text(item['judul'] ?? 'No Title'),
-                  subtitle: Text('${item['kategori'] ?? 'General'} • ${item['views']} views'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: const Icon(Icons.edit), onPressed: () => _navigateForm(item)),
-                      IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteNews(item['id'])),
-                    ],
+      appBar: AppBar(title: const Text('Manage News')),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _news.length,
+              itemBuilder: (context, index) {
+                final item = _news[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
                   ),
-                ),
-              );
-            },
-          ),
+                  child: ListTile(
+                    leading:
+                        item['thumbnail'] != null &&
+                            item['thumbnail'].toString().isNotEmpty
+                        ? Image.network(
+                            item['thumbnail'],
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.article),
+                          )
+                        : const Icon(Icons.article),
+                    title: Text(item['judul'] ?? 'No Title'),
+                    subtitle: Text(
+                      '${item['kategori'] ?? 'General'} • ${item['views']} views',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => _navigateForm(item),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _deleteNews(item['id']),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateForm(),
         child: const Icon(Icons.add),

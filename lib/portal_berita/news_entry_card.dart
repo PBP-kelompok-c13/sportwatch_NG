@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/config.dart';
 import 'package:sportwatch_ng/portal_berita/news_entry.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -23,15 +25,126 @@ const double _kCategoryTagBorderRadius = 4.0;
 const double _kCategoryTagFontSize = 11.0;
 const double _kTitleSpacing = 8.0;
 const double _kAuthorDateSpacing = 8.0;
-const double _kContentPreviewSpacing = 12.0;
-const double _kReadMoreSpacing = 4.0;
-const double _kReadMoreIconSize = 16.0;
 
-class NewsEntryCard extends StatelessWidget {
+class NewsEntryCard extends StatefulWidget {
   final NewsEntry news;
   final VoidCallback onTap;
 
   const NewsEntryCard({super.key, required this.news, required this.onTap});
+
+  @override
+  State<NewsEntryCard> createState() => _NewsEntryCardState();
+}
+
+class _NewsEntryCardState extends State<NewsEntryCard> {
+  late List<ReactionSummary> _reactionSummary;
+  String? _userReaction;
+  bool _isReacting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _reactionSummary = widget.news.reactionSummary;
+    _userReaction = widget.news.userReaction;
+  }
+
+  @override
+  void didUpdateWidget(covariant NewsEntryCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.news != oldWidget.news) {
+      _reactionSummary = widget.news.reactionSummary;
+      _userReaction = widget.news.userReaction;
+    }
+  }
+
+  Future<void> _handleReaction(
+    String reactionKey,
+    CookieRequest request,
+  ) async {
+    if (_isReacting) return;
+    if (!request.loggedIn) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please login to react')));
+      return;
+    }
+
+    setState(() {
+      _isReacting = true;
+    });
+
+    // Optimistic update
+    final previousUserReaction = _userReaction;
+    final previousSummary = _reactionSummary
+        .map((e) => ReactionSummary.fromJson(e.toJson()))
+        .toList();
+
+    setState(() {
+      if (_userReaction == reactionKey) {
+        // Remove reaction
+        _userReaction = null;
+        for (var summary in _reactionSummary) {
+          if (summary.key == reactionKey) {
+            summary.count = (summary.count - 1).clamp(0, 999999);
+          }
+        }
+      } else {
+        // Change or add reaction
+        if (_userReaction != null) {
+          // Decrement previous
+          for (var summary in _reactionSummary) {
+            if (summary.key == _userReaction) {
+              summary.count = (summary.count - 1).clamp(0, 999999);
+            }
+          }
+        }
+        // Increment new
+        _userReaction = reactionKey;
+        for (var summary in _reactionSummary) {
+          if (summary.key == reactionKey) {
+            summary.count++;
+          }
+        }
+      }
+    });
+
+    try {
+      final response = await request.post(reactToNewsApi(widget.news.id), {
+        'reaction': reactionKey,
+      });
+
+      if (response['status'] == 'ok') {
+        // Update with server data to be sure
+        if (mounted) {
+          setState(() {
+            _userReaction = response['user_reaction'];
+            _reactionSummary = List<ReactionSummary>.from(
+              response['reactions'].map((x) => ReactionSummary.fromJson(x)),
+            );
+          });
+        }
+      } else {
+        throw Exception(response['error'] ?? 'Unknown error');
+      }
+    } catch (e) {
+      // Revert on error
+      if (mounted) {
+        setState(() {
+          _userReaction = previousUserReaction;
+          _reactionSummary = previousSummary;
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Failed to react: $e')));
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isReacting = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +152,7 @@ class NewsEntryCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final mutedColor = colorScheme.onSurfaceVariant;
+    final request = context.watch<CookieRequest>();
 
     return Card(
       margin: const EdgeInsets.symmetric(
@@ -46,24 +160,24 @@ class NewsEntryCard extends StatelessWidget {
         vertical: _kCardMarginVertical,
       ),
       elevation: _kCardElevation,
-      clipBehavior: Clip.antiAlias, // Clips content to card borders
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_kCardBorderRadius),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Section with Featured Badge Overlay
+            // Image Section
             Stack(
               children: [
                 SizedBox(
                   height: _kImageHeight,
                   width: double.infinity,
-                  child: news.thumbnail.isNotEmpty
+                  child: widget.news.thumbnail.isNotEmpty
                       ? Image.network(
-                          buildProxyImageUrl(news.thumbnail),
+                          buildProxyImageUrl(widget.news.thumbnail),
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -110,8 +224,7 @@ class NewsEntryCard extends StatelessWidget {
                           ),
                         ),
                 ),
-                // Featured Badge
-                if (news.isPublished)
+                if (widget.news.isPublished)
                   Positioned(
                     top: _kFeaturedBadgeTop,
                     right: _kFeaturedBadgeRight,
@@ -178,7 +291,7 @@ class NewsEntryCard extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      news.kategori.toUpperCase(),
+                      widget.news.kategori.toUpperCase(),
                       style: TextStyle(
                         color: colorScheme.primary,
                         fontSize: _kCategoryTagFontSize,
@@ -190,7 +303,7 @@ class NewsEntryCard extends StatelessWidget {
 
                   // Title
                   Text(
-                    news.judul,
+                    widget.news.judul,
                     style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -203,12 +316,12 @@ class NewsEntryCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        news.penulis ?? "Unknown Author",
+                        widget.news.penulis ?? "Unknown Author",
                         style: textTheme.bodySmall?.copyWith(color: mutedColor),
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        timeago.format(news.tanggalDibuat),
+                        timeago.format(widget.news.tanggalDibuat),
                         style: textTheme.bodySmall?.copyWith(color: mutedColor),
                       ),
                     ],
@@ -217,7 +330,7 @@ class NewsEntryCard extends StatelessWidget {
 
                   // Content Preview
                   Text(
-                    news.konten,
+                    widget.news.konten,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.bodyMedium?.copyWith(
@@ -226,25 +339,60 @@ class NewsEntryCard extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: _kContentPreviewSpacing),
+                  const SizedBox(height: 16),
 
-                  // Read More Indicator
-                  Row(
-                    children: [
-                      Text(
-                        "Read more",
-                        style: TextStyle(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: _kReadMoreSpacing),
-                      Icon(
-                        Icons.arrow_forward,
-                        size: _kReadMoreIconSize,
-                        color: colorScheme.primary,
-                      ),
-                    ],
+                  // Reactions Bar
+                  SizedBox(
+                    height: 40,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _reactionSummary.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 8),
+                      itemBuilder: (context, index) {
+                        final reaction = _reactionSummary[index];
+                        final isSelected = _userReaction == reaction.key;
+                        return Material(
+                          color: isSelected
+                              ? colorScheme.primaryContainer
+                              : colorScheme.surfaceContainerHighest.withValues(
+                                  alpha: 0.5,
+                                ),
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () => _handleReaction(reaction.key, request),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    reaction.emoji,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${reaction.count}',
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? colorScheme.onPrimaryContainer
+                                          : colorScheme.onSurfaceVariant,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

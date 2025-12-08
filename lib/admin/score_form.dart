@@ -67,10 +67,10 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
 
     try {
       final isEdit = widget.initialData != null;
-      final url = isEdit 
-          ? editScoreApi(widget.initialData!['id']) 
+      final url = isEdit
+          ? editScoreApi(widget.initialData!['id'])
           : createScoreApi();
-      
+
       final response = await request.postJson(url, body);
 
       if (response['status'] == 'success') {
@@ -89,9 +89,9 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -147,13 +147,17 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
             DropdownButtonFormField<String>(
               initialValue: _sportOptions.contains(_sport) ? _sport : _sportOptions.first,
               decoration: const InputDecoration(labelText: 'Sport'),
-              items: _sportOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+              items: _sportOptions
+                  .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                  .toList(),
               onChanged: (v) => setState(() => _sport = v!),
             ),
             DropdownButtonFormField<String>(
               initialValue: _statusOptions.contains(_status) ? _status : _statusOptions.first,
               decoration: const InputDecoration(labelText: 'Status'),
-              items: _statusOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+              items: _statusOptions
+                  .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                  .toList(),
               onChanged: (v) => setState(() => _status = v!),
             ),
             TextFormField(
@@ -169,7 +173,9 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _isLoading ? null : _save,
-              child: _isLoading ? const CircularProgressIndicator() : const Text('Save'),
+              child: _isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text('Save'),
             ),
           ],
         ),

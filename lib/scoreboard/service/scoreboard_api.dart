@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:sportwatch_ng/scoreboard/models/scoreboard_entry.dart';
+import 'package:flutter/foundation.dart';
+
+import '../models/scoreboard_entry.dart';
 
 class ScoreboardApi {
-  final String baseUrl = 'http://localhost:8000/scoreboard/filter/';
+  late final String baseUrl = kIsWeb
+      ? 'http://127.0.0.1:8000/scoreboard/filter/'
+      : 'http://10.0.2.2:8000/scoreboard/filter/';
 
   Future<List<ScoreboardMatch>> fetchMatches({String? sport}) async {
     final uri = Uri.parse(

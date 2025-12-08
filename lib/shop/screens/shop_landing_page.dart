@@ -11,6 +11,25 @@ import 'package:sportwatch_ng/shop/screens/product_detail_page.dart';
 import 'package:sportwatch_ng/shop/screens/product_form_page.dart';
 import 'package:sportwatch_ng/shop/widgets/product_entry_card.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
+import 'package:sportwatch_ng/card_notifier.dart';
+import 'package:sportwatch_ng/fitur_belanja/screens/cart_page.dart';
+
+// Helper function untuk format angka dengan pemisah ribuan
+String formatCurrency(double value) {
+  final formatted = value.toStringAsFixed(0);
+  final buffer = StringBuffer();
+  final chars = formatted.split('').toList();
+  
+  for (int i = 0; i < chars.length; i++) {
+    buffer.write(chars[i]);
+    final remainingDigits = chars.length - i - 1;
+    if (remainingDigits > 0 && remainingDigits % 3 == 0) {
+      buffer.write(',');
+    }
+  }
+  
+  return buffer.toString();
+}
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -234,6 +253,41 @@ class _ShopPageState extends State<ShopPage> {
         title: const Text('Shop'),
         centerTitle: true,
         elevation: 0,
+
+        actions: [
+          Consumer<CartNotifier>(
+            builder: (context, cart, child) {
+              return Badge(
+                label: Text('${cart.itemCount}'),
+                isLabelVisible: cart.itemCount > 0,
+                child: IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CartPage()),
+                    );
+                    // TODO: Navigate ke CartPage
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (_) => const CartPage()),
+                    // );
+                    
+                    // Sementara tampilkan info
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Cart: ${cart.itemCount} items, Total: Rp ${formatCurrency(cart.totalPrice)}',
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
 
       body: SafeArea(
@@ -480,6 +534,13 @@ class _ShopPageState extends State<ShopPage> {
                           onAddToCart: () {
                             // TODO: nanti isi logika add to cart di sini
                             // misalnya pakai Provider / request.post ke Django
+                            final cart = context.read<CartNotifier>();
+                            // Tambahkan product ke cart
+                            cart.addItem(
+                              product.pk, // Product ID
+                              product.name, // Product Name
+                              product.price, // Price (already double)
+                            );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(

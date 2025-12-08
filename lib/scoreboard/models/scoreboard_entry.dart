@@ -1,9 +1,4 @@
-
-enum MatchStatus {
-  live,
-  finished,
-  upcoming,
-}
+enum MatchStatus { live, finished, upcoming }
 
 MatchStatus matchStatusFromString(String value) {
   switch (value.toLowerCase()) {

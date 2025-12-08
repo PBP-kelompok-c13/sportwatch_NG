@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/login.dart';
 import 'package:sportwatch_ng/theme_notifier.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
+import 'package:sportwatch_ng/card_notifier.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +13,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     const seedColor = Color(0xFF0050C8);
@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
         ChangeNotifierProvider<UserProfileNotifier>(
           create: (_) => UserProfileNotifier(),
+        ),
+        ChangeNotifierProvider<CartNotifier>(
+          create: (_) => CartNotifier(),
         ),
       ],
       child: Consumer<ThemeNotifier>(

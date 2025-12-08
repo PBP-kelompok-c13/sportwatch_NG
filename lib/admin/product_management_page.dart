@@ -14,7 +14,7 @@ class ProductManagementPage extends StatefulWidget {
 class _ProductManagementPageState extends State<ProductManagementPage> {
   List<dynamic> _products = [];
   bool _isLoading = true;
-  
+
   @override
   void initState() {
     super.initState();
@@ -43,15 +43,21 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
 
   Future<void> _deleteProduct(String id) async {
     final confirm = await showDialog<bool>(
-      context: context, 
+      context: context,
       builder: (c) => AlertDialog(
         title: const Text('Confirm Delete'),
         content: const Text('Are you sure you want to delete this product?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(
+            onPressed: () => Navigator.pop(c, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(c, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
         ],
-      )
+      ),
     );
     
     if (!mounted || confirm != true) return;
@@ -60,6 +66,7 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
     final messenger = ScaffoldMessenger.of(context);
     try {
       final response = await request.postJson(deleteProductApi(id), '{}');
+      if (!mounted) return;
       if (response['status'] == 'success') {
         if (!mounted) return;
         await _fetchProducts();
@@ -75,8 +82,10 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
 
   void _navigateForm([Map<String, dynamic>? data]) async {
     final result = await Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => ProductFormPage(initialData: data))
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductFormPage(initialData: data),
+      ),
     );
     if (!mounted) return;
     if (result == true) {
@@ -87,40 +96,52 @@ class _ProductManagementPageState extends State<ProductManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Manage Products'),
-      ),
-      body: _isLoading 
-        ? const Center(child: CircularProgressIndicator()) 
-        : ListView.builder(
-            itemCount: _products.length,
-            itemBuilder: (context, index) {
-              final item = _products[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  leading: item['thumbnail'] != null && item['thumbnail'].toString().isNotEmpty
-                      ? Image.network(
-                          item['thumbnail'], 
-                          width: 50, 
-                          height: 50, 
-                          fit: BoxFit.cover,
-                          errorBuilder: (_,__,___) => const Icon(Icons.shopping_bag),
-                        )
-                      : const Icon(Icons.shopping_bag),
-                  title: Text(item['name'] ?? 'No Name'),
-                  subtitle: Text('${item['category'] ?? 'Uncategorized'} • Rp${item['price']}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: const Icon(Icons.edit), onPressed: () => _navigateForm(item)),
-                      IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () => _deleteProduct(item['id'])),
-                    ],
+      appBar: AppBar(title: const Text('Manage Products')),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _products.length,
+              itemBuilder: (context, index) {
+                final item = _products[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
                   ),
-                ),
-              );
-            },
-          ),
+                  child: ListTile(
+                    leading:
+                        item['thumbnail'] != null &&
+                            item['thumbnail'].toString().isNotEmpty
+                        ? Image.network(
+                            item['thumbnail'],
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.shopping_bag),
+                          )
+                        : const Icon(Icons.shopping_bag),
+                    title: Text(item['name'] ?? 'No Name'),
+                    subtitle: Text(
+                      '${item['category'] ?? 'Uncategorized'} • Rp${item['price']}',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => _navigateForm(item),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _deleteProduct(item['id']),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateForm(),
         child: const Icon(Icons.add),

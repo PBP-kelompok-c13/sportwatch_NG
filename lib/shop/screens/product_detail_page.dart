@@ -143,6 +143,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         "title": _titleController.text.trim(),
         "content": _contentController.text.trim(),
       });
+      if (!mounted) return;
 
       // Kalau backend mengikuti view create_review, response-nya:
       // { ok: true, review: {...}, rating_avg: x, rating_count: y }

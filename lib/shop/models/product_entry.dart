@@ -39,8 +39,7 @@ class ProductEntry {
   double get price =>
       double.tryParse(fields.price) ??
       0; // price and salePrice come as String from JSON
-  double? get salePrice =>
-      fields.salePrice != null ? double.tryParse(fields.salePrice!) : null;
+  double? get salePrice => double.tryParse(fields.salePrice ?? '');
   double get finalPrice => salePrice ?? price;
 
   int get discountPercent {
