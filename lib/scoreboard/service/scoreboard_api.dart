@@ -10,11 +10,9 @@ class ScoreboardApi {
       : 'http://10.0.2.2:8000/scoreboard/filter/';
 
   Future<List<ScoreboardMatch>> fetchMatches({String? sport}) async {
-    final uri = Uri.parse(baseUrl).replace(
-      queryParameters: {
-        if (sport != null) 'sport': sport,
-      },
-    );
+    final uri = Uri.parse(
+      baseUrl,
+    ).replace(queryParameters: {if (sport != null) 'sport': sport});
 
     final response = await http.get(uri);
 

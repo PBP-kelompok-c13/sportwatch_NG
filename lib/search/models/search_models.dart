@@ -123,8 +123,11 @@ class ProductItem {
   final int? stock;
 
   factory ProductItem.fromJson(Map<String, dynamic> json) {
-    final discount = (json['discount'] as num? ?? json['discount_percent'] as num?)?.toDouble();
-    final priceValue = json['final_price'] ?? json['price'] ?? json['sale_price'];
+    final discount =
+        (json['discount'] as num? ?? json['discount_percent'] as num?)
+            ?.toDouble();
+    final priceValue =
+        json['final_price'] ?? json['price'] ?? json['sale_price'];
     return ProductItem(
       id: json['id']?.toString(),
       name: json['name'] as String? ?? '',
@@ -167,10 +170,7 @@ class SearchResultsSummary {
 
 @immutable
 class FilterOption {
-  const FilterOption({
-    required this.id,
-    required this.name,
-  });
+  const FilterOption({required this.id, required this.name});
 
   final String id;
   final String name;

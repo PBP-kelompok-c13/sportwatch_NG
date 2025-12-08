@@ -50,8 +50,8 @@ class FeaturedProductsSection extends StatelessWidget {
                   final crossAxisCount = constraints.maxWidth > 800
                       ? 3
                       : constraints.maxWidth > 520
-                          ? 2
-                          : 1;
+                      ? 2
+                      : 1;
                   return GridView.count(
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 12,
@@ -60,9 +60,7 @@ class FeaturedProductsSection extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     childAspectRatio: 1.1,
                     children: products
-                        .map(
-                          (product) => FeaturedProductCard(product: product),
-                        )
+                        .map((product) => FeaturedProductCard(product: product))
                         .toList(),
                   );
                 },

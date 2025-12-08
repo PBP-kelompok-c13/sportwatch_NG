@@ -5,10 +5,7 @@ import 'package:sportwatch_ng/scoreboard/models/scoreboard_entry.dart';
 class MatchCard extends StatelessWidget {
   final ScoreboardMatch match;
 
-  const MatchCard({
-    super.key,
-    required this.match,
-  });
+  const MatchCard({super.key, required this.match});
 
   Color _statusColor(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -51,10 +48,7 @@ class MatchCard extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
-        side: BorderSide(
-          color: borderColor,
-          width: 1.5,
-        ),
+        side: BorderSide(color: borderColor, width: 1.5),
       ),
       elevation: 0,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -67,8 +61,10 @@ class MatchCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: colorScheme.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(16),
@@ -83,8 +79,10 @@ class MatchCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: _statusColor(context).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(18),
@@ -186,9 +184,7 @@ class _TeamInfo extends StatelessWidget {
       Flexible(
         child: Text(
           name,
-          style: textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
           overflow: TextOverflow.ellipsis,
         ),
       ),
@@ -199,8 +195,9 @@ class _TeamInfo extends StatelessWidget {
     ];
 
     return Row(
-      mainAxisAlignment:
-          alignRight ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: alignRight
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: rowChildren,
     );

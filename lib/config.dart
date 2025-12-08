@@ -52,12 +52,17 @@ String searchFilterOptionsUrl() {
 }
 
 String featuredProductsUrl({int page = 1}) {
-  final uri =
-      Uri.parse(baseUrl).resolve("/shop/api/products/?sort=featured&page=$page");
+  final uri = Uri.parse(
+    baseUrl,
+  ).resolve("/shop/api/products/?sort=featured&page=$page");
   return uri.toString();
 }
 
-String productsListApi({int page = 1, int perPage = 6, String sort = "featured"}) {
+String productsListApi({
+  int page = 1,
+  int perPage = 6,
+  String sort = "featured",
+}) {
   final safePerPage = perPage.clamp(1, 50);
   final uri = Uri.parse(
     baseUrl,
@@ -87,28 +92,58 @@ String scoreboardFilterApi({String? status, String? sport}) {
 
 // --- News CRUD ---
 String createNewsApi() {
-  return Uri.parse(baseUrl).resolve("/portal_berita/api/create-flutter/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/portal_berita/api/create-flutter/").toString();
 }
 
 String editNewsApi(String id) {
-  return Uri.parse(baseUrl).resolve("/portal_berita/api/edit-flutter/$id/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/portal_berita/api/edit-flutter/$id/").toString();
 }
 
 String deleteNewsApi(String id) {
-  return Uri.parse(baseUrl).resolve("/portal_berita/api/delete-flutter/$id/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/portal_berita/api/delete-flutter/$id/").toString();
+}
+
+String reactToNewsApi(String id) {
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/portal_berita/news/$id/react/").toString();
+}
+
+String newsCommentsApi(String id) {
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/portal_berita/api/news/$id/comments/").toString();
+}
+
+String createCommentApi(String id) {
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/portal_berita/api/news/$id/comment/create/").toString();
 }
 
 // --- Scoreboard CRUD ---
 String createScoreApi() {
-  return Uri.parse(baseUrl).resolve("/scoreboard/api/create-flutter/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/scoreboard/api/create-flutter/").toString();
 }
 
 String editScoreApi(int id) {
-  return Uri.parse(baseUrl).resolve("/scoreboard/api/edit-flutter/$id/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/scoreboard/api/edit-flutter/$id/").toString();
 }
 
 String deleteScoreApi(int id) {
-  return Uri.parse(baseUrl).resolve("/scoreboard/api/delete-flutter/$id/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/scoreboard/api/delete-flutter/$id/").toString();
 }
 
 // --- Shop CRUD ---
@@ -117,9 +152,13 @@ String createProductApi() {
 }
 
 String editProductApi(String id) {
-  return Uri.parse(baseUrl).resolve("/shop/api/products/$id/edit-flutter/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/shop/api/products/$id/edit-flutter/").toString();
 }
 
 String deleteProductApi(String id) {
-  return Uri.parse(baseUrl).resolve("/shop/api/products/$id/delete-flutter/").toString();
+  return Uri.parse(
+    baseUrl,
+  ).resolve("/shop/api/products/$id/delete-flutter/").toString();
 }

@@ -1,6 +1,7 @@
 part of 'search_landing_page.dart';
 
-class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKeepAliveClientMixin {
+class _SearchLandingPageState extends State<SearchLandingPage>
+    with AutomaticKeepAliveClientMixin {
   static _SearchPageSnapshot? _lastSnapshot;
   final TextEditingController _queryController = TextEditingController();
   final TextEditingController _minPriceController = TextEditingController();
@@ -141,14 +142,27 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     final request = context.read<CookieRequest>();
     try {
       final response = await request.get(searchFilterOptionsUrl());
-      final newsCategories = (response['news_categories'] as List<dynamic>? ?? [])
-          .map((item) => FilterOption.fromJson(Map<String, dynamic>.from(item as Map)))
-          .toList();
-      final categories = (response['product_categories'] as List<dynamic>? ?? [])
-          .map((item) => FilterOption.fromJson(Map<String, dynamic>.from(item as Map)))
-          .toList();
+      final newsCategories =
+          (response['news_categories'] as List<dynamic>? ?? [])
+              .map(
+                (item) => FilterOption.fromJson(
+                  Map<String, dynamic>.from(item as Map),
+                ),
+              )
+              .toList();
+      final categories =
+          (response['product_categories'] as List<dynamic>? ?? [])
+              .map(
+                (item) => FilterOption.fromJson(
+                  Map<String, dynamic>.from(item as Map),
+                ),
+              )
+              .toList();
       final brands = (response['brands'] as List<dynamic>? ?? [])
-          .map((item) => FilterOption.fromJson(Map<String, dynamic>.from(item as Map)))
+          .map(
+            (item) =>
+                FilterOption.fromJson(Map<String, dynamic>.from(item as Map)),
+          )
           .toList();
       if (!mounted) return;
       setState(() {
@@ -156,15 +170,22 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
         _productCategoryOptions = categories;
         _brandOptions = brands;
         if (_selectedNewsCategoryId != null &&
-            _newsCategoryOptions.indexWhere((opt) => opt.id == _selectedNewsCategoryId) == -1) {
+            _newsCategoryOptions.indexWhere(
+                  (opt) => opt.id == _selectedNewsCategoryId,
+                ) ==
+                -1) {
           _selectedNewsCategoryId = null;
         }
         if (_selectedProductCategoryId != null &&
-            _productCategoryOptions.indexWhere((opt) => opt.id == _selectedProductCategoryId) == -1) {
+            _productCategoryOptions.indexWhere(
+                  (opt) => opt.id == _selectedProductCategoryId,
+                ) ==
+                -1) {
           _selectedProductCategoryId = null;
         }
         if (_selectedBrandId != null &&
-            _brandOptions.indexWhere((opt) => opt.id == _selectedBrandId) == -1) {
+            _brandOptions.indexWhere((opt) => opt.id == _selectedBrandId) ==
+                -1) {
           _selectedBrandId = null;
         }
       });
@@ -178,7 +199,10 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     try {
       final response = await request.get(featuredProductsUrl());
       final results = (response['results'] as List<dynamic>? ?? [])
-          .map((item) => ProductItem.fromJson(Map<String, dynamic>.from(item as Map)))
+          .map(
+            (item) =>
+                ProductItem.fromJson(Map<String, dynamic>.from(item as Map)),
+          )
           .take(3)
           .toList();
       if (!mounted) return;
@@ -204,8 +228,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     _trendingNews = List<NewsItem>.from(snapshot.trendingNews);
     _trendingProducts = List<ProductItem>.from(snapshot.trendingProducts);
     _featuredProducts = List<ProductItem>.from(snapshot.featuredProducts);
-    _newsCategoryOptions = List<FilterOption>.from(snapshot.newsCategoryOptions);
-    _productCategoryOptions = List<FilterOption>.from(snapshot.productCategoryOptions);
+    _newsCategoryOptions = List<FilterOption>.from(
+      snapshot.newsCategoryOptions,
+    );
+    _productCategoryOptions = List<FilterOption>.from(
+      snapshot.productCategoryOptions,
+    );
     _brandOptions = List<FilterOption>.from(snapshot.brandOptions);
     _filteredNews = List<NewsItem>.from(snapshot.filteredNews);
     _filteredProducts = List<ProductItem>.from(snapshot.filteredProducts);
@@ -232,10 +260,20 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
       parts.add('Kata kunci: "${_queryController.text}"');
     }
     parts.add('Scope: ${_labelForScope(_searchIn)}');
-    final selectedNews = _findOptionById(_newsCategoryOptions, _selectedNewsCategoryId);
-    if (selectedNews != null) parts.add('Kategori berita: ${selectedNews.name}');
-    final selectedCategory = _findOptionById(_productCategoryOptions, _selectedProductCategoryId);
-    if (selectedCategory != null) parts.add('Kategori produk: ${selectedCategory.name}');
+    final selectedNews = _findOptionById(
+      _newsCategoryOptions,
+      _selectedNewsCategoryId,
+    );
+    if (selectedNews != null) {
+      parts.add('Kategori berita: ${selectedNews.name}');
+    }
+    final selectedCategory = _findOptionById(
+      _productCategoryOptions,
+      _selectedProductCategoryId,
+    );
+    if (selectedCategory != null) {
+      parts.add('Kategori produk: ${selectedCategory.name}');
+    }
     final selectedBrand = _findOptionById(_brandOptions, _selectedBrandId);
     if (selectedBrand != null) parts.add('Brand: ${selectedBrand.name}');
     if (_onlyDiscount) parts.add('Hanya diskon');
@@ -282,8 +320,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     final maxPrice = _formatPriceForRequest(_maxPriceController.text);
     if (minPrice != null) params['min_price'] = minPrice;
     if (maxPrice != null) params['max_price'] = maxPrice;
-    if (_selectedNewsCategoryId != null) params['news_category'] = _selectedNewsCategoryId!;
-    if (_selectedProductCategoryId != null) params['product_category'] = _selectedProductCategoryId!;
+    if (_selectedNewsCategoryId != null) {
+      params['news_category'] = _selectedNewsCategoryId!;
+    }
+    if (_selectedProductCategoryId != null) {
+      params['product_category'] = _selectedProductCategoryId!;
+    }
     if (_selectedBrandId != null) params['brand'] = _selectedBrandId!;
     if (_onlyDiscount) params['only_discount'] = 'true';
     return params;
@@ -300,14 +342,23 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
       final response = await request.get(url);
       final data = Map<String, dynamic>.from(response as Map);
       final newsList = (data['news'] as List<dynamic>? ?? [])
-          .map((item) => NewsItem.fromJson(Map<String, dynamic>.from(item as Map)))
+          .map(
+            (item) => NewsItem.fromJson(Map<String, dynamic>.from(item as Map)),
+          )
           .toList();
       final productList = (data['products'] as List<dynamic>? ?? [])
-          .map((item) => ProductItem.fromJson(Map<String, dynamic>.from(item as Map)))
+          .map(
+            (item) =>
+                ProductItem.fromJson(Map<String, dynamic>.from(item as Map)),
+          )
           .toList();
       final summaryData = data['summary'] as Map<String, dynamic>?;
-      final summary = summaryData != null ? SearchResultsSummary.fromJson(summaryData) : null;
-      final recentList = _mapRecentEntries(data['recent'] as List<dynamic>? ?? []);
+      final summary = summaryData != null
+          ? SearchResultsSummary.fromJson(summaryData)
+          : null;
+      final recentList = _mapRecentEntries(
+        data['recent'] as List<dynamic>? ?? [],
+      );
       if (!mounted) return;
       setState(() {
         _filteredNews = newsList;
@@ -378,7 +429,9 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     if (_loadingResults) {
       return const Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
         child: SizedBox(
           height: 220,
           child: Center(child: CircularProgressIndicator()),
@@ -489,10 +542,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
             ],
             if ((news.url ?? '').isNotEmpty) ...[
               const SizedBox(height: 12),
-              Text(
-                'Sumber: ${news.url}',
-                style: const TextStyle(fontSize: 12),
-              ),
+              Text('Sumber: ${news.url}', style: const TextStyle(fontSize: 12)),
             ],
           ],
         ),
@@ -507,11 +557,14 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
   }
 
   Future<void> _confirmDeletePreset(SearchPreset preset) async {
-    final confirmed = await showDialog<bool>(
+    final confirmed =
+        await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Hapus preset?'),
-            content: Text('Apakah kamu yakin ingin menghapus preset "${preset.label}"?'),
+            content: Text(
+              'Apakah kamu yakin ingin menghapus preset "${preset.label}"?',
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -533,9 +586,9 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
         _selectedPresetId = null;
       }
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Preset "${preset.label}" dihapus')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Preset "${preset.label}" dihapus')));
   }
 
   @override
@@ -564,18 +617,23 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
                   onScopeChanged: (value) => setState(() => _searchIn = value),
                   newsCategories: _newsCategoryOptions,
                   selectedNewsCategoryId: _selectedNewsCategoryId,
-                  onNewsCategoryChanged: (value) => setState(() => _selectedNewsCategoryId = value),
+                  onNewsCategoryChanged: (value) =>
+                      setState(() => _selectedNewsCategoryId = value),
                   productCategories: _productCategoryOptions,
                   selectedProductCategoryId: _selectedProductCategoryId,
-                  onProductCategoryChanged: (value) => setState(() => _selectedProductCategoryId = value),
+                  onProductCategoryChanged: (value) =>
+                      setState(() => _selectedProductCategoryId = value),
                   brandOptions: _brandOptions,
                   selectedBrandId: _selectedBrandId,
-                  onBrandChanged: (value) => setState(() => _selectedBrandId = value),
+                  onBrandChanged: (value) =>
+                      setState(() => _selectedBrandId = value),
                   onlyDiscount: _onlyDiscount,
-                  onDiscountChanged: (value) => setState(() => _onlyDiscount = value),
+                  onDiscountChanged: (value) =>
+                      setState(() => _onlyDiscount = value),
                   presets: _presets,
                   selectedPresetId: _selectedPresetId,
-                  onPresetChanged: (value) => setState(() => _selectedPresetId = value),
+                  onPresetChanged: (value) =>
+                      setState(() => _selectedPresetId = value),
                   onPresetApplied: _applyPreset,
                   onCreatePreset: () => _openPresetSheet(),
                   onPerformSearch: _performSearch,
@@ -587,10 +645,7 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 3,
-                        child: _buildResultsContent(),
-                      ),
+                      Expanded(flex: 3, child: _buildResultsContent()),
                       const SizedBox(width: 16),
                       Expanded(
                         flex: 2,
@@ -645,7 +700,9 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     final productId = product.id;
     if (productId == null || productId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Produk ini belum memiliki detail lengkap.')),
+        const SnackBar(
+          content: Text('Produk ini belum memiliki detail lengkap.'),
+        ),
       );
       return;
     }
@@ -660,14 +717,12 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
         return;
       }
       final currentUserId = _resolveCurrentUserId(request);
-      final isOwner = currentUserId != null && entry.fields.createdBy == currentUserId;
+      final isOwner =
+          currentUserId != null && entry.fields.createdBy == currentUserId;
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => ProductDetailPage(
-            product: entry,
-            isOwner: isOwner,
-          ),
+          builder: (_) => ProductDetailPage(product: entry, isOwner: isOwner),
         ),
       );
     } catch (e) {
@@ -678,7 +733,10 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
     }
   }
 
-  Future<ProductEntry?> _getProductEntryById(String id, CookieRequest request) async {
+  Future<ProductEntry?> _getProductEntryById(
+    String id,
+    CookieRequest request,
+  ) async {
     final cached = _productEntryCache[id];
     if (cached != null) {
       return cached;
@@ -697,7 +755,10 @@ class _SearchLandingPageState extends State<SearchLandingPage> with AutomaticKee
   }
 
   int? _resolveCurrentUserId(CookieRequest request) {
-    final rawId = request.jsonData['id'] ?? request.jsonData['user_id'] ?? request.jsonData['pk'];
+    final rawId =
+        request.jsonData['id'] ??
+        request.jsonData['user_id'] ??
+        request.jsonData['pk'];
     if (rawId is int) return rawId;
     if (rawId is String) return int.tryParse(rawId);
     return null;

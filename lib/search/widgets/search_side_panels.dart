@@ -85,30 +85,39 @@ class _PresetPanel extends StatelessWidget {
               Column(
                 children: presets
                     .map(
-                    (preset) => Card(
-                      color: preset.id == selectedPresetId ? Colors.blue.shade50 : null,
-                      child: ListTile(
-                        title: Text(preset.label),
-                        subtitle: Text(preset.description.isEmpty ? 'Tanpa deskripsi' : preset.description),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, size: 20),
-                              tooltip: 'Edit preset',
-                              onPressed: () => onEditPreset(preset),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline, size: 20),
-                              tooltip: 'Hapus preset',
-                              onPressed: () => onDeletePreset(preset),
-                            ),
-                            const Icon(Icons.chevron_right),
-                          ],
+                      (preset) => Card(
+                        color: preset.id == selectedPresetId
+                            ? Colors.blue.shade50
+                            : null,
+                        child: ListTile(
+                          title: Text(preset.label),
+                          subtitle: Text(
+                            preset.description.isEmpty
+                                ? 'Tanpa deskripsi'
+                                : preset.description,
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit, size: 20),
+                                tooltip: 'Edit preset',
+                                onPressed: () => onEditPreset(preset),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  size: 20,
+                                ),
+                                tooltip: 'Hapus preset',
+                                onPressed: () => onDeletePreset(preset),
+                              ),
+                              const Icon(Icons.chevron_right),
+                            ],
+                          ),
+                          onTap: () => onPresetSelected(preset),
                         ),
-                        onTap: () => onPresetSelected(preset),
                       ),
-                    ),
                     )
                     .toList(),
               ),
@@ -140,7 +149,10 @@ class _RecentSearchPanel extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             if (recentSearches.isEmpty)
-              const Text('Belum ada pencarian.', style: TextStyle(color: Colors.grey))
+              const Text(
+                'Belum ada pencarian.',
+                style: TextStyle(color: Colors.grey),
+              )
             else
               Column(
                 children: recentSearches
@@ -148,7 +160,11 @@ class _RecentSearchPanel extends StatelessWidget {
                       (item) => ListTile(
                         dense: true,
                         leading: const Icon(Icons.history, size: 20),
-                        title: Text(item, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        title: Text(
+                          item,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     )
                     .toList(),
