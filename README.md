@@ -42,7 +42,7 @@ Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkink
 
 ### 4. Shop (`shop`)
 * **Penanggung Jawab:** Edward Jeremy Worang
-* **Deskripsi:** Halaman *marketplace* untuk melihat merchandise olahraga. Termasuk model produk, sistem filtering, dan rating.
+* **Deskripsi:** Halaman *marketplace* yang memungkinkan **admin** mengelola seluruh data produk, serta **user terdaftar** untuk menambahkan, mengubah, dan menghapus produk miliknya sendiri. Modul ini juga mencakup model produk, sistem *filtering*, dan fitur *rating*.
 
 ### 5. Fitur Belanja (`checkout`)
 * **Penanggung Jawab:** Dzaki Abrar Fatihul Ihsan
@@ -60,7 +60,8 @@ Aplikasi ini memiliki tiga peran utama:
 2.  **User (Pengguna Terdaftar):**
     * Memiliki semua hak **Guest**.
     * Dapat melakukan transaksi pembelian di *shop*.
-    * Dapat berinteraksi di aplikasi (jika fitur dikembangkan).
+    * Dapat memberikan review terhadap produk yang dibeli.
+    * Dapat menambahkan produk miliknya sendiri ke dalam *shop* sebagai penjual.
 3.  **Admin:**
     * Memiliki hak istimewa untuk mengelola konten aplikasi (CRUD Berita, Produk, dan Skor Pertandingan).
 
@@ -89,7 +90,7 @@ Alur integrasi fungsional adalah sebagai berikut:
 
 ## 📋 Tahapan Pengerjaan
 
-Secara garis besar, yang akan kita lakukan adalah (sementara):
+Secara garis besar, tahapan pengerjaan proyek ini adalah sebagai berikut:
 
 1. Memetakan fitur web → fitur mobile  
 2. Memutuskan pola autentikasi untuk mobile  
