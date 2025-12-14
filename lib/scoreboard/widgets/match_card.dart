@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sportwatch_ng/scoreboard/models/scoreboard_entry.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MatchCard extends StatelessWidget {
   final ScoreboardMatch match;
@@ -114,8 +115,9 @@ class MatchCard extends StatelessWidget {
                     children: [
                       Text(
                         match.homeScore.toString(),
-                        style: textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
+                        style: GoogleFonts.barlowCondensed(
+                          textStyle: textTheme.headlineSmall,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       Padding(
@@ -130,8 +132,9 @@ class MatchCard extends StatelessWidget {
                       ),
                       Text(
                         match.awayScore.toString(),
-                        style: textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
+                        style: GoogleFonts.barlowCondensed(
+                          textStyle: textTheme.headlineSmall,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],

@@ -598,7 +598,9 @@ class _SearchLandingPageState extends State<SearchLandingPage>
     }
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Login terlebih dahulu untuk mengelola preset pencarian.'),
+        content: Text(
+          'Login terlebih dahulu untuk mengelola preset pencarian.',
+        ),
       ),
     );
     return false;

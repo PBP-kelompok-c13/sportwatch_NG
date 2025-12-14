@@ -19,7 +19,10 @@ class FiturBelanjaPage extends StatelessWidget {
               ),
               child: const Text(
                 'SW',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -40,10 +43,7 @@ class FiturBelanjaPage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {},
-            child: const Text(
-              'Login',
-              style: TextStyle(color: Colors.black),
-            ),
+            child: const Text('Login', style: TextStyle(color: Colors.black)),
           ),
         ],
       ),
@@ -59,24 +59,21 @@ class FiturBelanjaPage extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               'Your cart is empty',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             Text(
               "Looks like you haven't added any items to your cart yet.",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
             ),
             const SizedBox(height: 25),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 28,
+                  vertical: 14,
+                ),
                 backgroundColor: const Color(0xFF1877F2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6),
@@ -87,10 +84,7 @@ class FiturBelanjaPage extends StatelessWidget {
               },
               child: const Text(
                 'Continue Shopping',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.white),
               ),
             ),
           ],

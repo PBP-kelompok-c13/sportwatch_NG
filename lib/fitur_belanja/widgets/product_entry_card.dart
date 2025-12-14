@@ -69,7 +69,7 @@ class ProductEntryCard extends StatelessWidget {
                               ),
                             ),
                     ),
-                    
+
                     // Sale badge
                     if (product.discountPercent > 0)
                       Positioned(
@@ -125,7 +125,7 @@ class ProductEntryCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        
+
                         const Spacer(),
 
                         // ========================================
@@ -166,15 +166,19 @@ class ProductEntryCard extends StatelessWidget {
                                       child: InkWell(
                                         onTap: () {
                                           cart.decreaseQuantity(product.pk);
-                                          
-                                          ScaffoldMessenger.of(context).showSnackBar(
+
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
                                               content: Text(
                                                 quantity > 1
                                                     ? 'Quantity dikurangi'
                                                     : '${product.name} dihapus dari cart',
                                               ),
-                                              duration: const Duration(milliseconds: 800),
+                                              duration: const Duration(
+                                                milliseconds: 800,
+                                              ),
                                             ),
                                           );
                                         },
@@ -188,7 +192,7 @@ class ProductEntryCard extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    
+
                                     // QUANTITY
                                     Container(
                                       width: 40,
@@ -208,7 +212,7 @@ class ProductEntryCard extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    
+
                                     // Tombol TAMBAH (+)
                                     Expanded(
                                       child: InkWell(
@@ -218,11 +222,17 @@ class ProductEntryCard extends StatelessWidget {
                                             product.name,
                                             product.price,
                                           );
-                                          
-                                          ScaffoldMessenger.of(context).showSnackBar(
+
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             const SnackBar(
-                                              content: Text('Quantity ditambah'),
-                                              duration: Duration(milliseconds: 800),
+                                              content: Text(
+                                                'Quantity ditambah',
+                                              ),
+                                              duration: Duration(
+                                                milliseconds: 800,
+                                              ),
                                             ),
                                           );
                                         },
@@ -239,9 +249,9 @@ class ProductEntryCard extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              
+
                               const SizedBox(height: 4),
-                              
+
                               // Baris 2: Tombol REMOVE (Merah)
                               SizedBox(
                                 width: double.infinity,
@@ -265,7 +275,9 @@ class ProductEntryCard extends StatelessWidget {
                                             onPressed: () {
                                               cart.removeItem(product.pk);
                                               Navigator.pop(ctx);
-                                              ScaffoldMessenger.of(context).showSnackBar(
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
                                                     '${product.name} dihapus dari cart',
@@ -275,7 +287,9 @@ class ProductEntryCard extends StatelessWidget {
                                             },
                                             child: const Text(
                                               'Remove',
-                                              style: TextStyle(color: Colors.red),
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -306,7 +320,10 @@ class ProductEntryCard extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.zero,
                               ),
-                              icon: const Icon(Icons.add_shopping_cart, size: 14),
+                              icon: const Icon(
+                                Icons.add_shopping_cart,
+                                size: 14,
+                              ),
                               label: const Text(
                                 'Add to Cart',
                                 style: TextStyle(fontSize: 11),

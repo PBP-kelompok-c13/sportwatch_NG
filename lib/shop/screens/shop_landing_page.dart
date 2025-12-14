@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:sportwatch_ng/shop/models/product_entry.dart';
 import 'package:sportwatch_ng/shop/models/constants.dart';
@@ -230,32 +231,31 @@ class _ShopPageState extends State<ShopPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () async {
-            if (profile.isGuest) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('You must login to create products.'),
-                ),
-              );
-              return;
-            }
-
-            final created = await Navigator.push<bool>(
-              context,
-              MaterialPageRoute(builder: (_) => const ProductFormPage()),
-            );
-            if (created == true) {
-              _refresh();
-            }
-          },
-        ),
         title: const Text('Shop'),
         centerTitle: true,
         elevation: 0,
-
         actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              if (profile.isGuest) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('You must login to create products.'),
+                  ),
+                );
+                return;
+              }
+
+              final created = await Navigator.push<bool>(
+                context,
+                MaterialPageRoute(builder: (_) => const ProductFormPage()),
+              );
+              if (created == true) {
+                _refresh();
+              }
+            },
+          ),
           Consumer<CartNotifier>(
             builder: (context, cart, child) {
               return Badge(
@@ -277,8 +277,21 @@ class _ShopPageState extends State<ShopPage> {
                     // Sementara tampilkan info
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(
-                          'Cart: ${cart.itemCount} items, Total: Rp ${formatCurrency(cart.totalPrice)}',
+                        content: Row(
+                          children: [
+                            Text(
+                              'Cart: ${cart.itemCount} items, Total: ',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              'Rp ${formatCurrency(cart.totalPrice)}',
+                              style: GoogleFonts.barlowCondensed(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -308,7 +321,7 @@ class _ShopPageState extends State<ShopPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: profile.isGuest
-                      ? Colors.red.shade100
+                      ? const Color(0xFFD4B8B4) // Soft Clay
                       : Colors.green.shade100,
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -319,7 +332,7 @@ class _ShopPageState extends State<ShopPage> {
                   style: TextStyle(
                     fontSize: 12,
                     color: profile.isGuest
-                        ? Colors.red.shade800
+                        ? const Color(0xFF1D1D1F) // Soft Black
                         : Colors.green.shade800,
                   ),
                 ),

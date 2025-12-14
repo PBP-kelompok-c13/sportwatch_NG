@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart';
 
 // Use localhost instead of 127.0.0.1 for the web build so the browser treats
@@ -5,16 +7,26 @@ import 'package:flutter/foundation.dart';
 // session cookies are sent with cross-origin requests during local testing.
 const String _webBaseUrl = "http://localhost:8000";
 const String _androidEmulatorBaseUrl = "http://10.0.2.2:8000";
+const String _desktopBaseUrl = "http://127.0.0.1:8000";
+const String _productionBaseUrl =
+    "https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id";
 
 String _resolveBaseUrl() {
   const override = String.fromEnvironment("SPORTWATCH_BASE_URL");
   if (override.isNotEmpty) {
     return override;
   }
+  const useProduction = bool.fromEnvironment("SPORTWATCH_USE_PROD");
+  if (useProduction || kReleaseMode) {
+    return _productionBaseUrl;
+  }
   if (kIsWeb) {
     return _webBaseUrl;
   }
-  return _androidEmulatorBaseUrl;
+  if (Platform.isAndroid) {
+    return _androidEmulatorBaseUrl;
+  }
+  return _desktopBaseUrl;
 }
 
 final String baseUrl = _resolveBaseUrl();
@@ -38,7 +50,7 @@ String newsListApi({int page = 1, int perPage = 6}) {
   final safePerPage = perPage.clamp(1, 30);
   final uri = Uri.parse(
     baseUrl,
-  ).resolve("/portal_berita/api/news/?page=$page&per_page=$safePerPage");
+  ).resolve("/api/news/?page=$page&per_page=$safePerPage");
   return uri.toString();
 }
 
@@ -95,39 +107,27 @@ String scoreboardFilterApi({String? status, String? sport}) {
 
 // --- News CRUD ---
 String createNewsApi() {
-  return Uri.parse(
-    baseUrl,
-  ).resolve("/portal_berita/api/create-flutter/").toString();
+  return Uri.parse(baseUrl).resolve("/api/create-flutter/").toString();
 }
 
 String editNewsApi(String id) {
-  return Uri.parse(
-    baseUrl,
-  ).resolve("/portal_berita/api/edit-flutter/$id/").toString();
+  return Uri.parse(baseUrl).resolve("/api/edit-flutter/$id/").toString();
 }
 
 String deleteNewsApi(String id) {
-  return Uri.parse(
-    baseUrl,
-  ).resolve("/portal_berita/api/delete-flutter/$id/").toString();
+  return Uri.parse(baseUrl).resolve("/api/delete-flutter/$id/").toString();
 }
 
 String reactToNewsApi(String id) {
-  return Uri.parse(
-    baseUrl,
-  ).resolve("/portal_berita/news/$id/react/").toString();
+  return Uri.parse(baseUrl).resolve("/news/$id/react/").toString();
 }
 
 String newsCommentsApi(String id) {
-  return Uri.parse(
-    baseUrl,
-  ).resolve("/portal_berita/api/news/$id/comments/").toString();
+  return Uri.parse(baseUrl).resolve("/api/news/$id/comments/").toString();
 }
 
 String createCommentApi(String id) {
-  return Uri.parse(
-    baseUrl,
-  ).resolve("/portal_berita/api/news/$id/comment/create/").toString();
+  return Uri.parse(baseUrl).resolve("/api/news/$id/comment/create/").toString();
 }
 
 // --- Scoreboard CRUD ---

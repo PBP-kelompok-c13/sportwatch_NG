@@ -152,8 +152,10 @@ class _SearchAdminPageState extends State<SearchAdminPage> {
   }
 
   Widget _buildSummaryHeader(_SearchAnalyticsData data) {
-    final totalQueries =
-        data.topQueries.fold<int>(0, (sum, q) => sum + q.total);
+    final totalQueries = data.topQueries.fold<int>(
+      0,
+      (sum, q) => sum + q.total,
+    );
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -202,11 +204,7 @@ class _SearchAdminPageState extends State<SearchAdminPage> {
 }
 
 class _SearchAdminException implements Exception {
-  const _SearchAdminException(
-    this.message, {
-    this.code,
-    this.cause,
-  });
+  const _SearchAdminException(this.message, {this.code, this.cause});
 
   final String message;
   final String? code;
@@ -232,10 +230,7 @@ class _SearchAnalyticsData {
     final scopes = (json['scope_breakdown'] as List<dynamic>? ?? [])
         .map((item) => _ScopeStat.fromJson(Map<String, dynamic>.from(item)))
         .toList();
-    return _SearchAnalyticsData(
-      topQueries: topQueries,
-      scopeBreakdown: scopes,
-    );
+    return _SearchAnalyticsData(topQueries: topQueries, scopeBreakdown: scopes);
   }
 }
 
@@ -317,8 +312,10 @@ class _ScopeBreakdownCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total =
-        scopes.fold<int>(0, (previousValue, element) => previousValue + element.total);
+    final total = scopes.fold<int>(
+      0,
+      (previousValue, element) => previousValue + element.total,
+    );
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -338,8 +335,9 @@ class _ScopeBreakdownCard extends StatelessWidget {
             else
               Column(
                 children: scopes.map((s) {
-                  final percent =
-                      total > 0 ? (s.total / total * 100).toStringAsFixed(1) : '0.0';
+                  final percent = total > 0
+                      ? (s.total / total * 100).toStringAsFixed(1)
+                      : '0.0';
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(_scopeLabel(s.scope)),

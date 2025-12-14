@@ -62,8 +62,15 @@ class _NewsResults extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             Chip(
-              label: Text('${newsResults.length} hasil'),
-              backgroundColor: Colors.blue.shade50,
+              label: Text(
+                '${newsResults.length} hasil',
+                style: const TextStyle(color: Color(0xFF1D1D1F)),
+              ),
+              backgroundColor: const Color(0xFFF7F8FA),
+              side: const BorderSide(color: Color(0xFFD4B8B4)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ],
         ),
@@ -119,8 +126,15 @@ class _ProductResults extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             Chip(
-              label: Text('${productResults.length} hasil'),
-              backgroundColor: Colors.blue.shade50,
+              label: Text(
+                '${productResults.length} hasil',
+                style: const TextStyle(color: Color(0xFF1D1D1F)),
+              ),
+              backgroundColor: const Color(0xFFF7F8FA),
+              side: const BorderSide(color: Color(0xFFD4B8B4)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ],
         ),

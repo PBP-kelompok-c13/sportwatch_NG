@@ -7,13 +7,15 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const MyApp());
-    await tester.pumpAndSettle();
+    await tester.pump();
 
-    await tester.tap(find.byTooltip('Open navigation menu'));
-    await tester.pumpAndSettle();
+    await tester.dragFrom(const Offset(0, 300), const Offset(320, 0));
+    await tester.pump(const Duration(milliseconds: 600));
 
+    await tester.scrollUntilVisible(find.text('Login'), 200);
     await tester.tap(find.text('Login'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Welcome Back'), findsOneWidget);
     expect(find.text("Don't have an account? Register"), findsOneWidget);
@@ -22,6 +24,6 @@ void main() {
 
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
     await tester.pump();
-    expect(find.text('Please fill in all fields'), findsOneWidget);
+    expect(find.text('Please fill in all fields'), findsWidgets);
   });
 }

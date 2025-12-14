@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sportwatch_ng/card_notifier.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // Helper function untuk format angka dengan pemisah ribuan
 String formatCurrency(double value) {
   final formatted = value.toStringAsFixed(0);
   final buffer = StringBuffer();
   final chars = formatted.split('').toList();
-  
+
   for (int i = 0; i < chars.length; i++) {
     buffer.write(chars[i]);
     final remainingDigits = chars.length - i - 1;
@@ -15,7 +16,7 @@ String formatCurrency(double value) {
       buffer.write(',');
     }
   }
-  
+
   return buffer.toString();
 }
 
@@ -42,7 +43,10 @@ class CartPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     const Text(
                       'Keranjang Anda kosong',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -75,7 +79,9 @@ class CartPage extends StatelessWidget {
                           cart.removeItem(item.productId);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${item.productName} dihapus dari keranjang'),
+                              content: Text(
+                                '${item.productName} dihapus dari keranjang',
+                              ),
                             ),
                           );
                         },
@@ -97,7 +103,8 @@ class CartPage extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         item.productName,
@@ -109,9 +116,10 @@ class CartPage extends StatelessWidget {
                                       const SizedBox(height: 4),
                                       Text(
                                         'Rp ${formatCurrency(item.price)}',
-                                        style: TextStyle(
+                                        style: GoogleFonts.barlowCondensed(
                                           color: Colors.blue.shade700,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
                                         ),
                                       ),
                                       const SizedBox(height: 8),
@@ -156,8 +164,8 @@ class CartPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       'Rp ${formatCurrency(item.price * item.quantity)}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                      style: GoogleFonts.barlowCondensed(
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                       ),
                                     ),
@@ -189,9 +197,9 @@ class CartPage extends StatelessWidget {
                           ),
                           Text(
                             'Rp ${formatCurrency(cart.totalPrice)}',
-                            style: const TextStyle(
+                            style: GoogleFonts.barlowCondensed(
                               fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -206,9 +214,9 @@ class CartPage extends StatelessWidget {
                           ),
                           Text(
                             'Rp 0',
-                            style: TextStyle(
+                            style: GoogleFonts.barlowCondensed(
                               fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                               color: Colors.grey.shade600,
                             ),
                           ),
@@ -229,9 +237,9 @@ class CartPage extends StatelessWidget {
                           ),
                           Text(
                             'Rp ${formatCurrency(cart.totalPrice)}',
-                            style: const TextStyle(
+                            style: GoogleFonts.barlowCondensed(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               color: Colors.blue,
                             ),
                           ),

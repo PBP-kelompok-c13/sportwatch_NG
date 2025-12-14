@@ -11,6 +11,7 @@ on:
 env:
   # Set the repository variable RUN_APK_CI to 'true' to allow this workflow to run.
   APK_WORKFLOW_ENABLED: ${{ vars.RUN_APK_CI }}
+  SPORTWATCH_PROD_BASE_URL: "https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id"
 
 jobs:
   android-apk:
@@ -52,7 +53,9 @@ jobs:
         run: flutter test
 
       - name: Build Android APK
-        run: flutter build apk --${{ github.event.inputs.build_mode || 'release' }} --split-per-abi
+        run: >
+          flutter build apk --${{ github.event.inputs.build_mode || 'release' }} --split-per-abi
+          --dart-define SPORTWATCH_BASE_URL=${{ env.SPORTWATCH_PROD_BASE_URL }}
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4

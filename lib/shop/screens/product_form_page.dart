@@ -15,8 +15,9 @@ class ProductFormPage extends StatelessWidget {
       'name': fields.name,
       'description': fields.description,
       'price': double.tryParse(fields.price),
-      'sale_price':
-          fields.salePrice != null ? double.tryParse(fields.salePrice!) : null,
+      'sale_price': fields.salePrice != null
+          ? double.tryParse(fields.salePrice!)
+          : null,
       'stock': fields.stock,
       'thumbnail': fields.thumbnail,
       'category': fields.category,

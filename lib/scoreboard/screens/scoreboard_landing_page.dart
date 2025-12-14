@@ -6,6 +6,7 @@ import 'package:sportwatch_ng/scoreboard/service/scoreboard_api.dart';
 import 'package:sportwatch_ng/scoreboard/widgets/match_card.dart';
 import 'package:sportwatch_ng/scoreboard/widgets/section_title.dart';
 import 'package:sportwatch_ng/widgets/theme_toggle_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ScoreboardLandingPage extends StatefulWidget {
   const ScoreboardLandingPage({super.key});
@@ -337,7 +338,8 @@ class _ScoreboardLandingPageState extends State<ScoreboardLandingPage> {
                                 ),
                                 child: Text(
                                   '${liveMatches.length} Live',
-                                  style: textTheme.labelSmall?.copyWith(
+                                  style: GoogleFonts.barlowCondensed(
+                                    textStyle: textTheme.labelSmall,
                                     color: colorScheme.error,
                                     fontWeight: FontWeight.w600,
                                   ),
