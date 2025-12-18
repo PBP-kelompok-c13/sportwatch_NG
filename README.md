@@ -26,7 +26,7 @@ Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkink
 **SportWatch** adalah aplikasi mobile berbasis Flutter/Dart yang
 mengintegrasikan berbagai kebutuhan penggemar olahraga dalam satu
 platform terpadu. Pengguna sering kali harus menggunakan beberapa
-aplikasi berbeda untuk membaca berita, memantau skor pertandingan,
+aplikasi berbeda untuk membaca berita olahraga, memantau skor pertandingan,
 dan membeli merchandise olahraga.
 
 SportWatch hadir sebagai solusi dengan menyediakan berita olahraga
