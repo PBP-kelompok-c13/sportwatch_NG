@@ -5,6 +5,7 @@ import 'package:sportwatch_ng/main_page.dart';
 import 'package:sportwatch_ng/scoreboard/screens/scoreboard_landing_page.dart';
 import 'package:sportwatch_ng/search/screens/search_landing_page.dart';
 import 'package:sportwatch_ng/shop/screens/shop_landing_page.dart';
+import 'package:sportwatch_ng/splash_screen.dart';
 import 'package:sportwatch_ng/theme_notifier.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
 import 'package:sportwatch_ng/card_notifier.dart';
@@ -80,7 +81,7 @@ class MyApp extends StatelessWidget {
             darkTheme: _buildTheme(darkColorScheme),
             themeMode: themeNotifier.themeMode,
             navigatorObservers: [FlutterSmartDialog.observer],
-            initialRoute: '/news',
+            home: const SplashGate(),
             routes: {
               '/news': (_) => const MainPage(),
               '/search': (_) => const SearchLandingPage(),

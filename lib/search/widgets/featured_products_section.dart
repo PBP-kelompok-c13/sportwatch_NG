@@ -23,12 +23,16 @@ class FeaturedProductsSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Produk Pilihan SportWatch',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                const Expanded(
+                  child: Text(
+                    'Produk Pilihan SportWatch',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                const SizedBox(width: 8),
                 TextButton(
                   onPressed: onViewAll,
                   child: const Text('Lihat semua produk'),
