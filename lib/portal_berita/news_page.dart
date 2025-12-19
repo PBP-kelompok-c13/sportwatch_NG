@@ -20,10 +20,15 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
+  static const int _newsPageSize = 6;
   List<NewsEntry> _newsEntries = [];
   bool _loadingNews = false;
+  bool _loadingMore = false;
+  bool _hasNextPage = true;
+  int _currentPage = 1;
   String? _newsError;
   bool _loggingOut = false;
+  final ScrollController _scrollController = ScrollController();
   bool _asBool(dynamic value) {
     if (value is bool) return value;
     if (value is num) return value != 0;
@@ -40,10 +45,26 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_handleScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final request = context.read<CookieRequest>();
-      _fetchNews(request);
+      _refreshNews(request);
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_handleScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _handleScroll() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.position.extentAfter < 320) {
+      final request = context.read<CookieRequest>();
+      _fetchMoreNews(request);
+    }
   }
 
   List<dynamic> _extractNewsList(dynamic payload) {
@@ -65,7 +86,38 @@ class _NewsPageState extends State<NewsPage> {
     throw const FormatException('Unexpected news API response shape');
   }
 
-  Future<void> _fetchNews(CookieRequest request) async {
+  bool _extractHasNext(dynamic payload, int receivedCount) {
+    if (payload is Map<String, dynamic>) {
+      final hasNext = payload['has_next'];
+      if (hasNext is bool) {
+        return hasNext;
+      }
+      if (payload['next_page'] != null) {
+        return true;
+      }
+      final page = payload['page'];
+      final totalPages = payload['total_pages'];
+      if (page is int && totalPages is int) {
+        return page < totalPages;
+      }
+      if (page is num && totalPages is num) {
+        return page.toInt() < totalPages.toInt();
+      }
+    }
+    return receivedCount >= _newsPageSize;
+  }
+
+  Future<void> _refreshNews(CookieRequest request) async {
+    if (_loadingNews) return;
+    setState(() {
+      _newsError = null;
+      _currentPage = 1;
+      _hasNextPage = true;
+    });
+    await _fetchNews(request, page: 1);
+  }
+
+  Future<void> _fetchNews(CookieRequest request, {int page = 1}) async {
     if (mounted) {
       setState(() {
         _loadingNews = true;
@@ -73,7 +125,9 @@ class _NewsPageState extends State<NewsPage> {
       });
     }
     try {
-      final response = await request.get(newsListApi());
+      final response = await request.get(
+        newsListApi(page: page, perPage: _newsPageSize),
+      );
       final List<dynamic> rawResults = _extractNewsList(response);
       final entries = rawResults
           .map(
@@ -85,19 +139,67 @@ class _NewsPageState extends State<NewsPage> {
       if (mounted) {
         setState(() {
           _newsEntries = entries;
+          _currentPage = page;
+          _hasNextPage = _extractHasNext(response, entries.length);
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _newsError = e.toString();
-          _newsEntries = [];
+          if (_newsEntries.isEmpty) {
+            _newsEntries = [];
+          }
         });
       }
     } finally {
       if (mounted) {
         setState(() {
           _loadingNews = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _fetchMoreNews(CookieRequest request) async {
+    if (_loadingMore || _loadingNews || !_hasNextPage) return;
+    setState(() {
+      _loadingMore = true;
+    });
+    final nextPage = _currentPage + 1;
+    try {
+      final response = await request.get(
+        newsListApi(page: nextPage, perPage: _newsPageSize),
+      );
+      final List<dynamic> rawResults = _extractNewsList(response);
+      final entries = rawResults
+          .map(
+            (item) => NewsEntry.fromJson(
+              Map<String, dynamic>.from(item as Map<String, dynamic>),
+            ),
+          )
+          .toList();
+      if (mounted) {
+        setState(() {
+          final existingIds = _newsEntries.map((e) => e.id).toSet();
+          final newItems = entries
+              .where((entry) => !existingIds.contains(entry.id))
+              .toList();
+          _newsEntries = [..._newsEntries, ...newItems];
+          _currentPage = nextPage;
+          _hasNextPage = _extractHasNext(response, entries.length);
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load more news.')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loadingMore = false;
         });
       }
     }
@@ -170,33 +272,35 @@ class _NewsPageState extends State<NewsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AspectRatio(
-                aspectRatio: 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: entry.thumbnail.isNotEmpty
-                      ? Image.network(
-                          buildProxyImageUrl(entry.thumbnail),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
-                                color: colorScheme.muted,
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: colorScheme.mutedForeground,
+              Flexible(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: entry.thumbnail.isNotEmpty
+                        ? Image.network(
+                            buildProxyImageUrl(entry.thumbnail),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  color: colorScheme.muted,
+                                  child: Icon(
+                                    Icons.image_not_supported_outlined,
+                                    color: colorScheme.mutedForeground,
+                                  ),
                                 ),
-                              ),
-                        )
-                      : Container(
-                          color: colorScheme.muted,
-                          child: Icon(
-                            Icons.image_not_supported_outlined,
-                            color: colorScheme.mutedForeground,
+                          )
+                        : Container(
+                            color: colorScheme.muted,
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: colorScheme.mutedForeground,
+                            ),
                           ),
-                        ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
                 entry.judul,
                 maxLines: 2,
@@ -393,11 +497,11 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Widget _buildHome(CookieRequest request) {
-    if (_loadingNews) {
+    if (_loadingNews && _newsEntries.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (_newsError != null) {
+    if (_newsError != null && _newsEntries.isEmpty) {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -408,7 +512,7 @@ class _NewsPageState extends State<NewsPage> {
             ),
             const SizedBox(height: 12),
             ShadButton(
-              onPressed: () => _fetchNews(request),
+              onPressed: () => _refreshNews(request),
               child: const Text('Retry'),
             ),
           ],
@@ -454,12 +558,6 @@ class _NewsPageState extends State<NewsPage> {
       ),
       _buildServiceGridItem(
         context,
-        'News',
-        Icons.newspaper_outlined,
-        () {}, // Already on News page
-      ),
-      _buildServiceGridItem(
-        context,
         'Search',
         Icons.search,
         () => Navigator.pushNamed(context, '/search'),
@@ -477,8 +575,10 @@ class _NewsPageState extends State<NewsPage> {
     ];
 
     return RefreshIndicator(
-      onRefresh: () => _fetchNews(request),
+      onRefresh: () => _refreshNews(request),
       child: CustomScrollView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           // 1. Header Row (Welcome Guest + Login Link)
           SliverToBoxAdapter(
@@ -603,6 +703,19 @@ class _NewsPageState extends State<NewsPage> {
               final entry = entries[index];
               return NewsEntryCard(news: entry, onTap: () => _openNews(entry));
             }, childCount: entries.length),
+          ),
+          SliverToBoxAdapter(
+            child: _loadingMore
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : (!_hasNextPage && entries.isNotEmpty)
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(child: Text('No more news.')),
+                  )
+                : const SizedBox.shrink(),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],

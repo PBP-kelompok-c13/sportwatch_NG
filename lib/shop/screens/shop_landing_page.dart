@@ -117,7 +117,7 @@ class _ShopPageState extends State<ShopPage> {
                     try {
                       final messenger = ScaffoldMessenger.of(context);
                       final response = await request.post(
-                        "$baseUrl/shop/api/products/${product.id}/delete-flutter/",
+                        "$baseUrl/api/shop/products/${product.id}/delete/",
                         {}, // body kosong saja
                       );
 
@@ -212,7 +212,7 @@ class _ShopPageState extends State<ShopPage> {
   }
 
   Future<List<ProductEntry>> _fetchProducts(CookieRequest request) async {
-    final response = await request.get("$baseUrl/shop/json/");
+    final response = await request.get("$baseUrl/api/shop/json/");
     final encoded = jsonEncode(response); // response = List<dynamic>
     return productEntryFromJson(encoded);
   }

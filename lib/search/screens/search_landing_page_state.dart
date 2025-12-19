@@ -775,7 +775,7 @@ class _SearchLandingPageState extends State<SearchLandingPage>
     if (cached != null) {
       return cached;
     }
-    final response = await request.get('$baseUrl/shop/json/');
+    final response = await request.get('$baseUrl/api/shop/json/');
     if (response is! List) {
       return null;
     }

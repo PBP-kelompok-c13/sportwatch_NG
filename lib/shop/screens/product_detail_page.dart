@@ -83,7 +83,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       }
 
       final url =
-          "$baseUrl/shop/api/reviews/${widget.product.pk}/?page=$_currentPage";
+          "$baseUrl/api/shop/reviews/${widget.product.pk}/?page=$_currentPage";
 
       final response = await request.get(url);
       // response bentuknya {results: [...], has_next: bool}
@@ -133,7 +133,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     try {
       final url =
-          "$baseUrl/shop/api/reviews/${widget.product.id}/create-flutter/";
+          "$baseUrl/api/shop/reviews/${widget.product.id}/create-flutter/";
 
       // create_review expects POST form (bukan JSON)
       final response = await request.post(url, {

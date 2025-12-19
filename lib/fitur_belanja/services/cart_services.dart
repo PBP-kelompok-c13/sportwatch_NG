@@ -9,7 +9,7 @@ class CartService {
         : path.endsWith('/')
         ? path
         : "$path/";
-    return Uri.parse(app_config.baseUrl).resolve("/cart/$suffix");
+    return Uri.parse(app_config.baseUrl).resolve("/api/cart/$suffix");
   }
 
   static Future<Map<String, dynamic>> getCart() async {

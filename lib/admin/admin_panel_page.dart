@@ -72,7 +72,7 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
     );
     final finishedScoresResponse = await _safeGetMap(
       request,
-      scoreboardFilterApi(status: 'recent'),
+      scoreboardFilterApi(status: 'finished'),
     );
     final upcomingScoresResponse = await _safeGetMap(
       request,
@@ -103,7 +103,7 @@ class _AdminPanelPageState extends State<AdminPanelPage> {
           .toList(),
       finishedMatches: _asList(finishedScoresResponse['scores'])
           .map(
-            (item) => AdminMatchItem.fromJson(_asMap(item), status: 'recent'),
+            (item) => AdminMatchItem.fromJson(_asMap(item), status: 'finished'),
           )
           .toList(),
       upcomingMatches: _asList(upcomingScoresResponse['scores'])
