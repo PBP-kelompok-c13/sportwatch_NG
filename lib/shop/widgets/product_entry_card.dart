@@ -6,10 +6,10 @@ import 'package:sportwatch_ng/shop/models/product_entry.dart';
 class ProductEntryCard extends StatelessWidget {
   final ProductEntry product;
 
-  /// Tap seluruh card → lihat detail
+  /// Tap seluruh card nanti lihat detail
   final VoidCallback onCardTap;
 
-  /// Tap tombol → add to cart
+  /// Tap tombol maka add to cart
   final VoidCallback onAddToCart;
 
   /// apakah current user adalah pemilik produk
@@ -48,7 +48,7 @@ class ProductEntryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ==== Thumbnail + SALE badge (mirip web) ====
+            // Thumbnail and SALE badge
             AspectRatio(
               aspectRatio: 4 / 3,
               child: Stack(
@@ -129,7 +129,7 @@ class ProductEntryCard extends StatelessWidget {
               ),
             ),
 
-            // ==== Text info (category, name, rating, owner, price) ====
+            // Text info
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(
@@ -179,7 +179,7 @@ class ProductEntryCard extends StatelessWidget {
                     ),
                   ],
 
-                  // Price + discount highlight bisa scroll
+                  // Price  discount highlight bisa scroll
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
