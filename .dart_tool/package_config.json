@@ -485,7 +485,7 @@
       "name": "sportwatch_ng",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.9"
+      "languageVersion": "3.4"
     }
   ],
   "generator": "pub",

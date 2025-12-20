@@ -4,8 +4,6 @@
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-yellow?style=for-the-badge)
 
-[![Flutter CI](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml)
-[![Build Status](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33/status.svg?token=B73M8_agenC2FZWZQA1MqA&branch=master)](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33)
 
 Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkinkan pengguna membaca berita olahraga, memantau skor pertandingan, berdiskusi, hingga membeli merchandise tim favorit mereka.
 
