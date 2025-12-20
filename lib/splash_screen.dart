@@ -2,20 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:sportwatch_ng/main_page.dart';
 
 class SplashGate extends StatefulWidget {
-  const SplashGate({super.key});
+  const SplashGate({
+    super.key,
+    this.skipIntro = false,
+    this.holdDuration = const Duration(milliseconds: 1400),
+  });
+
+  final bool skipIntro;
+  final Duration holdDuration;
 
   @override
   State<SplashGate> createState() => _SplashGateState();
 }
 
 class _SplashGateState extends State<SplashGate> {
-  static const Duration _holdDuration = Duration(milliseconds: 1400);
   bool _showSplash = true;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(_holdDuration, () {
+    if (widget.skipIntro) {
+      _showSplash = false;
+      return;
+    }
+    Future.delayed(widget.holdDuration, () {
       if (!mounted) return;
       setState(() {
         _showSplash = false;

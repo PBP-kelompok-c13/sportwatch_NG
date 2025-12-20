@@ -1,22 +1,22 @@
-import 'package:sportwatch_ng/main_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:sportwatch_ng/main.dart'; // Import your main.dart file
+import 'package:sportwatch_ng/main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'helpers/fake_cookie_request.dart';
 
 void main() {
+  final fakeRequest = FakeCookieRequest();
   group('Theme Test', () {
     testWidgets('Verify ThemeData properties', (WidgetTester tester) async {
-      // Build our app and trigger a frame.
-      await tester.pumpWidget(const MyApp());
-
-      // Find the MainPage widget and get its context
-      final BuildContext mainPageContext = tester.element(
-        find.byType(MainPage),
+      await tester.pumpWidget(
+        MyApp(testMode: true, cookieRequestOverride: fakeRequest),
       );
+      await tester.pumpAndSettle();
 
-      // Get the ThemeData from the MainPage context
-      final ThemeData theme = Theme.of(mainPageContext);
+      final MaterialApp app = tester.widget<MaterialApp>(
+        find.byType(MaterialApp),
+      );
+      final ThemeData theme = app.theme!;
 
       // Verify useMaterial3
       expect(theme.useMaterial3, true);

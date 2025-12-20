@@ -32,7 +32,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+    this.testMode = false,
+    this.cookieRequestOverride,
+    this.splashHoldDuration = const Duration(milliseconds: 1400),
+  });
+
+  final bool testMode;
+  final CookieRequest? cookieRequestOverride;
+  final Duration splashHoldDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +72,14 @@ class MyApp extends StatelessWidget {
       surfaceContainerHighest: const Color(0xFF547BA6),
     );
 
+    final cookieRequest = cookieRequestOverride;
+
     return MultiProvider(
       providers: [
-        Provider<CookieRequest>(create: (_) => CookieRequest()),
+        if (cookieRequest != null)
+          Provider<CookieRequest>.value(value: cookieRequest)
+        else
+          Provider<CookieRequest>(create: (_) => CookieRequest()),
         ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
         ChangeNotifierProvider<UserProfileNotifier>(
           create: (_) => UserProfileNotifier(),
@@ -81,7 +95,10 @@ class MyApp extends StatelessWidget {
             darkTheme: _buildTheme(darkColorScheme),
             themeMode: themeNotifier.themeMode,
             navigatorObservers: [FlutterSmartDialog.observer],
-            home: const SplashGate(),
+            home: SplashGate(
+              skipIntro: testMode,
+              holdDuration: splashHoldDuration,
+            ),
             routes: {
               '/news': (_) => const MainPage(),
               '/search': (_) => const SearchLandingPage(),
