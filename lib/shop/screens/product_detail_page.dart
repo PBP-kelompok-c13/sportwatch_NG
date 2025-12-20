@@ -22,17 +22,17 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  // ---------- State untuk rating summary ----------
+  // State untuk rating summary
   late double _ratingAvg;
   late int _ratingCount;
 
-  // ---------- State untuk reviews list ----------
+  // State untuk reviews list
   final List<_ProductReview> _reviews = [];
   bool _isLoadingReviews = false;
   bool _hasMoreReviews = true;
   int _currentPage = 1;
 
-  // ---------- State untuk form review ----------
+  //State untuk form review
   int? _selectedRating;
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
@@ -60,7 +60,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     super.dispose();
   }
 
-  // ---------- MODELS KECIL UNTUK REVIEW ----------
+  // models kecil untuk review
   Future<void> _fetchReviews(
     CookieRequest request, {
     bool reset = false,
@@ -86,7 +86,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           "$baseUrl/api/shop/reviews/${widget.product.pk}/?page=$_currentPage";
 
       final response = await request.get(url);
-      // response bentuknya {results: [...], has_next: bool}
+
       final results = (response['results'] as List<dynamic>)
           .cast<Map<String, dynamic>>();
 
@@ -101,7 +101,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         }
       });
     } catch (e) {
-      // bisa kamu tambahkan SnackBar kalau mau
+      // b
     } finally {
       if (mounted) {
         setState(() {
@@ -144,7 +144,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       if (!mounted) return;
 
       // Kalau backend mengikuti view create_review, response-nya:
-      // { ok: true, review: {...}, rating_avg: x, rating_count: y }
       if (response['ok'] == true) {
         final newReviewJson = (response['review'] as Map<String, dynamic>);
 
@@ -153,7 +152,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           rating: newReviewJson['rating'] as int,
           title: newReviewJson['title'] as String,
           content: newReviewJson['content'] as String,
-          createdAt: DateTime.now(), // backend tidak kirim, pakai sekarang saja
+          createdAt: DateTime.now(), // backend tidak kirim
         );
 
         setState(() {
@@ -198,7 +197,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final owner = widget.product.owner; // nullable String?
 
     if (owner != null && owner.isNotEmpty) {
-      // sama seperti web: "Accessories • by RonaldoLove"
       return "$category • by $owner";
     }
     return category;
@@ -219,7 +217,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ---------- IMAGE ----------
+            // -Image
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: widget.product.thumbnail.isNotEmpty
@@ -244,14 +242,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 16),
 
-            // ---------- CATEGORY + OWNER ----------
+            // Cat and owner
             Text(
               _buildMetaLine(context),
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
             const SizedBox(height: 4),
 
-            // ---------- NAME ----------
+            //
             Text(
               widget.product.name,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -259,7 +257,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 8),
 
-            // ---------- PRICE + DISCOUNT + STOCK ----------
+            // Price discount dan stoc
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -322,7 +320,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 4),
 
-            // ---------- RATING SUMMARY ----------
+            //Rating
             Text(
               "Reviews ($_ratingCount) — "
               "${_ratingCount > 0 ? "⭐ ${_ratingAvg.toStringAsFixed(1)}" : "☆☆☆☆☆"}",
@@ -331,7 +329,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 16),
 
-            // ---------- DESCRIPTION ----------
+            // Desc
             Text(
               fields.description,
               style: const TextStyle(fontSize: 14, height: 1.6),
@@ -339,7 +337,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 24),
 
-            // ---------- ADD TO CART BUTTON ----------
+            // Add TO CART BUTTON
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -371,7 +369,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 32),
 
-            // ===================== REVIEWS SECTION =====================
+            // SECTION REVIEWS
             const Text(
               "Reviews",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

@@ -15,6 +15,8 @@ import 'package:sportwatch_ng/user_profile_notifier.dart';
 import 'package:sportwatch_ng/card_notifier.dart';
 import 'package:sportwatch_ng/fitur_belanja/screens/cart_page.dart';
 
+enum PriceSort { lowToHigh, highToLow, none }
+
 // Helper function untuk format angka dengan pemisah ribuan
 String formatCurrency(double value) {
   final formatted = value.toStringAsFixed(0);
@@ -39,9 +41,9 @@ class ShopPage extends StatefulWidget {
   State<ShopPage> createState() => _ShopPageState();
 }
 
-// 🔹 Model kecil buat filter kategori
+//Model kecil buat filter kategori
 class CategoryFilter {
-  final String key; // misal: 'all', 'accessories'
+  final String key; //'all', 'accessories'
   final String label;
   final String? categoryId; // null = tidak filter by category
 
@@ -53,6 +55,8 @@ class CategoryFilter {
 }
 
 class _ShopPageState extends State<ShopPage> {
+  // AState vraiables yang sering keupdate
+  PriceSort _priceSort = PriceSort.none;
   late Future<List<ProductEntry>> _futureProducts;
 
   void _showOwnerActions(BuildContext context, ProductEntry product) async {
@@ -158,24 +162,14 @@ class _ShopPageState extends State<ShopPage> {
   bool _showFeaturedOnly = false;
   bool _showMyProductsOnly = false;
 
-  // 🔹 Daftar kategori (mapping dari UUID di JSON kamu)
-  //   Dari JSON yang kamu kirim:
-  //   - Accessories  : ff590d73-32c7-4df3-9ec6-2c7cfff40a31
-  //   - Apparel      : 22a687ec-7639-4bf8-9504-c17801ad30fe
-  //   - Equipment    : 5d90d643-4b2d-4912-9f23-a1509d773240
-  //   - Footwears    : b995dd2e-b0b3-481b-ad34-76f234f4dad6
-  //   - Jerseys      : 4987be29-da54-4c01-93fa-51c63c268d24
-  //   - Uncategorized: sisa kategori yang bukan 5 di atas
-  // lib/screens/shop_landing_page.dart
-
-  // 1) CategoryFilter: use category *name* as categoryId
+  // categorty by id
   final List<CategoryFilter> _categoryFilters = const [
     CategoryFilter(key: 'all', label: 'All'),
 
     CategoryFilter(
       key: 'accessories',
       label: 'Accessories',
-      categoryId: 'Accessories', // <--- NAME, not UUID
+      categoryId: 'Accessories', //NAME, not UUID
     ),
     CategoryFilter(key: 'apparel', label: 'Apparel', categoryId: 'Apparel'),
     CategoryFilter(
@@ -193,7 +187,7 @@ class _ShopPageState extends State<ShopPage> {
     CategoryFilter(key: 'uncategorized', label: 'Uncategorized'),
   ];
 
-  // 2) Known category IDs: also use names
+  //Known category ID also use names
   late final Set<String> _knownCategoryIds = {
     'Accessories',
     'Apparel',
@@ -316,12 +310,12 @@ class _ShopPageState extends State<ShopPage> {
               ),
               const SizedBox(height: 4),
 
-              // 🔹 TEMPORARY DEBUG WIDGET
+              //TEMPORARY DEBUG WIDGET
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: profile.isGuest
-                      ? const Color(0xFFD4B8B4) // Soft Clay
+                      ? const Color(0xFFD4B8B4)
                       : Colors.green.shade100,
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -345,7 +339,7 @@ class _ShopPageState extends State<ShopPage> {
               ),
               const SizedBox(height: 16),
 
-              // 🔹 SCROLLABLE CATEGORY FILTER (ganti search bar)
+              //SCROLLABLE CATEGORY FILTER (ganti search bar)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -373,7 +367,7 @@ class _ShopPageState extends State<ShopPage> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Filter chips (featured & my products) + reload
+              //Filter chips (featured dan my products) dan reload
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -419,7 +413,34 @@ class _ShopPageState extends State<ShopPage> {
               ),
               const SizedBox(height: 12),
 
-              // 🔹 Product grid
+              Row(
+                children: [
+                  DropdownButton<PriceSort>(
+                    value: _priceSort,
+                    items: const [
+                      DropdownMenuItem(
+                        value: PriceSort.none,
+                        child: Text('None'),
+                      ),
+                      DropdownMenuItem(
+                        value: PriceSort.lowToHigh,
+                        child: Text('Price: Low → High'),
+                      ),
+                      DropdownMenuItem(
+                        value: PriceSort.highToLow,
+                        child: Text('Price: High → Low'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _priceSort = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+              //Product grid
               Expanded(
                 child: FutureBuilder<List<ProductEntry>>(
                   future: _futureProducts,
@@ -441,12 +462,28 @@ class _ShopPageState extends State<ShopPage> {
 
                     List<ProductEntry> products = snapshot.data!;
 
-                    // 1️⃣ Category filter
+                    double effectivePrice(ProductEntry p) {
+                      return p.salePrice ?? p.price;
+                    }
+
+                    if (_priceSort == PriceSort.lowToHigh) {
+                      products.sort(
+                        (a, b) =>
+                            effectivePrice(a).compareTo(effectivePrice(b)),
+                      );
+                    } else if (_priceSort == PriceSort.highToLow) {
+                      products.sort(
+                        (a, b) =>
+                            effectivePrice(b).compareTo(effectivePrice(a)),
+                      );
+                    }
+
+                    //Category filter
                     final selectedFilter =
                         _categoryFilters[_selectedCategoryIndex];
 
                     if (selectedFilter.key == 'uncategorized') {
-                      // kategori yang BUKAN 5 kategori utama di atas
+                      //kategori yang BUKAN 5 kategori utama di atas
                       products = products
                           .where(
                             (p) =>
@@ -461,14 +498,14 @@ class _ShopPageState extends State<ShopPage> {
                           )
                           .toList();
                     }
-                    // kalau 'all' -> gak diapa-apain
+                    // kalau 'all'  gak diapa-apain
 
-                    // 2️⃣ Featured filter
+                    //  Featured filter
                     if (_showFeaturedOnly) {
                       products = products.where((p) => p.isFeatured).toList();
                     }
 
-                    // 3️⃣ My products filter (by created_by)
+                    //  My products filter (by created_by)
                     if (_showMyProductsOnly) {
                       final jsonData = request.jsonData;
 
@@ -545,7 +582,7 @@ class _ShopPageState extends State<ShopPage> {
                             );
 
                             if (changed == true) {
-                              _refresh(); // ini method yang sudah kamu punya untuk reload _futureProducts
+                              _refresh(); // ini method yang untuk reload _futureProducts
                             }
                           },
                           onAddToCart: () {
