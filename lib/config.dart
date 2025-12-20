@@ -1,42 +1,4 @@
-import 'dart:io' show Platform;
-
-import 'package:flutter/foundation.dart';
-
-// Use localhost instead of 127.0.0.1 for the web build so the browser treats
-// the Flutter dev server and Django backend as the same site. This ensures
-// session cookies are sent with cross-origin requests during local testing.
-const String _webBaseUrl = "http://localhost:8000";
-const String _androidEmulatorBaseUrl = "http://10.0.2.2:8000";
-const String _desktopBaseUrl = "http://127.0.0.1:8000";
-const String _productionBaseUrl =
-    "https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id";
-const bool _preferProductionBase = bool.fromEnvironment(
-  "SPORTWATCH_PREFER_PROD",
-  defaultValue: true,
-);
-
-String _resolveBaseUrl() {
-  const override = String.fromEnvironment("SPORTWATCH_BASE_URL");
-  if (override.isNotEmpty) {
-    return override;
-  }
-  if (_preferProductionBase) {
-    return _productionBaseUrl;
-  }
-  const useProduction = bool.fromEnvironment("SPORTWATCH_USE_PROD");
-  if (useProduction || kReleaseMode) {
-    return _productionBaseUrl;
-  }
-  if (kIsWeb) {
-    return _webBaseUrl;
-  }
-  if (Platform.isAndroid) {
-    return _androidEmulatorBaseUrl;
-  }
-  return _desktopBaseUrl;
-}
-
-final String baseUrl = _resolveBaseUrl();
+const String baseUrl = "https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id";
 
 String _authPath(String suffix) {
   final cleaned = suffix.startsWith('/') ? suffix.substring(1) : suffix;

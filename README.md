@@ -2,7 +2,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-green?style=for-the-badge)
 
 
 Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkinkan pengguna membaca berita olahraga, memantau skor pertandingan, berdiskusi, hingga membeli merchandise tim favorit mereka.
@@ -96,7 +96,7 @@ Alur integrasi fungsional adalah sebagai berikut:
 
 ## ⚙️ Konfigurasi Backend
 
-Secara default aplikasi Flutter sekarang selalu menggunakan backend produksi (`https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id`) agar perilaku build APK sama dengan aplikasi yang dipasang user. Bila perlu kembali ke backend lokal saat development, jalankan perintah Flutter dengan `--dart-define=SPORTWATCH_PREFER_PROD=false`. Untuk menimpa URL secara eksplisit (misal staging), gunakan `--dart-define=SPORTWATCH_BASE_URL=https://domain-custom` yang akan mengabaikan seluruh logika pemilihan otomatis.
+Base URL backend sekarang dipatok permanen ke server produksi (`https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id`) agar semua build (termasuk APK) selalu konsisten. Jika suatu saat perlu berpindah ke server lain, ubah nilai `baseUrl` di `lib/config.dart`.
 
 ## 📋 Tahapan Pengerjaan
 

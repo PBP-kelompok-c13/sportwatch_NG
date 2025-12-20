@@ -409,10 +409,10 @@ packages:
     dependency: "direct main"
     description:
       name: shadcn_ui
-      sha256: f8e00100bb15a7f99d95ddb2c7132a3ecac8ddbb37127df79f0a56db2890c1fe
+      sha256: f7f18b1d3c6e10628b72a7bc80fce32c91722800828efbfb248f6d846f36d5cb
       url: "https://pub.dev"
     source: hosted
-    version: "0.42.1"
+    version: "0.38.5"
   shared_preferences:
     dependency: transitive
     description:
@@ -526,10 +526,10 @@ packages:
     dependency: transitive
     description:
       name: theme_extensions_builder_annotation
-      sha256: e14648a3318842992f14b207cb811df48a1d6f0bd742b77bcbf1b74557493c00
+      sha256: "5ed8e758c33a011fa8a2fd6af2d951cd5500874f465cea379aa7db80807aa7e9"
       url: "https://pub.dev"
     source: hosted
-    version: "7.1.0"
+    version: "6.0.1"
   timeago:
     dependency: "direct main"
     description:

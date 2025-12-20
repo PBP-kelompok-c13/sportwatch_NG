@@ -315,9 +315,9 @@
     },
     {
       "name": "shadcn_ui",
-      "rootUri": "file:///C:/Users/Faizu/AppData/Local/Pub/Cache/hosted/pub.dev/shadcn_ui-0.42.1",
+      "rootUri": "file:///C:/Users/Faizu/AppData/Local/Pub/Cache/hosted/pub.dev/shadcn_ui-0.38.5",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "shared_preferences",
@@ -405,7 +405,7 @@
     },
     {
       "name": "theme_extensions_builder_annotation",
-      "rootUri": "file:///C:/Users/Faizu/AppData/Local/Pub/Cache/hosted/pub.dev/theme_extensions_builder_annotation-7.1.0",
+      "rootUri": "file:///C:/Users/Faizu/AppData/Local/Pub/Cache/hosted/pub.dev/theme_extensions_builder_annotation-6.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.8"
     },
@@ -489,8 +489,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.10.3",
+  "generatorVersion": "3.10.4",
   "flutterRoot": "file:///C:/Users/Faizu/Dev/flutter",
-  "flutterVersion": "3.38.4",
+  "flutterVersion": "3.38.5",
   "pubCache": "file:///C:/Users/Faizu/AppData/Local/Pub/Cache"
 }
