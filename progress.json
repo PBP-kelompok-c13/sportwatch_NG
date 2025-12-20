@@ -46,7 +46,7 @@
           "id": "widget-fadhil",
           "description": "Widget modul Scoreboard (Fadhil)",
           "percent": 15,
-          "done": false
+          "done": true
         },
         {
           "id": "widget-edward",
@@ -58,31 +58,31 @@
           "id": "widget-kadek",
           "description": "Widget modul Fitur Pencarian (Kadek)",
           "percent": 15,
-          "done": false
+          "done": true
         },
         {
           "id": "widget-dzaki",
           "description": "Widget modul Checkout (Dzaki)",
           "percent": 15,
-          "done": false
+          "done": true
         },
         {
           "id": "integrasi-modul",
           "description": "Integrasi seluruh modul dalam satu aplikasi",
           "percent": 5,
-          "done": false
+          "done": true
         },
         {
           "id": "desain-sesuai",
           "description": "Fungsionalitas & desain sesuai rancangan",
           "percent": 5,
-          "done": false
+          "done": true
         },
         {
           "id": "json-data",
           "description": "Pengolahan data JSON dari web service Django",
           "percent": 3,
-          "done": false
+          "done": true
         },
         {
           "id": "apk-readme",
@@ -94,7 +94,7 @@
           "id": "presentasi-demo",
           "description": "Presentasi & demo tugas ke dosen",
           "percent": 1,
-          "done": false
+          "done": true
         }
       ]
     }

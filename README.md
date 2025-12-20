@@ -2,7 +2,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%2841%25%29-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-yellow?style=for-the-badge)
 
 [![Flutter CI](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml)
 [![Build Status](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33/status.svg?token=B73M8_agenC2FZWZQA1MqA&branch=master)](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33)
@@ -83,9 +83,9 @@ Arsitektur aplikasi ini menggunakan model **Client-Server**.
 Alur integrasi fungsional adalah sebagai berikut:
 
 * **Autentikasi:**
-    * Flutter mengirimkan *request* `POST` ke *endpoint* `/api/login/` (contoh) dengan kredensial pengguna (JSON).
-    * Server Django memvalidasi data dan mengembalikan *token* (misal, JWT) dalam respons JSON.
-    * Flutter menyimpan *token* ini di *local storage* (misal: `flutter_secure_storage`) untuk digunakan di *header* *request* selanjutnya.
+    * Flutter mengirimkan *request* `POST` ke *endpoint* `/api/auth/login/` dengan kredensial pengguna (JSON).
+    * Server Django (DRF) merespons JSON yang berisi token akses plus metadata akun; tidak ada sesi/cookie yang dibagikan ke Flutter.
+    * Flutter menyimpan token ini di `flutter_secure_storage` dan menambahkannya sebagai header `Authorization: Token <token>` di setiap *request* yang memerlukan autentikasi (logout memanggil `/api/auth/logout/` untuk mencabut token).
 
 * **Pengambilan Data (Berita, Produk, Skor):**
     * Flutter mengirimkan *request* `GET` ke *endpoint* yang relevan (misal, `/api/berita/`).
@@ -95,6 +95,10 @@ Alur integrasi fungsional adalah sebagai berikut:
 * **Pengiriman Data (Checkout, CRUD Admin):**
     * Flutter mengirimkan *request* `POST` atau `PUT` ke *endpoint* yang sesuai (misal, `/api/checkout/`) dengan membawa *payload* data (JSON) dan *token* autentikasi.
     * Server Django memvalidasi data, memprosesnya ke database, dan mengembalikan status sukses atau error dalam format JSON.
+
+## ⚙️ Konfigurasi Backend
+
+Secara default aplikasi Flutter sekarang selalu menggunakan backend produksi (`https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id`) agar perilaku build APK sama dengan aplikasi yang dipasang user. Bila perlu kembali ke backend lokal saat development, jalankan perintah Flutter dengan `--dart-define=SPORTWATCH_PREFER_PROD=false`. Untuk menimpa URL secara eksplisit (misal staging), gunakan `--dart-define=SPORTWATCH_BASE_URL=https://domain-custom` yang akan mengabaikan seluruh logika pemilihan otomatis.
 
 ## 📋 Tahapan Pengerjaan
 

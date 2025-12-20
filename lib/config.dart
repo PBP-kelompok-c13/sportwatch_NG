@@ -10,11 +10,18 @@ const String _androidEmulatorBaseUrl = "http://10.0.2.2:8000";
 const String _desktopBaseUrl = "http://127.0.0.1:8000";
 const String _productionBaseUrl =
     "https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id";
+const bool _preferProductionBase = bool.fromEnvironment(
+  "SPORTWATCH_PREFER_PROD",
+  defaultValue: true,
+);
 
 String _resolveBaseUrl() {
   const override = String.fromEnvironment("SPORTWATCH_BASE_URL");
   if (override.isNotEmpty) {
     return override;
+  }
+  if (_preferProductionBase) {
+    return _productionBaseUrl;
   }
   const useProduction = bool.fromEnvironment("SPORTWATCH_USE_PROD");
   if (useProduction || kReleaseMode) {
