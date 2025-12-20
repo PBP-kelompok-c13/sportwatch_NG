@@ -26,7 +26,7 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
   bool _isLoading = false;
 
   final List<String> _sportOptions = ['NBA', 'EPL', 'NFL', 'MLB', 'NHL'];
-  final List<String> _statusOptions = ['upcoming', 'live', 'recent'];
+  final List<String> _statusOptions = ['upcoming', 'live', 'finished'];
 
   @override
   void initState() {
@@ -57,8 +57,8 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
     final body = jsonEncode({
       'tim1': _tim1,
       'tim2': _tim2,
-      'skor_tim1': _skorTim1,
-      'skor_tim2': _skorTim2,
+      'skor_tim1': _skorTim1 ?? 0,
+      'skor_tim2': _skorTim2 ?? 0,
       'sport': _sport,
       'status': _status,
       'logo_tim1': _logoTim1,
@@ -162,7 +162,12 @@ class _ScoreFormPageState extends State<ScoreFormPage> {
                   : _statusOptions.first,
               decoration: const InputDecoration(labelText: 'Status'),
               items: _statusOptions
-                  .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                  .map(
+                    (s) => DropdownMenuItem(
+                      value: s,
+                      child: Text(s == 'finished' ? 'Recent' : s),
+                    ),
+                  )
                   .toList(),
               onChanged: (v) => setState(() => _status = v!),
             ),

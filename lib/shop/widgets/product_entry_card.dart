@@ -1,5 +1,6 @@
 // lib/widgets/product_entry_card.dart
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sportwatch_ng/shop/models/product_entry.dart';
 
 class ProductEntryCard extends StatelessWidget {
@@ -186,8 +187,8 @@ class ProductEntryCard extends StatelessWidget {
                       children: [
                         Text(
                           _formatPrice(product.finalPrice),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                          style: GoogleFonts.barlowCondensed(
+                            fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
@@ -195,8 +196,9 @@ class ProductEntryCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           Text(
                             _formatPrice(product.price),
-                            style: const TextStyle(
+                            style: GoogleFonts.barlowCondensed(
                               fontSize: 11,
+                              fontWeight: FontWeight.w600,
                               color: Colors.grey,
                               decoration: TextDecoration.lineThrough,
                             ),
@@ -204,10 +206,10 @@ class ProductEntryCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           Text(
                             "-${product.discountPercent}%",
-                            style: const TextStyle(
+                            style: GoogleFonts.barlowCondensed(
                               fontSize: 11,
                               color: Colors.red,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],

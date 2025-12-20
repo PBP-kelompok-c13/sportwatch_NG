@@ -59,10 +59,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
     final request = context.read<CookieRequest>();
     try {
       final catRes = await request.get(
-        Uri.parse(baseUrl).resolve("/shop/api/categories/").toString(),
+        Uri.parse(baseUrl).resolve("/api/shop/categories/").toString(),
       );
       final brandRes = await request.get(
-        Uri.parse(baseUrl).resolve("/shop/api/brands/").toString(),
+        Uri.parse(baseUrl).resolve("/api/shop/brands/").toString(),
       );
 
       if (mounted) {

@@ -14,7 +14,7 @@ class ScoreManagementPage extends StatefulWidget {
 class _ScoreManagementPageState extends State<ScoreManagementPage> {
   List<dynamic> _scores = [];
   bool _isLoading = true;
-  String _currentFilter = 'upcoming'; // live, upcoming, recent
+  String _currentFilter = 'upcoming'; // live, upcoming, finished
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
     }
   }
 
-  Future<void> _deleteScore(int id) async {
+  Future<void> _deleteScore(Object id) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (c) => AlertDialog(
@@ -109,7 +109,7 @@ class _ScoreManagementPageState extends State<ScoreManagementPage> {
             items: const [
               DropdownMenuItem(value: 'live', child: Text('Live')),
               DropdownMenuItem(value: 'upcoming', child: Text('Upcoming')),
-              DropdownMenuItem(value: 'recent', child: Text('Recent')),
+              DropdownMenuItem(value: 'finished', child: Text('Recent')),
             ],
             onChanged: (v) {
               if (v != null) {

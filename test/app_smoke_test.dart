@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sportwatch_ng/main.dart';
+import 'helpers/fake_cookie_request.dart';
 
 void main() {
-  testWidgets('renders home screen with bottom navigation', (tester) async {
-    await tester.pumpWidget(const MyApp());
+  late FakeCookieRequest fakeRequest;
+
+  setUp(() {
+    fakeRequest = FakeCookieRequest();
+  });
+
+  testWidgets('renders home screen with drawer navigation', (tester) async {
+    await tester.pumpWidget(
+      MyApp(testMode: true, cookieRequestOverride: fakeRequest),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.text('Sportwatch New Generations'), findsOneWidget);
-    expect(find.text('Welcome to Sportwatch NG!'), findsOneWidget);
-    expect(find.byType(BottomNavigationBar), findsOneWidget);
-    expect(find.text('Home'), findsOneWidget);
-    expect(find.text('News'), findsOneWidget);
-    expect(find.text('Search'), findsOneWidget);
-    expect(find.text('Scoreboard'), findsOneWidget);
-    expect(find.text('Shop'), findsOneWidget);
+    expect(find.text('SportWatch'), findsOneWidget);
+    expect(find.text('Welcome, Guest'), findsOneWidget);
+    expect(find.text('Hot News'), findsOneWidget);
+
+    await tester.tap(find.text('Login / Register'));
+    await tester.pumpAndSettle();
+    expect(find.text('Welcome Back'), findsOneWidget);
   });
 }

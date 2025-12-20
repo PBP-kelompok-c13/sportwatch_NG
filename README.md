@@ -2,7 +2,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%2841%25%29-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-yellow?style=for-the-badge)
 
 [![Flutter CI](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/PBP-kelompok-c13/sportwatch_NG/actions/workflows/flutter-ci.yml)
 [![Build Status](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33/status.svg?token=B73M8_agenC2FZWZQA1MqA&branch=master)](https://app.bitrise.io/app/88c9ea2b-d5f8-4446-9a5e-10f95db28c33)
@@ -23,8 +23,16 @@ Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkink
 
 ## 📝 Deskripsi Aplikasi
 
-* **Nama Aplikasi:** SportWatch
-* **Fungsi Aplikasi:** SportWatch adalah portal olahraga *all-in-one* di saku Anda. Aplikasi ini menyediakan berita terkini, skor pertandingan *real-time*, dan marketplace khusus untuk merchandise olahraga.
+**SportWatch** adalah aplikasi mobile berbasis Flutter/Dart yang
+mengintegrasikan berbagai kebutuhan penggemar olahraga dalam satu
+platform terpadu. Pengguna sering kali harus menggunakan beberapa
+aplikasi berbeda untuk membaca berita olahraga, memantau skor pertandingan,
+dan membeli merchandise olahraga.
+
+SportWatch hadir sebagai solusi dengan menyediakan berita olahraga
+terkini, skor pertandingan secara *real-time*, fitur pencarian,
+serta marketplace untuk jual beli dan ulasan produk olahraga dalam
+satu aplikasi yang terintegrasi dan mudah digunakan.
 
 ## 🚀 Daftar Modul & Pembagian Kerja
 
@@ -42,7 +50,7 @@ Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkink
 
 ### 4. Shop (`shop`)
 * **Penanggung Jawab:** Edward Jeremy Worang
-* **Deskripsi:** Halaman *marketplace* untuk melihat merchandise olahraga. Termasuk model produk, sistem filtering, dan rating.
+* **Deskripsi:** Halaman *marketplace* yang memungkinkan **admin** mengelola seluruh data produk, serta **user terdaftar** untuk menambahkan, mengubah, dan menghapus produk miliknya sendiri. Modul ini juga mencakup model produk, sistem *filtering*, dan fitur *rating*.
 
 ### 5. Fitur Belanja (`checkout`)
 * **Penanggung Jawab:** Dzaki Abrar Fatihul Ihsan
@@ -60,7 +68,8 @@ Aplikasi ini memiliki tiga peran utama:
 2.  **User (Pengguna Terdaftar):**
     * Memiliki semua hak **Guest**.
     * Dapat melakukan transaksi pembelian di *shop*.
-    * Dapat berinteraksi di aplikasi (jika fitur dikembangkan).
+    * Dapat memberikan review terhadap produk yang dibeli.
+    * Dapat menambahkan produk miliknya sendiri ke dalam *shop* sebagai penjual.
 3.  **Admin:**
     * Memiliki hak istimewa untuk mengelola konten aplikasi (CRUD Berita, Produk, dan Skor Pertandingan).
 
@@ -74,9 +83,9 @@ Arsitektur aplikasi ini menggunakan model **Client-Server**.
 Alur integrasi fungsional adalah sebagai berikut:
 
 * **Autentikasi:**
-    * Flutter mengirimkan *request* `POST` ke *endpoint* `/api/login/` (contoh) dengan kredensial pengguna (JSON).
-    * Server Django memvalidasi data dan mengembalikan *token* (misal, JWT) dalam respons JSON.
-    * Flutter menyimpan *token* ini di *local storage* (misal: `flutter_secure_storage`) untuk digunakan di *header* *request* selanjutnya.
+    * Flutter mengirimkan *request* `POST` ke *endpoint* `/api/auth/login/` dengan kredensial pengguna (JSON).
+    * Server Django (DRF) merespons JSON yang berisi token akses plus metadata akun; tidak ada sesi/cookie yang dibagikan ke Flutter.
+    * Flutter menyimpan token ini di `flutter_secure_storage` dan menambahkannya sebagai header `Authorization: Token <token>` di setiap *request* yang memerlukan autentikasi (logout memanggil `/api/auth/logout/` untuk mencabut token).
 
 * **Pengambilan Data (Berita, Produk, Skor):**
     * Flutter mengirimkan *request* `GET` ke *endpoint* yang relevan (misal, `/api/berita/`).
@@ -87,9 +96,13 @@ Alur integrasi fungsional adalah sebagai berikut:
     * Flutter mengirimkan *request* `POST` atau `PUT` ke *endpoint* yang sesuai (misal, `/api/checkout/`) dengan membawa *payload* data (JSON) dan *token* autentikasi.
     * Server Django memvalidasi data, memprosesnya ke database, dan mengembalikan status sukses atau error dalam format JSON.
 
+## ⚙️ Konfigurasi Backend
+
+Secara default aplikasi Flutter sekarang selalu menggunakan backend produksi (`https://faiz-yusuf-sportwatch.pbp.cs.ui.ac.id`) agar perilaku build APK sama dengan aplikasi yang dipasang user. Bila perlu kembali ke backend lokal saat development, jalankan perintah Flutter dengan `--dart-define=SPORTWATCH_PREFER_PROD=false`. Untuk menimpa URL secara eksplisit (misal staging), gunakan `--dart-define=SPORTWATCH_BASE_URL=https://domain-custom` yang akan mengabaikan seluruh logika pemilihan otomatis.
+
 ## 📋 Tahapan Pengerjaan
 
-Secara garis besar, yang akan kita lakukan adalah (sementara):
+Secara garis besar, tahapan pengerjaan proyek ini adalah sebagai berikut:
 
 1. Memetakan fitur web → fitur mobile  
 2. Memutuskan pola autentikasi untuk mobile  

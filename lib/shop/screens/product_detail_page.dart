@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:sportwatch_ng/shop/models/product_entry.dart';
 import 'package:sportwatch_ng/shop/models/constants.dart';
@@ -82,7 +83,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       }
 
       final url =
-          "$baseUrl/shop/api/reviews/${widget.product.pk}/?page=$_currentPage";
+          "$baseUrl/api/shop/reviews/${widget.product.pk}/?page=$_currentPage";
 
       final response = await request.get(url);
       // response bentuknya {results: [...], has_next: bool}
@@ -132,7 +133,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     try {
       final url =
-          "$baseUrl/shop/api/reviews/${widget.product.id}/create-flutter/";
+          "$baseUrl/api/shop/reviews/${widget.product.id}/create-flutter/";
 
       // create_review expects POST form (bukan JSON)
       final response = await request.post(url, {
@@ -264,17 +265,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               children: [
                 Text(
                   _formatPrice(widget.product.finalPrice),
-                  style: const TextStyle(
+                  style: GoogleFonts.barlowCondensed(
                     fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 if (hasDiscount) ...[
                   const SizedBox(width: 8),
                   Text(
                     _formatPrice(widget.product.price),
-                    style: const TextStyle(
+                    style: GoogleFonts.barlowCondensed(
                       fontSize: 14,
+                      fontWeight: FontWeight.w600,
                       color: Colors.grey,
                       decoration: TextDecoration.lineThrough,
                     ),
@@ -291,7 +293,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                     child: Text(
                       "-${widget.product.discountPercent}%",
-                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                      style: GoogleFonts.barlowCondensed(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],

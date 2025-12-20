@@ -1,83 +1,32 @@
-// lib/screens/product_form_page.dart
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
-
-import 'package:sportwatch_ng/shop/models/constants.dart';
+import 'package:sportwatch_ng/admin/product_form.dart' as admin;
 import 'package:sportwatch_ng/shop/models/product_entry.dart';
-import 'package:sportwatch_ng/user_profile_notifier.dart';
 
-class ProductFormPage extends StatefulWidget {
-  final ProductEntry? product; // null = create, non-null = edit
+/// Bridge widget so the shop flow can reuse the admin product form.
+class ProductFormPage extends StatelessWidget {
+  final ProductEntry? product;
 
   const ProductFormPage({super.key, this.product});
 
-  bool get isEdit => product != null;
-
-  @override
-  State<ProductFormPage> createState() => _ProductFormPageState();
-}
-
-// DTO kecil buat dropdown
-class CategoryOption {
-  final String id; // UUID category (pk)
-  final String name; // label
-  final String slug; // slug utk kirim ke API
-
-  CategoryOption({required this.id, required this.name, required this.slug});
-
-  factory CategoryOption.fromJson(Map<String, dynamic> json) => CategoryOption(
-    // kalau id/slug dari backend angka / null -> tetap aman
-    id: json['id']?.toString() ?? '',
-    name: json['name']?.toString() ?? '',
-    // kalau slug null, fallback ke id (atau string kosong)
-    slug: (json['slug'] ?? json['id'] ?? '').toString(),
-  );
-}
-
-class BrandOption {
-  final String id;
-  final String name;
-  final String slug;
-
-  BrandOption({required this.id, required this.name, required this.slug});
-
-  factory BrandOption.fromJson(Map<String, dynamic> json) => BrandOption(
-    id: json['id']?.toString() ?? '',
-    name: json['name']?.toString() ?? '',
-    slug: (json['slug'] ?? json['id'] ?? '').toString(),
-  );
-}
-
-class _ProductFormPageState extends State<ProductFormPage> {
-  final _formKey = GlobalKey<FormState>();
-
-  // state form
-  String _name = "";
-  CategoryOption? _selectedCategory;
-  BrandOption? _selectedBrand; // <-- boleh null
-  String _description = "";
-  double _price = 0;
-  double? _salePrice;
-  String _currency = "IDR";
-  int _stock = 0;
-  String _thumbnail = "";
-  bool _isFeatured = false;
-
-  // data dropdown
-  List<CategoryOption> _categories = [];
-  List<BrandOption> _brands = [];
-  bool _dropdownLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _initFromProduct();
-    _loadDropdownData();
+  Map<String, dynamic>? _mapProduct(ProductEntry product) {
+    final fields = product.fields;
+    return {
+      'id': product.pk,
+      'name': fields.name,
+      'description': fields.description,
+      'price': double.tryParse(fields.price),
+      'sale_price': fields.salePrice != null
+          ? double.tryParse(fields.salePrice!)
+          : null,
+      'stock': fields.stock,
+      'thumbnail': fields.thumbnail,
+      'category': fields.category,
+      'brand': fields.brand,
+      'is_featured': fields.isFeatured,
+    };
   }
 
+<<<<<<< HEAD
   void _initFromProduct() {
     if (!widget.isEdit) return;
     final f = widget.product!.fields;
@@ -405,6 +354,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 ),
               ),
             ),
+=======
+  @override
+  Widget build(BuildContext context) {
+    return admin.ProductFormPage(
+      initialData: product != null ? _mapProduct(product!) : null,
+>>>>>>> 6991bf4205772456801fc2974e5369408dba6248
     );
   }
 }
