@@ -2,7 +2,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-green?style=for-the-badge)
 
 ## Download APK & Video
 
@@ -156,15 +156,15 @@ Tahap I selesai penuh sehingga menyumbang 20% ke badge.
 ### Tahap II – 80% (deadline: Minggu, 21 Desember 2025, 23.59 WIB + toleransi 30 menit)
 | Deliverable | Bobot | Status awal |
 | --- | --- | --- |
-| Widget modul Portal Berita (Faiz) | 5% | ✅ (`widget-faiz`) |
-| Widget modul Scoreboard (Fadhil) | 15% | ⏳ |
-| Widget modul Shop (Edward) | 15% | ⏳ |
-| Widget modul Fitur Pencarian (Kadek) | 15% | ⏳ |
-| Widget modul Checkout (Dzaki) | 15% | ⏳ |
-| Integrasi seluruh modul | 5% | ⏳ |
-| Fungsionalitas sesuai desain | 5% | ⏳ |
-| Pengolahan JSON web service Django | 3% | ⏳ |
-| Menambahkan tautan APK ke README | 1% | ⏳ |
-| Presentasi & demo ke dosen | 1% | ⏳ |
+| Widget modul Portal Berita (Faiz) | 5% | ✅ |
+| Widget modul Scoreboard (Fadhil) | 15% | ✅ |
+| Widget modul Shop (Edward) | 15% | ✅ |
+| Widget modul Fitur Pencarian (Kadek) | 15% | ✅ |
+| Widget modul Checkout (Dzaki) | 15% | ✅ |
+| Integrasi seluruh modul | 5% | ✅ |
+| Fungsionalitas sesuai desain | 5% | ✅ |
+| Pengolahan JSON web service Django | 3% | ✅ |
+| Menambahkan tautan APK ke README | 1% | ✅ |
+| Presentasi & demo ke dosen | 1% | ✅ |
 
-Progress awal `Tahap II (25%)` = 20% (Tahap I) + 5% (widget modul Faiz). Saat deliverable lain diselesaikan, badge akan otomatis naik tanpa perlu mengedit README secara manual.
+Tahap II selesai penuh sehingga menyumbang 80% ke badge.
