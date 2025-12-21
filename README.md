@@ -4,6 +4,12 @@
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-yellow?style=for-the-badge)
 
+## Download APK & Video
+
+* Bitrise: https://app.bitrise.io/app/392c55c1-177a-4a24-954f-85a97d83cd92/installable-artifacts/c06517ff4aa80b2a/public-install-page/f4311e1a446c5cf0903b2126976a9cb0
+* GitHub Release: https://github.com/PBP-kelompok-c13/sportwatch_NG/releases/tag/Final_Build
+* Video Promotion: https://youtu.be/3Iyn12eQZVk?si=KT46FfcVDDBwF_PB
+
 
 Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkinkan pengguna membaca berita olahraga, memantau skor pertandingan, berdiskusi, hingga membeli merchandise tim favorit mereka.
 
