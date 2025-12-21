@@ -44,27 +44,19 @@ android {
 
     signingConfigs {
         create("release") {
-            // Priority 1: Environment Variables (Bitrise / GitHub Actions)
-            val envStoreFile =
-                System.getenv("BITRISEIO_ANDROID_KEYSTORE_URL")
-                    ?: System.getenv("KEYSTORE_FILE")
-            val envStorePassword =
-                System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
-                    ?: System.getenv("KEYSTORE_PASSWORD")
-            val envKeyAlias =
-                System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
-                    ?: System.getenv("KEY_ALIAS")
-            val envKeyPassword =
-                System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
-                    ?: System.getenv("KEY_PASSWORD")
+            // Bitrise downloads the keystore and provides a local path variable
+            // If BITRISEIO_ANDROID_KEYSTORE_URL contains an HTTPS link, Gradle fails.
+            // Use the local path if provided, otherwise the URL.
+            val bitriseKeystorePath = System.getenv("BITRISE_KEYSTORE_PATH")
+                ?: System.getenv("BITRISEIO_ANDROID_KEYSTORE_URL")
 
-            if (envStoreFile != null) {
-                storeFile = file(envStoreFile)
-                storePassword = envStorePassword
-                keyAlias = envKeyAlias
-                keyPassword = envKeyPassword
+            if (!bitriseKeystorePath.isNullOrBlank()) {
+                storeFile = file(bitriseKeystorePath)
+                storePassword = System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
+                keyPassword = System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
             } else if (keystorePropertiesFile.exists()) {
-                // Priority 2: Local Properties File (Local builds)
+                // Local fallback
                 storeFile = file(keystoreProperties["storeFile"] as String)
                 storePassword = keystoreProperties["storePassword"] as String
                 keyAlias = keystoreProperties["keyAlias"] as String
