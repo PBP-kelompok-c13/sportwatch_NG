@@ -6,9 +6,9 @@
 
 ## Download APK & Video
 
-* Bitrise: https://app.bitrise.io/app/392c55c1-177a-4a24-954f-85a97d83cd92/installable-artifacts/c06517ff4aa80b2a/public-install-page/f4311e1a446c5cf0903b2126976a9cb0
-* GitHub Release: https://github.com/PBP-kelompok-c13/sportwatch_NG/releases/tag/Final_Build
-* Video Promotion: https://youtu.be/3Iyn12eQZVk?si=KT46FfcVDDBwF_PB
+[![Download APK (Bitrise)](https://img.shields.io/badge/Download%20APK-Bitrise-7E3FF2?style=for-the-badge&logo=bitrise&logoColor=white)](https://app.bitrise.io/app/392c55c1-177a-4a24-954f-85a97d83cd92/installable-artifacts/c06517ff4aa80b2a/public-install-page/f4311e1a446c5cf0903b2126976a9cb0)
+[![GitHub Release](https://img.shields.io/badge/Release-GitHub-ffffff?style=for-the-badge&logo=github&logoColor=000000&labelColor=000000)](https://github.com/PBP-kelompok-c13/sportwatch_NG/releases/tag/Final_Build)
+[![Video Promotion](https://img.shields.io/badge/Video%20Promotion-YouTube-ff0000?style=for-the-badge&logo=youtube&logoColor=ffffff&labelColor=000000)](https://youtu.be/3Iyn12eQZVk?si=KT46FfcVDDBwF_PB)
 
 
 Platform digital terpadu berbasis aplikasi mobile (Flutter/Dart) yang memungkinkan pengguna membaca berita olahraga, memantau skor pertandingan, berdiskusi, hingga membeli merchandise tim favorit mereka.
