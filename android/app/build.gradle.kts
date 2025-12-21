@@ -10,10 +10,9 @@ import java.io.FileInputStream
 
 val splitPerAbi = project.hasProperty("split-per-abi")
 val keystorePropertiesFile = rootProject.file("key.properties")
-val keystoreProperties = Properties()
-
+val keystoreProperties = java.util.Properties()
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    keystoreProperties.load(java.util.FileInputStream(keystorePropertiesFile))
 }
 
 android {

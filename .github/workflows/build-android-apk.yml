@@ -58,7 +58,7 @@ jobs:
       - name: Create key.properties
         run: |
           cat > android/key.properties <<'EOF'
-          storeFile=app/release-keystore.jks
+          storeFile=release-keystore.jks
           storePassword=${{ secrets.KEY_PASSWORD }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
           keyAlias=release
