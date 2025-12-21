@@ -5,7 +5,16 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+import java.util.Properties
+import java.io.FileInputStream
+
 val splitPerAbi = project.hasProperty("split-per-abi")
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
 
 android {
     namespace = "com.example.sportwatch_ng"
@@ -32,6 +41,37 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("release") {
+            // Priority 1: Environment Variables (Bitrise / GitHub Actions)
+            val envStoreFile =
+                System.getenv("BITRISEIO_ANDROID_KEYSTORE_URL")
+                    ?: System.getenv("KEYSTORE_FILE")
+            val envStorePassword =
+                System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
+                    ?: System.getenv("KEYSTORE_PASSWORD")
+            val envKeyAlias =
+                System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
+                    ?: System.getenv("KEY_ALIAS")
+            val envKeyPassword =
+                System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
+                    ?: System.getenv("KEY_PASSWORD")
+
+            if (envStoreFile != null) {
+                storeFile = file(envStoreFile)
+                storePassword = envStorePassword
+                keyAlias = envKeyAlias
+                keyPassword = envKeyPassword
+            } else if (keystorePropertiesFile.exists()) {
+                // Priority 2: Local Properties File (Local builds)
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -40,8 +80,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("release")
         }
     }
