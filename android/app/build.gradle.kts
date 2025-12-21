@@ -43,39 +43,29 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            // Bitrise downloads the keystore and provides a local path variable
-            // If BITRISEIO_ANDROID_KEYSTORE_URL contains an HTTPS link, Gradle fails.
-            // Use the local path if provided, otherwise the URL.
-            val bitriseKeystorePath = System.getenv("BITRISE_KEYSTORE_PATH")
-                ?: System.getenv("BITRISEIO_ANDROID_KEYSTORE_URL")
-
-            if (!bitriseKeystorePath.isNullOrBlank()) {
-                storeFile = file(bitriseKeystorePath)
-                storePassword = System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
-                keyPassword = System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
-            } else if (keystorePropertiesFile.exists()) {
-                // Local fallback
-                storeFile = file(keystoreProperties["storeFile"] as String)
-                storePassword = keystoreProperties["storePassword"] as String
-                keyAlias = keystoreProperties["keyAlias"] as String
-                keyPassword = keystoreProperties["keyPassword"] as String
+            create("release") {
+                // This configuration works for Local, GitHub Actions, and Bitrise
+                // provided the CI workflow creates the 'key.properties' file first.
+                if (keystorePropertiesFile.exists()) {
+                    storeFile = file(keystoreProperties["storeFile"] as String)
+                    storePassword = keystoreProperties["storePassword"] as String
+                    keyAlias = keystoreProperties["keyAlias"] as String
+                    keyPassword = keystoreProperties["keyPassword"] as String
+                }
             }
         }
-    }
 
     buildTypes {
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-            signingConfig = signingConfigs.getByName("release")
+            release {
+                signingConfig = signingConfigs.getByName("release")
+                isMinifyEnabled = true
+                isShrinkResources = true
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            }
         }
-    }
 
     splits {
         abi {
