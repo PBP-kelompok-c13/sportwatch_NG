@@ -10,7 +10,6 @@ import 'package:sportwatch_ng/theme_notifier.dart';
 import 'package:sportwatch_ng/user_profile_notifier.dart';
 import 'package:sportwatch_ng/card_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 // Refined Palette: User Specified Blue & Grey
@@ -94,7 +93,6 @@ class MyApp extends StatelessWidget {
             theme: _buildTheme(lightColorScheme),
             darkTheme: _buildTheme(darkColorScheme),
             themeMode: themeNotifier.themeMode,
-            navigatorObservers: [FlutterSmartDialog.observer],
             home: SplashGate(
               skipIntro: testMode,
               holdDuration: splashHoldDuration,
@@ -106,7 +104,7 @@ class MyApp extends StatelessWidget {
               '/shop': (_) => const ShopPage(),
             },
             builder: (context, child) {
-              child = FlutterSmartDialog.init()(context, child);
+              final resolvedChild = child ?? const SizedBox.shrink();
               final brightness = Theme.of(context).brightness;
               return ShadTheme(
                 data: ShadThemeData(
@@ -115,7 +113,7 @@ class MyApp extends StatelessWidget {
                       ? const ShadSlateColorScheme.dark()
                       : const ShadSlateColorScheme.light(),
                 ),
-                child: ShadToaster(child: child),
+                child: ShadToaster(child: resolvedChild),
               );
             },
           );

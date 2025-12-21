@@ -149,11 +149,15 @@ class _NewsEntryCardState extends State<NewsEntryCard> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final devicePixelRatio = mediaQuery.devicePixelRatio;
+    final imageCacheWidth = (mediaQuery.size.width * devicePixelRatio).round();
+    final imageCacheHeight = (_kImageHeight * devicePixelRatio).round();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final mutedColor = colorScheme.onSurfaceVariant;
-    final request = context.watch<CookieRequest>();
+    final request = context.read<CookieRequest>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -178,40 +182,41 @@ class _NewsEntryCardState extends State<NewsEntryCard> {
                         ? Image.network(
                             buildProxyImageUrl(widget.news.thumbnail),
                             fit: BoxFit.cover,
+                            cacheWidth: imageCacheWidth,
+                            cacheHeight: imageCacheHeight,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value:
-                                      loadingProgress.expectedTotalBytes != null
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
                                       ? loadingProgress.cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
+                                          loadingProgress.expectedTotalBytes!
                                       : null,
                                 ),
                               );
                             },
                             errorBuilder: (context, error, stackTrace) =>
                                 Container(
-                                  color: colorScheme.surfaceContainerHighest,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.broken_image,
-                                          size: 40,
-                                          color: mutedColor,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          "Image Error",
-                                          style: TextStyle(color: mutedColor),
-                                        ),
-                                      ],
+                              color: colorScheme.surfaceContainerHighest,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.broken_image,
+                                      size: 40,
+                                      color: mutedColor,
                                     ),
-                                  ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "Image Error",
+                                      style: TextStyle(color: mutedColor),
+                                    ),
+                                  ],
                                 ),
+                              ),
+                            ),
                           )
                         : Container(
                             color: colorScheme.surfaceContainerHighest,
@@ -351,7 +356,7 @@ class _NewsEntryCardState extends State<NewsEntryCard> {
                             color: isSelected
                                 ? colorScheme.primaryContainer
                                 : colorScheme.surfaceContainerHighest
-                                      .withValues(alpha: 0.5),
+                                    .withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(20),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20),

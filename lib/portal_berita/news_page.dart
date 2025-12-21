@@ -22,6 +22,9 @@ class NewsPage extends StatefulWidget {
 class _NewsPageState extends State<NewsPage> {
   static const int _newsPageSize = 6;
   List<NewsEntry> _newsEntries = [];
+  NewsEntry? _featuredEntry;
+  List<NewsEntry> _hotEntries = [];
+  List<NewsEntry> _newestEntries = [];
   bool _loadingNews = false;
   bool _loadingMore = false;
   bool _hasNextPage = true;
@@ -141,6 +144,7 @@ class _NewsPageState extends State<NewsPage> {
           _newsEntries = entries;
           _currentPage = page;
           _hasNextPage = _extractHasNext(response, entries.length);
+          _rebuildDerivedLists();
         });
       }
     } catch (e) {
@@ -188,6 +192,7 @@ class _NewsPageState extends State<NewsPage> {
           _newsEntries = [..._newsEntries, ...newItems];
           _currentPage = nextPage;
           _hasNextPage = _extractHasNext(response, entries.length);
+          _rebuildDerivedLists();
         });
       }
     } catch (_) {
@@ -259,9 +264,35 @@ class _NewsPageState extends State<NewsPage> {
     });
   }
 
+  void _rebuildDerivedLists() {
+    if (_newsEntries.isEmpty) {
+      _featuredEntry = null;
+      _hotEntries = const [];
+      _newestEntries = const [];
+      return;
+    }
+
+    final entries = List<NewsEntry>.from(_newsEntries);
+    final featured = _selectFeatured(entries);
+    final filtered = featured == null
+        ? entries
+        : entries.where((entry) => entry.id != featured.id).toList();
+
+    final hot = List<NewsEntry>.from(filtered)
+      ..sort((a, b) => b.views.compareTo(a.views));
+    final newest = List<NewsEntry>.from(filtered)
+      ..sort((a, b) => b.tanggalDibuat.compareTo(a.tanggalDibuat));
+
+    _featuredEntry = featured;
+    _hotEntries = hot;
+    _newestEntries = newest;
+  }
+
   Widget _buildSquareThumbItem(BuildContext context, NewsEntry entry) {
     final theme = ShadTheme.of(context);
     final colorScheme = theme.colorScheme;
+    final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final thumbCacheSize = (160 * devicePixelRatio).round();
 
     return GestureDetector(
       onTap: () => _openNews(entry),
@@ -281,14 +312,16 @@ class _NewsPageState extends State<NewsPage> {
                         ? Image.network(
                             buildProxyImageUrl(entry.thumbnail),
                             fit: BoxFit.cover,
+                            cacheWidth: thumbCacheSize,
+                            cacheHeight: thumbCacheSize,
                             errorBuilder: (context, error, stackTrace) =>
                                 Container(
-                                  color: colorScheme.muted,
-                                  child: Icon(
-                                    Icons.image_not_supported_outlined,
-                                    color: colorScheme.mutedForeground,
-                                  ),
-                                ),
+                              color: colorScheme.muted,
+                              child: Icon(
+                                Icons.image_not_supported_outlined,
+                                color: colorScheme.mutedForeground,
+                              ),
+                            ),
                           )
                         : Container(
                             color: colorScheme.muted,
@@ -320,6 +353,8 @@ class _NewsPageState extends State<NewsPage> {
     final theme = ShadTheme.of(context);
     final colorScheme = theme.colorScheme;
     final totalReactions = _totalReactions(entry);
+    final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final featuredCacheSize = (104 * devicePixelRatio).round();
 
     return GlassContainer(
       opacity: 0.1,
@@ -347,14 +382,16 @@ class _NewsPageState extends State<NewsPage> {
                           ? Image.network(
                               buildProxyImageUrl(entry.thumbnail),
                               fit: BoxFit.cover,
+                              cacheWidth: featuredCacheSize,
+                              cacheHeight: featuredCacheSize,
                               errorBuilder: (context, error, stackTrace) =>
                                   Container(
-                                    color: colorScheme.muted,
-                                    child: Icon(
-                                      Icons.image_not_supported_outlined,
-                                      color: colorScheme.mutedForeground,
-                                    ),
-                                  ),
+                                color: colorScheme.muted,
+                                child: Icon(
+                                  Icons.image_not_supported_outlined,
+                                  color: colorScheme.mutedForeground,
+                                ),
+                              ),
                             )
                           : Container(
                               color: colorScheme.muted,
@@ -520,14 +557,12 @@ class _NewsPageState extends State<NewsPage> {
       );
     }
 
-    final entries = List<NewsEntry>.from(_newsEntries);
-    final featured = _selectFeatured(entries);
-    final hot =
-        entries.where((e) => featured == null || e.id != featured.id).toList()
-          ..sort((a, b) => b.views.compareTo(a.views));
-    final newest =
-        entries.where((e) => featured == null || e.id != featured.id).toList()
-          ..sort((a, b) => b.tanggalDibuat.compareTo(a.tanggalDibuat));
+    final entries = _newsEntries;
+    final featured = _featuredEntry;
+    final hot = _hotEntries;
+    final newest = _newestEntries;
+    final hotCount = hot.length < 10 ? hot.length : 10;
+    final newestCount = newest.length < 10 ? newest.length : 10;
     final profile = context.watch<UserProfileNotifier>();
     final userData = request.getJsonData();
     final isStaff =
@@ -537,11 +572,10 @@ class _NewsPageState extends State<NewsPage> {
     final username = profile.isGuest
         ? 'Guest'
         : profile.username.isNotEmpty
-        ? profile.username
-        : (fallbackUsername.isNotEmpty ? fallbackUsername : 'User');
-    final greeting = profile.isGuest
-        ? 'Welcome, Guest'
-        : 'Welcome back, $username';
+            ? profile.username
+            : (fallbackUsername.isNotEmpty ? fallbackUsername : 'User');
+    final greeting =
+        profile.isGuest ? 'Welcome, Guest' : 'Welcome back, $username';
 
     final serviceTiles = <Widget>[
       _buildServiceGridItem(
@@ -652,7 +686,7 @@ class _NewsPageState extends State<NewsPage> {
               child: ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                 scrollDirection: Axis.horizontal,
-                itemCount: hot.take(10).length,
+                itemCount: hotCount,
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final entry = hot[index];
@@ -678,7 +712,7 @@ class _NewsPageState extends State<NewsPage> {
               child: ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 scrollDirection: Axis.horizontal,
-                itemCount: newest.take(10).length,
+                itemCount: newestCount,
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final entry = newest[index];
@@ -711,11 +745,11 @@ class _NewsPageState extends State<NewsPage> {
                     child: Center(child: CircularProgressIndicator()),
                   )
                 : (!_hasNextPage && entries.isNotEmpty)
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Center(child: Text('No more news.')),
-                  )
-                : const SizedBox.shrink(),
+                    ? const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Center(child: Text('No more news.')),
+                      )
+                    : const SizedBox.shrink(),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],

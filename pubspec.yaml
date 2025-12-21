@@ -32,15 +32,11 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
   provider: ^6.1.5+1
   pbp_django_auth: ^0.4.0
   http: ^1.6.0
   timeago: ^3.7.1
   google_fonts: ^6.3.3
-  flutter_smart_dialog: ^4.9.8+9
   shadcn_ui: ^0.38.1
   glassmorphism_ui: ^0.3.0
 
@@ -71,7 +67,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
-    - logo_sportwatch.png
+    - logo_sportwatch.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -102,4 +98,4 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: "logo_sportwatch.png"
+  image_path: "logo_sportwatch.webp"

@@ -88,7 +88,7 @@ class SplashScreen extends StatelessWidget {
                     ),
                   ),
                   Image.asset(
-                    'logo_sportwatch.png',
+                    'logo_sportwatch.webp',
                     width: 92,
                     height: 92,
                     fit: BoxFit.contain,
