@@ -2,7 +2,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-green?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-TAHAP%20II%20%28100%25%29-yellow?style=for-the-badge)
 
 ## Download APK & Video
 
